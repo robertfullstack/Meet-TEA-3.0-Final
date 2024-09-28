@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // useEffect adicionado
 import { auth, storage, db } from '../firebase';
 import { useNavigate } from "react-router-dom";
 import '../styles/Home.css';
@@ -7,9 +7,23 @@ import '@fontsource/nunito';
 const Postar = (props) => {
     const [openModalPublicar, setOpenModalPublicar] = useState(true); // Mudar para true para abrir automaticamente
     const [file, setFile] = useState(null);
-    const [setProgress] = useState(0);
+    const [progress, setProgress] = useState(0);
     const [showChat, setShowChat] = useState(false); 
     const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState(null); // Estado para armazenar o usuário atual
+
+    // useEffect para monitorar o estado de autenticação
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setCurrentUser(user);
+            } else {
+                setCurrentUser(null);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleOpenChat = () => {
         setShowChat(!showChat);
@@ -37,6 +51,11 @@ const Postar = (props) => {
             return;
         }
 
+        if (!currentUser) { // Verifica se o usuário está autenticado
+            alert("Usuário não autenticado.");
+            return;
+        }
+
         const uploadTask = storage.ref(`images/${file.name}`).put(file);
 
         uploadTask.on(
@@ -55,19 +74,37 @@ const Postar = (props) => {
                     .child(file.name)
                     .getDownloadURL()
                     .then((url) => {
+                        console.log("Dados do Post:", {
+                            title: titlePost,
+                            description: descricaoPost,
+                            imageUrl: url,
+                            timestamp: new Date(),
+                            user: currentUser.uid, // Utilize UID ou outro identificador
+                            likes: 0,
+                        });
+
                         db.collection("posts").add({
                             title: titlePost,
                             description: descricaoPost,
                             imageUrl: url,
                             timestamp: new Date(),
-                            user: props.user, // Certifique-se de que props.user está disponível
+                            user: currentUser.uid, // ou currentUser.email, etc.
                             likes: 0,
+                        })
+                        .then(() => {
+                            setProgress(0);
+                            setFile(null);
+                            setOpenModalPublicar(false);
+                            alert("Postagem criada com sucesso!");
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao adicionar documento: ", error);
+                            alert("Erro ao criar postagem.");
                         });
-
-                        setProgress(0);
-                        setFile(null);
-                        setOpenModalPublicar(false); // Fecha a modal após a publicação
-                        alert("Postagem criada com sucesso!");
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao obter URL da imagem:", error);
+                        alert("Erro ao obter URL da imagem.");
                     });
             }
         );
@@ -82,7 +119,7 @@ const Postar = (props) => {
                     <a className="nav-link" id="config" onClick={() => navigate('/configuracoes')}>Configurações</a>
                     
                     <div className="nav-buttons"> 
-                        <button  id="btn-chat" onClick={handleOpenChat}>
+                        <button id="btn-chat" onClick={handleOpenChat}>
                             {showChat ? 'Fechar' : 'Chat'}
                         </button>
                         <button id="btn-pub" onClick={() => navigate('/postar')}> 
