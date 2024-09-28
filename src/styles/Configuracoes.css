@@ -1,0 +1,91 @@
+.configuracoes-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 30px;
+    background-color: #30405F;
+    font-family: "Nunito";
+    margin-top: 6px;
+}
+
+.profile-photo-update {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.img-perfil {
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-profile-form input,
+.edit-profile-form textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    width: 500px;
+    margin-left: 10px;
+    text-align: center;
+}
+
+.edit-profile-form button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#file-upload-button{
+  border-radius: 30px;
+}
+
+#config{
+    text-decoration: none;
+    color: white;
+}
+
+#btn-save{
+    border-radius: 30px;
+    border: none;
+    background-color:#DE995A ;
+    color: black;
+    transition: 0.5s;
+}
+
+#btn-save:hover{
+    background-color: rgb(72, 184, 72);
+}
+
+#text-info{
+    color: white;
+    text-align: center;
+}
+
+#text-info1{
+    color: white;
+    margin-left: 15px;
+}
+
+#bnt-profile {
+    border-radius: 30px;
+    margin-right: 200px; 
+}
+
+#btn-atualizar {
+    border-radius: 30px;
+    background-color: #DE995A;
+    border: none;
+    color: black;
+    margin-left: 300px;
+    margin-top: -25px;
+}
+
