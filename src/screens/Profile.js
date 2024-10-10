@@ -1,8 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { auth, db, storage } from '../firebase.js';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Profile.css';
 import defaultProfile from '../img/default-profile.png';
+import { auth, db, storage } from '../firebase'; // Certifique-se de importar corretamente seus módulos do Firebase
+
+const calcularIdade = (dataNascimento) => {
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+
+    // Verifica se o aniversário ainda não aconteceu neste ano
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+    }
+
+    return idade;
+};
 
 export const Profile = () => {
     const [userData, setUserData] = useState(null);
@@ -13,6 +27,11 @@ export const Profile = () => {
     const [postToDelete, setPostToDelete] = useState(null);
     const navigate = useNavigate();
     const user = auth.currentUser;
+    const [formData, setFormData] = useState({
+        displayName: '',
+        phone: '',
+        about: '',
+    });
 
     const handleOpenChat = () => {
         setShowChat(!showChat);
@@ -29,35 +48,26 @@ export const Profile = () => {
             });
     };
 
-    // Função para abrir o modal de confirmação antes de excluir o post
     const openModalToDelete = (post) => {
-        setPostToDelete(post); // Armazenar o post a ser excluído
-        setShowModal(true); // Mostrar o modal de confirmação
+        setPostToDelete(post);
+        setShowModal(true);
     };
 
-    // Função para excluir post
     const handleDeletePost = async () => {
-        if (!postToDelete) return; // Verifica se há um post selecionado para excluir
+        if (!postToDelete) return;
         try {
-            // Primeiro exclua a imagem associada do armazenamento (opcional)
             const imageRef = storage.refFromURL(postToDelete.imageUrl);
             await imageRef.delete();
-
-            // Em seguida, exclua o post do Firestore
             await db.collection('posts').doc(postToDelete.id).delete();
-
-            // Atualize o estado dos posts para remover o post excluído da lista
             setUserPosts(userPosts.filter(post => post.id !== postToDelete.id));
-
             console.log('Postagem excluída com sucesso!');
         } catch (error) {
             console.error('Erro ao excluir postagem:', error);
         } finally {
-            setShowModal(false); // Fechar o modal após a exclusão
+            setShowModal(false);
         }
     };
 
-    // Função para buscar os posts do usuário
     const fetchUserPosts = async () => {
         try {
             const postsSnapshot = await db.collection('posts')
@@ -82,6 +92,11 @@ export const Profile = () => {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if (userDoc.exists) {
                         setUserData(userDoc.data());
+                        setFormData({
+                            displayName: userDoc.data().displayName || '',
+                            phone: userDoc.data().phone || '',
+                            about: userDoc.data().about || '',
+                        });
                     } else {
                         console.log('Usuário não encontrado no Firestore.');
                     }
@@ -100,6 +115,8 @@ export const Profile = () => {
         }
     }, [user]);
 
+    if (loading) return <div>Carregando...</div>;
+
     return (
         <div className="profile-container">
             <div className="container-home">
@@ -108,14 +125,11 @@ export const Profile = () => {
                         <a className="nav-link active" id="inicio" onClick={() => navigate('/Home')}>Inicio</a>
                         <a className="nav-link" id="perfil" onClick={() => navigate('/profile')}>Perfil</a>
                         <a className="nav-link" id="config" onClick={() => navigate('/configuracoes')}>Configurações</a>
-
                         <div className="nav-buttons">
                             <button id="btn-chat" onClick={handleOpenChat}>
                                 {showChat ? 'Fechar' : 'Chat'}
                             </button>
-                            <button id="btn-pub" onClick={() => navigate('/postar')}>
-                                Postar
-                            </button>
+                            <button id="btn-pub" onClick={() => navigate('/postar')}>Postar</button>
                             <button id="btn-sair" onClick={handleLogout}>Sair</button>
                         </div>
                     </nav>
@@ -131,11 +145,29 @@ export const Profile = () => {
                             height={200}
                         />
                         <p id="sobre-nome">{userData.displayName}</p>
-                        <p><strong id="sobre">Sobre mim:</strong>
-                            <p id="sobre-info">{userData.about}</p>
-                        </p>
+                        <p><strong id="sobre">Sobre mim:</strong></p>
+                        <p id="sobre-info">{userData.about}</p>
 
-                        {/* Exibir posts do usuário */}
+                        <div id="infos">
+                            <div id="texto1">
+                                <p><strong>E-mail:</strong><br />{userData.email}</p>
+                                <p><strong>Idade:</strong><br />{calcularIdade(userData.birthDate)}</p>
+                                <p><strong>Sexo:</strong><br />{userData.gender}</p>
+                            </div>
+                            <div id="texto2">
+                                <p><strong>Telefone:</strong><br />{userData.phone}</p>
+                                <p><strong>Endereço:</strong><br />{userData.address}</p>
+                                {userData.fileURL && (
+                                    <div>
+                                        <p><strong>Carteira CIPTEA</strong></p>
+                                        <a id="ciptea-link" href={userData.fileURL} target="_blank" rel="noopener noreferrer">
+                                            Visualizar carteira
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         <div>
                             <h3>Minhas Postagens</h3>
                             {userPosts.length > 0 ? (
@@ -163,7 +195,6 @@ export const Profile = () => {
                     <div>Dados do usuário não encontrados.</div>
                 )}
 
-                {/* Modal de Confirmação */}
                 {showModal && (
                     <div className="modal-confirmation">
                         <div className="modal-content">
