@@ -6,19 +6,14 @@ export const Admin = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [adminName, setAdminName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [selectedReports, setSelectedReports] = useState([]);
 
-    // Função para autenticar o ADM.
     const handleLogin = () => {
-        if (adminName === 'Robert' && adminPassword === 'MeetTEA') {
+        const validAdmins = ['Robert', 'Julia', 'Isabella', 'Marcos'];
+        if (validAdmins.includes(adminName) && adminPassword === 'MeetTEA') {
             setIsLoggedIn(true);
-        } else if (adminName === 'Julia' && adminPassword === 'MeetTEA') {
-            setIsLoggedIn(true);
-        } else if (adminName === 'Isabelle' && adminPassword === 'MeetTEA') {
-            setIsLoggedIn(true);
-        } else if (adminName === 'Marcos' && adminPassword === 'MeetTEA') {
-            setIsLoggedIn(true);
-        }
-        else {
+        } else {
             alert('Nome ou senha incorretos!');
         }
     };
@@ -35,11 +30,19 @@ export const Admin = () => {
                     const userData = userDoc.data();
                     const fileURL = userData.fileURL;
 
+                    
+                    const reportsCollection = await db.collection('users').doc(userDoc.id).collection('reports').get();
+                    const reports = reportsCollection.docs.map(reportDoc => ({
+                        id: reportDoc.id,
+                        ...reportDoc.data()
+                    }));
+
                     usersList.push({
                         id: userDoc.id,
                         email: userData.email,
                         fileURL,
                         banned: userData.banned || false,
+                        reports,
                     });
                 }
 
@@ -65,6 +68,17 @@ export const Admin = () => {
         } catch (error) {
             console.error('Erro ao banir o usuário:', error);
         }
+    };
+
+    
+    const openReportsModal = (reports) => {
+        setSelectedReports(reports);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setSelectedReports([]);
     };
 
     if (!isLoggedIn) {
@@ -105,6 +119,7 @@ export const Admin = () => {
                         <th>ID do Usuário:</th>
                         <th>Email:</th>
                         <th>Arquivo/Carteirinha:</th>
+                        <th>Denúncias:</th>
                         <th>Ações (ADM):</th>
                     </tr>
                 </thead>
@@ -121,6 +136,13 @@ export const Admin = () => {
                                 )}
                             </td>
                             <td>
+                                {user.reports.length > 0 ? (
+                                    <button onClick={() => openReportsModal(user.reports)}>Exibir Denúncias</button>
+                                ) : (
+                                    'Nenhuma denúncia'
+                                )}
+                            </td>
+                            <td>
                                 {!user.banned ? (
                                     <button onClick={() => banUser(user.id)}>Banir</button>
                                 ) : (
@@ -131,11 +153,37 @@ export const Admin = () => {
                     ))}
                 </tbody>
             </table>
+
+            {showModal && (
+                <div className="modal-confirmation">
+                    <div className="modal-content">
+                        <h4>Denúncias do Usuário</h4>
+                        {selectedReports.length > 0 ? (
+                            <ul>
+                                {selectedReports.map((report) => (
+                                    <li key={report.id}>
+                                        <strong>Email do Denunciante:</strong> {report.emailDenunciante} <br />
+                                        <strong>Justificativa:</strong> {report.justificativa} <br />
+                                        <strong>Data:</strong> {new Date(report.timestamp?.seconds * 1000).toLocaleString()}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>Nenhuma denúncia encontrada.</p>
+                        )}
+                        <div className="modal-buttons">
+                            <button className="btn-cancel" onClick={closeModal}>Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
-}
+};
 
 export default Admin;
+
+
 
 
 
