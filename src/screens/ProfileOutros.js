@@ -8,6 +8,7 @@ const ProfileOutros = () => {
     const [reportText, setReportText] = useState(""); // Campo para justificar a denúncia
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [hasReported, setHasReported] = useState(false); // Novo estado para controlar se o usuário já denunciou
 
     useEffect(() => {
         if (id) {
@@ -21,6 +22,25 @@ const ProfileOutros = () => {
                 console.error("Erro ao buscar usuário:", error);
             });
         }
+
+        // Verificar se o usuário logado já fez uma denúncia
+        const checkIfAlreadyReported = async () => {
+            if (auth.currentUser) {
+                const currentUser = auth.currentUser;
+                const reportsSnapshot = await db
+                    .collection("users")
+                    .doc(id)
+                    .collection("reports")
+                    .where("emailDenunciante", "==", currentUser.email)
+                    .get();
+
+                if (!reportsSnapshot.empty) {
+                    setHasReported(true);
+                }
+            }
+        };
+
+        checkIfAlreadyReported();
     }, [id]);
 
     // Função para enviar a denúncia
@@ -32,6 +52,11 @@ const ProfileOutros = () => {
 
         if (reportText.trim() === "") {
             setErrorMessage("A justificativa da denúncia não pode estar vazia.");
+            return;
+        }
+
+        if (hasReported) {
+            setErrorMessage("Você já enviou uma denúncia para este usuário.");
             return;
         }
 
@@ -47,6 +72,7 @@ const ProfileOutros = () => {
 
             setSuccessMessage("Denúncia enviada com sucesso.");
             setReportText(""); // Limpa o campo de texto após enviar
+            setHasReported(true); // Define que o usuário já denunciou
         } catch (error) {
             console.error("Erro ao enviar denúncia:", error);
             setErrorMessage("Erro ao enviar denúncia. Tente novamente mais tarde.");
@@ -75,15 +101,21 @@ const ProfileOutros = () => {
             {/* Formulário para justificar a denúncia */}
             <div style={{ marginTop: '20px' }}>
                 <h3>Denunciar Usuário</h3>
-                <textarea
-                    value={reportText}
-                    onChange={(e) => setReportText(e.target.value)}
-                    placeholder="Escreva a justificativa para denunciar este perfil"
-                    rows="5"
-                    cols="50"
-                    style={{ width: '100%', marginBottom: '10px' }}
-                ></textarea>
-                <button onClick={handleReport}>Enviar Denúncia</button>
+                {hasReported ? (
+                    <p style={{ color: 'red' }}>Você já enviou uma denúncia para este usuário.</p>
+                ) : (
+                    <>
+                        <textarea
+                            value={reportText}
+                            onChange={(e) => setReportText(e.target.value)}
+                            placeholder="Escreva a justificativa para denunciar este perfil"
+                            rows="5"
+                            cols="50"
+                            style={{ width: '100%', marginBottom: '10px' }}
+                        ></textarea>
+                        <button onClick={handleReport}>Enviar Denúncia</button>
+                    </>
+                )}
 
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

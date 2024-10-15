@@ -30,7 +30,6 @@ export const Admin = () => {
                     const userData = userDoc.data();
                     const fileURL = userData.fileURL;
 
-                    
                     const reportsCollection = await db.collection('users').doc(userDoc.id).collection('reports').get();
                     const reports = reportsCollection.docs.map(reportDoc => ({
                         id: reportDoc.id,
@@ -70,7 +69,6 @@ export const Admin = () => {
         }
     };
 
-    
     const openReportsModal = (reports) => {
         setSelectedReports(reports);
         setShowModal(true);
@@ -163,7 +161,8 @@ export const Admin = () => {
                                 {selectedReports.map((report) => (
                                     <li key={report.id}>
                                         <strong>Email do Denunciante:</strong> {report.emailDenunciante} <br />
-                                        <strong>Justificativa:</strong> {report.justificativa} <br />
+                                        <strong>Motivo:</strong> {report.motivo} <br />
+                                        <strong>Justificativa:</strong> {report.justificativa || 'Nenhuma justificativa'} <br />
                                         <strong>Data:</strong> {new Date(report.timestamp?.seconds * 1000).toLocaleString()}
                                     </li>
                                 ))}
@@ -182,6 +181,7 @@ export const Admin = () => {
 };
 
 export default Admin;
+
 
 
 
