@@ -81,6 +81,7 @@ const Postar = (props) => {
                             timestamp: new Date(),
                             user: currentUser.uid, // Utilize UID ou outro identificador
                             likes: 0,
+                            loves: 0,
                         });
 
                         db.collection("posts").add({
@@ -90,6 +91,7 @@ const Postar = (props) => {
                             timestamp: new Date(),
                             user: currentUser.uid, // ou currentUser.email, etc.
                             likes: 0,
+                            loves: 0,
                         })
                         .then(() => {
                             setProgress(0);
