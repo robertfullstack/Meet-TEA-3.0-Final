@@ -1,277 +1,401 @@
 /* Estilos globais */
 body,
 html {
-    font-family: Arial, sans-serif;
-    background-color: #F5EEDA;
+  font-family: Arial, sans-serif;
+  background-color: #f5eeda;
+  justify-content: center;
+  place-items: center;
 }
-
 
 /* Container principal */
+/* .container-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20em;
+  max-height: 749px;
+} */
+
 .container-home {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 20em;
-    max-height: 749px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 749px;
+  margin: 0 auto; /* Centraliza o container na tela */
+  width: 100%;
+  max-width: 1200px; /* Limita a largura máxima em telas grandes */
+  padding: 1rem;
 }
 
+/* .container-home {
+  display: grid;
+  /* margin-left: 20em; */
+/* place-items: center;
+  width: 769px;
+} */
+
+.main2 {
+  /* max-width: 769px; */
+  /* max-height: 769px; */
+  display: flex;
+  flex-direction: column;
+  /* align-self: center; */
+  /* margin-left: 20em; */
+  background-color: #f5eeda;
+  place-self: center;
+}
 /* Cabeçalho */
 .header {
-    text-align: center;
-    margin-bottom: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-family: "Poetsen One";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: "Poetsen One";
+  flex-wrap: wrap;
 }
 
 /* Parágrafo de boas-vindas */
 .container-home p {
-    font-size: 1.2rem;
-    margin: 1rem 0;
+  font-size: 1.2rem;
+  margin: 1rem 0;
 }
 
 /* Botão de postagem */
 .btn-post {
-    padding: 0.5rem 1rem;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1.5rem;
 }
 
 .btn-post:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 /* Modal de publicação */
 .modal-publicar {
-    margin-top: 130px;
-    width: 50em;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-image: linear-gradient(90deg, #6487C9 0%, #465D8B 40%, #314263 79%);
-    font-family: "Nunito";
-    font-size: medium;
-    color: white;
+  margin-top: 130px;
+  width: 50em;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(
+    90deg,
+    #6487c9 0%,
+    #465d8b 40%,
+    #314263 79%
+  );
+  font-family: "Nunito";
+  font-size: medium;
+  color: white;
 }
 
 .modal-publicar form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-publicar label {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .modal-publicar input[type="text"],
 .modal-publicar textarea {
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
 }
 
 .modal-publicar textarea {
-    height: 100px;
-    resize: vertical;
+  height: 100px;
+  resize: vertical;
 }
 
-
 .modal-publicar button {
-    padding: 0.5rem;
-    margin-top: 1rem;
-    background-color: #26282C;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 25em;
-    margin-left: 170px;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  background-color: #26282c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 25em;
+  margin-left: 170px;
 }
 
 .modal-publicar button[type="button"] {
-    background-color: #991522;
-    width: 25em;
+  background-color: #991522;
+  width: 25em;
 }
 
 /*Botões de Pefis*/
-#filtro{
-    background-color: #f0b782;
-    color:#000;
-    border: 2px solid #000;
-    border-radius: 10px;
-    font-family: "Nunito";
-    margin-left: 5px;
+#filtro {
+  background-color: #f0b782;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 10px;
+  font-family: "Nunito";
+  margin-left: 5px;
 }
 
-.modal-perfis label{
-    font-family: "Nunito";
-    font-weight: bolder;
+.modal-perfis label {
+  font-family: "Nunito";
+  font-weight: bolder;
 }
 
 /* Parte do post*/
 .post {
-    background-image: linear-gradient(90deg, #6487C9 0%, #465D8B 40%, #314263 79%);
-    padding: 20px;
-    margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    color: white;
-    font-family:"Nunito";
-    max-width: 40em;
+  background-image: linear-gradient(
+    90deg,
+    #6487c9 0%,
+    #465d8b 40%,
+    #314263 79%
+  );
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+  font-family: "Nunito";
+  max-width: 40em;
+  width: 90%;
+  justify-content: center;
+  display: block;
+  overflow-wrap: break-word;
+  overflow: hidden;
 }
 
- input #file-upload-button{
-    background-color: #000;
+input #file-upload-button {
+  background-color: #000;
 }
 
-
-.main2{
-    background-color: #F5EEDA ;
-}
+/* .main2 {
+  background-color: #f5eeda;
+  justify-self: center;
+  place-items: center;
+} */
 .sidbar {
-    background-color: #5C77A8;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Coloca os elementos no topo e o final */
-    padding: 15px;
-    font-family: "Poetsen One";
+  background-color: #5c77a8;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Coloca os elementos no topo e o final */
+  padding: 15px;
+  font-family: "Poetsen One";
+  z-index: 1000;
 }
 
 .nav {
-    flex-grow: 1; /* Preenche o espaço vertical da navbar */
+  flex-grow: 1; /* Preenche o espaço vertical da navbar */
 }
 
-
-#perfil, #config, #inicio{
-    color: white;
-    margin-bottom: 10px;
-    cursor: pointer;
+#perfil,
+#config,
+#inicio {
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .nav-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: auto; /* Empurra os botões para o final */
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto; /* Empurra os botões para o final */
+  gap: 20px;
 }
-#comentario{
-    border-radius: 8px;
+#comentario {
+  border-radius: 8px;
 }
-#btn-pub, #btn-chat, #btn-sair {
-    width: 80%; 
-    padding: 10px;
-    border-radius: 45px;
-    cursor: pointer;
-    border: none;
+#btn-pub,
+#btn-chat,
+#btn-sair {
+  width: 80%;
+  padding: 10px;
+  border-radius: 45px;
+  cursor: pointer;
+  border: none;
 }
-.btn-post{
-    background-color: #30405F;
-    padding: 15px;
-    border-radius:40px;
-    width: 30em;
-    margin-left: 70px;
-    font-family: "Nunito";
+.btn-post {
+  background-color: #30405f;
+  padding: 15px;
+  border-radius: 40px;
+  width: 30em;
+  margin-left: 70px;
+  font-family: "Nunito";
+  justify-content: center;
+  align-items: center;
 }
 
 #btn-pub {
-    background-color: #26282C;
+  background-color: #26282c;
 }
 
 #btn-chat {
-    background-color: #DE995A;
+  background-color: #de995a;
 }
 
 #btn-sair {
-    background-color: #990d1b;
+  background-color: #990d1b;
 }
 
-#btn-curtir{
-    border-radius: 18px;
-    background-color: #DE995A;
-    color: #361e07;
-    margin-bottom: 15px;
-    padding: 5px;
-    border:2px solid #000;
+#btn-curtir {
+  border-radius: 18px;
+  background-color: #de995a;
+  color: #361e07;
+  margin-bottom: 15px;
+  padding: 5px;
+  border: 2px solid #000;
 }
 
-#btn-coment, #btn-coment-enviar{
-    border-radius: 18px;
-    background-color: #361e07;
-    color: #e9aa6f;
-    margin: 5px;
-    padding: 5px;
-    cursor: pointer;
-    border:2px solid white
+#btn-coment,
+#btn-coment-enviar {
+  border-radius: 18px;
+  background-color: #361e07;
+  color: #e9aa6f;
+  margin: 5px;
+  padding: 5px;
+  cursor: pointer;
+  border: 2px solid white;
 }
 
-#btn-coment-fechar{
-    border-radius: 18px;
-    background-color: #361e07;
-    color: #e9aa6f;
-    margin: 5px;
-    padding: 5px;
-    cursor: pointer;
-    margin-right: 60em;
-    max-width:80px;
-    border:2px solid white;
+#btn-coment-fechar {
+  border-radius: 18px;
+  background-color: #361e07;
+  color: #e9aa6f;
+  margin: 5px;
+  padding: 5px;
+  cursor: pointer;
+  margin-right: 60em;
+  max-width: 80px;
+  border: 2px solid white;
 }
 .button-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
-#btn-coment-enviar:hover, #btn-coment-fechar:hover, #btn-coment:hover {
-    background-color: #502b0d;
+#btn-coment-enviar:hover,
+#btn-coment-fechar:hover,
+#btn-coment:hover {
+  background-color: #502b0d;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .container-home {
-        padding: 1rem;
-    }
+/* @media (max-width: 768px) {
+  .container-home {
+    padding: 1rem;
+  }
 
-    .btn-post {
-        width: 100%;
-    }
-}
+  .btn-post {
+    width: 100%;
+  } */
+/* } */
 
 .comments-section {
-    margin-top: 1em;
-    border-top: 1px solid #ccc;
-    padding-top: 1em;
+  margin-top: 1em;
+  border-top: 1px solid #ccc;
+  padding-top: 1em;
 }
 
 .comments-list {
-    margin-top: 1em;
+  margin-top: 1em;
 }
 
 .comment {
-    padding: 0.5em 0;
-    border-bottom: 1px solid #eee;
+  padding: 0.5em 0;
+  border-bottom: 1px solid #eee;
 }
 
 .profile-photo {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
 }
+
+/* @media (max-width: 769px) {
+  .container-home {
+    margin-left: 0px;
+  }
+  .btn-post {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 90%;
+  }
+  .post {
+    width: 90%;
+    margin: 0 auto;
+  }
+} */
+
+@media (max-width: 768px) {
+  .container-home {
+    padding: 1rem;
+  }
+
+  .btn-post {
+    width: 100%;
+    height: auto;
+  }
+
+  .post {
+    width: 100%; /* Ajusta os posts para ocupar 100% da largura em telas menores */
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 500px) {
+  .container-home {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .btn-post {
+    width: 100%; /* Aumenta a largura do botão em telas pequenas */
+    height: 10vh;
+  }
+
+  .post {
+    width: 100%; /* Posts ocupam 100% da largura da tela */
+    justify-content: center;
+    align-items: center;
+  }
+}
+/* @media (max-width: 500px) {
+  .btn-post {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+  }
+  .post {
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .container-home {
+    margin-left: 10em;
+    place-items: center;
+  }
+} */
