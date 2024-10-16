@@ -42,22 +42,24 @@ const Postar = (props) => {
 
     const uploadPost = (e) => {
         e.preventDefault();
-
-        let titlePost = document.getElementById("titlePost").value;
-        let descricaoPost = document.getElementById("descricaoPost").value;
-
+    
+        const titlePost = document.getElementById("titlePost").value;
+        const descricaoPost = document.getElementById("descricaoPost").value;
+    
+        // Verifica se um arquivo foi selecionado
         if (!file) {
             alert("Selecione um arquivo para upload");
             return;
         }
-
-        if (!currentUser) { // Verifica se o usuário está autenticado
+    
+        // Verifica se o usuário está autenticado
+        if (!currentUser) {
             alert("Usuário não autenticado.");
             return;
         }
-
+    
         const uploadTask = storage.ref(`images/${file.name}`).put(file);
-
+    
         uploadTask.on(
             "state_changed",
             (snapshot) => {
@@ -68,50 +70,38 @@ const Postar = (props) => {
                 console.error("Erro no upload:", error);
                 alert(error.message);
             },
-            () => {
-                storage
-                    .ref("images")
-                    .child(file.name)
-                    .getDownloadURL()
-                    .then((url) => {
-                        console.log("Dados do Post:", {
-                            title: titlePost,
-                            description: descricaoPost,
-                            imageUrl: url,
-                            timestamp: new Date(),
-                            user: currentUser.uid, // Utilize UID ou outro identificador
-                            likes: 0,
-                            loves: 0,
-                        });
-
-                        db.collection("posts").add({
-                            title: titlePost,
-                            description: descricaoPost,
-                            imageUrl: url,
-                            timestamp: new Date(),
-                            user: currentUser.uid, // ou currentUser.email, etc.
-                            likes: 0,
-                            loves: 0,
-                        })
-                        .then(() => {
-                            setProgress(0);
-                            setFile(null);
-                            setOpenModalPublicar(false);
-                            alert("Postagem criada com sucesso!");
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao adicionar documento: ", error);
-                            alert("Erro ao criar postagem.");
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Erro ao obter URL da imagem:", error);
-                        alert("Erro ao obter URL da imagem.");
-                    });
+            async () => {
+                try {
+                    // Obtém a URL da imagem após o upload
+                    const url = await storage.ref("images").child(file.name).getDownloadURL();
+    
+                    // Dados do post, incluindo o nome do usuário
+                    const newPost = {
+                        title: titlePost,
+                        description: descricaoPost,
+                        imageUrl: url,
+                        postUserName: currentUser.displayName || "Usuário Anônimo", // Adiciona o nome do usuário
+                        timestamp: new Date(),
+                        user: currentUser.uid, // UID do usuário autenticado
+                        likes: 0,
+                        loves: 0,
+                    };
+    
+                    // Salva o post no Firestore
+                    await db.collection("posts").add(newPost);
+    
+                    setProgress(0);
+                    setFile(null);
+                    setOpenModalPublicar(false);
+                    alert("Postagem criada com sucesso!");
+                } catch (error) {
+                    console.error("Erro ao adicionar documento: ", error);
+                    alert("Erro ao criar postagem.");
+                }
             }
         );
     };
-
+    
     return (
         <div className="container-home">
             <div className="sidbar"> 
