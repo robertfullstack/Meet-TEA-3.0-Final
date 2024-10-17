@@ -1,91 +1,146 @@
-.configuracoes-container {
+.container-conf {
+    margin-top: 25px;
+    padding-left: 250px;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-width: 100vw;
+  }
+  .configuracoes-container {
     padding: 20px;
-    max-width: 600px;
     margin: 0 auto;
     border-radius: 30px;
-    background-color: #30405F;
+    background-color: #30405f;
     font-family: "Nunito";
-    margin-top: 6px;
-}
-
-.profile-photo-update {
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-photo-update {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
-}
-
-
-.img-perfil {
+    object-fit: contain;
+    justify-content: center;
+  }
+  
+  .img-perfil {
+    max-width: 100%;
     border-radius: 50%;
     margin-bottom: 10px;
-}
-
-.edit-profile-form {
+    object-fit: contain;
+  }
+  
+  .edit-profile-form {
     display: flex;
+    min-width: 100%;
     flex-direction: column;
-}
-
-.edit-profile-form input,
-.edit-profile-form textarea {
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .edit-profile-form input,
+  .edit-profile-form textarea {
     margin-bottom: 10px;
     padding: 8px;
     font-size: 16px;
     border-radius: 30px;
     border: none;
-    width: 500px;
+    width: 100%;
     margin-left: 10px;
     text-align: center;
-}
-
-.edit-profile-form button {
+  }
+  
+  .edit-profile-form button {
     padding: 10px;
     font-size: 16px;
     cursor: pointer;
-}
-
-#file-upload-button{
-  border-radius: 30px;
-}
-
-#config{
+  }
+  
+  #file-upload-button {
+    border-radius: 30px;
+  }
+  
+  #config {
     text-decoration: none;
     color: white;
-}
-
-#btn-save{
+  }
+  
+  #btn-save {
     border-radius: 30px;
     border: none;
-    background-color:#DE995A ;
+    background-color: #de995a;
     color: black;
     transition: 0.5s;
-}
-
-#btn-save:hover{
+    width: 40%;
+  }
+  
+  #btn-save:hover {
     background-color: rgb(72, 184, 72);
-}
-
-#text-info{
+  }
+  
+  #text-info {
     color: white;
     text-align: center;
-}
-
-#text-info1{
+  }
+  
+  #text-info1 {
     color: white;
     margin-left: 15px;
-}
-
-#bnt-profile {
-    border-radius: 30px;
-    margin-right: 200px; 
-}
-
-#btn-atualizar {
-    border-radius: 30px;
-    background-color: #DE995A;
+  }
+  
+  #btn-atualizar {
+    background-color: #de995a;
+  }
+  
+  #btn-atualizar,
+  #bnt-profile {
+    padding: 10px;
+    font-size: 16px;
     border: none;
-    color: black;
-    margin-left: 300px;
-    margin-top: -25px;
-}
-
+    border-radius: 30px;
+    width: 200px;
+  }
+  
+  .profile_atualizar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    flex: wrap;
+  }
+  .navbar-mobile {
+    display: none;
+  }
+  
+  @media (max-width: 800px) {
+    .navbar-mobile {
+      display: flex;
+    }
+  
+    /* Esconda a primeira navbar em telas menores, se necessário */
+    .navbar-desktop {
+      display: none;
+    }
+  
+    .sidbar {
+      display: none;
+    }
+  
+    .container-conf {
+      padding: 0px;
+    }
+    .profile_atualizar {
+      flex-direction: column; /* Coloca os itens em uma coluna em telas menores */
+      align-items: center; /* Centraliza os botões na tela */
+    }
+  
+    #btn-atualizar,
+    #bnt-profile {
+      width: 80%; /* Ajusta a largura dos botões para telas menores */
+      font-size: 14px; /* Reduz o tamanho da fonte em telas pequenas */
+    }
+  }
+  

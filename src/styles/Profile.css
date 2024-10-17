@@ -1,139 +1,166 @@
-.body {
-    max-width: 768px;
-  }
-  
-  .profile-container {
-    width: 90%;
-  }
-  
-  .profile-border {
-    padding: 50px;
-    background-color: #30405f;
-    margin: 100px auto 0;
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
-    text-align: center;
-    justify-content: center;
-    max-width: 768px;
-  }
-  
-  .profile-photo {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    text-align: center;
-    justify-content: center;
-    display: block;
-    margin: 0 auto;
-  }
-  
-  #img-perfil {
-    border-radius: 100px;
-    justify-content: center;
-    text-align: center;
-  }
-  
-  #infos {
-    border-radius: 30px;
-    background-color: #de995a;
-    width: 100%;
-    max-width: 800px;
-    text-align: center;
+.profile-container {
+  height: 100%;
+  width: 100%;
+  padding-left: 250px;
+}
+
+.profile-border {
+  padding: 50px;
+  background-color: #30405f;
+  margin: 100px auto 0;
+  width: 70%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.profile-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  text-align: center;
+  justify-content: center;
+  display: block;
+  margin: 0 auto;
+}
+
+#img-perfil {
+  border-radius: 100px;
+  justify-content: center;
+  text-align: center;
+}
+
+#infos {
+  border-radius: 30px;
+  background-color: #de995a;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+#infos p {
+  font-size: 18px;
+  font-family: "Nunito";
+}
+
+#sobre-nome,
+#sobre,
+#sobre-info {
+  color: white;
+}
+
+#texto1,
+#texto2 {
+  flex: 1;
+  margin: 0 10px;
+  min-width: 100px;
+}
+
+#texto1 p,
+#texto2 p {
+  margin: 5px 0;
+}
+
+#ciptea-link {
+  text-decoration: none;
+  color: black;
+  transition: 0.5s;
+}
+
+#ciptea-link:hover {
+  color: white;
+}
+
+.navbar-mobile {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .navbar-mobile {
     display: flex;
-    justify-content: space-between;
+  }
+
+  /* Esconda a primeira navbar em telas menores, se necessário */
+  .navbar-desktop {
+    display: none;
+  }
+
+  .sidbar {
+    display: none;
+  }
+
+  .profile-border {
     padding: 20px;
-    box-sizing: border-box;
-    flex-wrap: wrap;
+    width: 60%;
+    margin-top: 50px;
   }
-  
-  #infos p {
-    font-size: 18px;
-    font-family: "Nunito";
+
+  #infos {
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    word-wrap: break-word;
   }
-  
-  #sobre-nome,
-  #sobre,
-  #sobre-info {
-    color: white;
-  }
-  
+
   #texto1,
   #texto2 {
-    flex: 1;
-    margin: 0 10px;
-    min-width: 100px;
+    margin: 10px 0;
+    width: 100%;
   }
-  
-  #texto1 p,
-  #texto2 p {
-    margin: 5px 0;
+  .profile-container {
+    align-items: start;
+    justify-content: start;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    text-align: start;
+    padding: 0;
   }
-  
-  #ciptea-link {
-    text-decoration: none;
-    color: black;
-    transition: 0.5s;
+
+  #img-perfil {
+    object-fit: contain;
+    max-width: 100%;
+    border-radius: 50%;
   }
-  
-  #ciptea-link:hover {
-    color: white;
-  }
-  
-  @media (max-width: 768px) {
+  /* @media (max-width: 570px) {
+    .profile-container {
+      align-items: start;
+      justify-content: start;
+      text-align: start;
+      width: 10%;
+    }
     .profile-border {
       padding: 20px;
       width: fit-content;
-      margin-top: 50px;
+      left: 200px;
+      top: 40px;
+      position: relative;
     }
-  
+    .container-home {
+      margin-left: 0px;
+    }
+    .profile-container {
+      text-align: start !important;
+    }
+
     #infos {
       flex-direction: column;
       padding: 15px;
-      align-items: center;
+      align-items: start;
     }
-  
+
     #texto1,
     #texto2 {
       margin: 10px 0;
       width: 100%;
     }
-
-    @media (max-width: 570px) {
-        .profile-container{
-            align-items: start;
-            justify-content: start;
-            text-align: start;
-            width: 10%;
-        }
-        .profile-border {
-          padding: 20px;
-          width: fit-content;
-          left: 200px;
-          top: 40px;
-          position: relative; 
-
-        }
-        .container-home {
-            margin-left: 0px;
-        }
-        .profile-container {
-            text-align: start !important;
-            
-        }
-      
-        #infos {
-          flex-direction: column;
-          padding: 15px;
-          align-items: start;
-        }
-      
-        #texto1,
-        #texto2 {
-          margin: 10px 0;
-          width: 100%;
-        }
-  }
+  } */
 }
