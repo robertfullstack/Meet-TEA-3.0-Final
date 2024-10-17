@@ -53,22 +53,24 @@ const Postar = (props) => {
 
     const uploadPost = (e) => {
         e.preventDefault();
-
-        let titlePost = document.getElementById("titlePost").value;
-        let descricaoPost = document.getElementById("descricaoPost").value;
-
+    
+        const titlePost = document.getElementById("titlePost").value;
+        const descricaoPost = document.getElementById("descricaoPost").value;
+    
+        // Verifica se um arquivo foi selecionado
         if (!file) {
             alert("Selecione um arquivo para upload");
             return;
         }
-
-        if (!currentUser) { 
+    
+        // Verifica se o usuário está autenticado
+        if (!currentUser) {
             alert("Usuário não autenticado.");
             return;
         }
-
+    
         const uploadTask = storage.ref(`images/${file.name}`).put(file);
-
+    
         uploadTask.on(
             "state_changed",
             (snapshot) => {
@@ -122,7 +124,7 @@ const Postar = (props) => {
             }
         );
     };
-
+    
     return (
         <div className="container-home">
           {/* Sidebar fixa */}

@@ -135,37 +135,52 @@ export const Profile = () => {
     const confirmDelete = window.confirm("Tem certeza de que deseja excluir sua conta? Esta ação é irreversível!");
 
     if (confirmDelete) {
-      try {
+        try {
+            
+            const postsSnapshot = await db.collection("posts").where("user", "==", user.uid).get();
+            const deletePromises = postsSnapshot.docs.map(async (doc) => {
+                const postData = doc.data();
+                if (postData.imageUrl) {
+                    const imageRef = storage.refFromURL(postData.imageUrl);
+                    await imageRef.delete();  // Excluir a imagem do Storage
+                }
+                await db.collection("posts").doc(doc.id).delete(); // Excluir o post do Firestore
+            });
 
-        if (userData.profilePhotoURL) {
-          const photoRef = storage.refFromURL(userData.profilePhotoURL);
-          await photoRef.delete();
-          console.log("Foto de perfil excluída do Storage.");
+            
+            await Promise.all(deletePromises);
+            console.log("Todos os posts do usuário foram excluídos.");
+
+            
+            if (userData.profilePhotoURL) {
+                const photoRef = storage.refFromURL(userData.profilePhotoURL);
+                await photoRef.delete();
+                console.log("Foto de perfil excluída do Storage.");
+            }
+
+            
+            await db.collection('users').doc(user.uid).delete();
+            console.log("Dados do Firestore excluídos.");
+
+            
+            await user.delete();
+            console.log("Conta excluída com sucesso.");
+
+            
+            window.location.href = '/';
+        } catch (error) {
+            console.error("Erro ao excluir a conta:", error);
+
+            if (error.code === 'auth/requires-recent-login') {
+                alert('Para segurança, você precisa fazer login novamente antes de excluir sua conta.');
+                auth.signOut().then(() => {
+                    window.location.href = '/login';
+                });
+            }
         }
-
-
-        await db.collection('users').doc(user.uid).delete();
-        console.log("Dados do Firestore excluídos.");
-
-
-        await user.delete();
-        console.log("Conta excluída com sucesso.");
-
-
-        window.location.href = '/';
-      } catch (error) {
-        console.error("Erro ao excluir a conta:", error);
-
-
-        if (error.code === 'auth/requires-recent-login') {
-          alert('Para segurança, você precisa fazer login novamente antes de excluir sua conta.');
-          auth.signOut().then(() => {
-            window.location.href = '/login';
-          });
-        }
-      }
     }
-  };
+};
+
 
 
   if (loading) return <div>Carregando...</div>;
@@ -272,24 +287,7 @@ export const Profile = () => {
                 <button id="btn-excluir-conta" onClick={openModalToDeleteAccount}>Excluir Conta</button>
               </div>
             </div>
-            {showModal && (
-          <div className="modal-confirmation">
-            <div className="modal-content">
-              <h4>Aceitar que essa publicação será excluída?</h4>
-              <div className="modal-buttons">
-                <button className="btn-confirm" onClick={handleDeletePost}>
-                  Sim
-                </button>
-                <button
-                  className="btn-cancel"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+            
 
         {showDeleteAccountModal && (
           <div className="modal-confirmation">
@@ -323,17 +321,37 @@ export const Profile = () => {
                     >
                       Excluir
                     </button>
+                    
                   </div>
+                  
                 ))
               ) : (
                 <p>Você ainda não tem posts.</p>
               )}
+              
             </div>
           </div>
         ) : (
           <div>Dados do usuário não encontrados.</div>
         )}
-
+{showModal && (
+          <div className="modal-confirmation">
+            <div className="modal-content">
+              <h4>Aceitar que essa publicação será excluída?</h4>
+              <div className="modal-buttons">
+                <button className="btn-confirm" onClick={handleDeletePost}>
+                  Sim
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
       </div>
     </div>

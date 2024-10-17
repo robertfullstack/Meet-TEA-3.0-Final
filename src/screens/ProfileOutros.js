@@ -5,7 +5,8 @@ import { db, auth } from '../firebase'; // Ajuste o caminho conforme necessário
 const ProfileOutros = () => {
     const { id } = useParams(); // Obtém o ID da URL
     const [user, setUser] = useState(null);
-    const [reportText, setReportText] = useState(""); // Campo para justificar a denúncia
+    const [reportText, setReportText] = useState(""); // Campo opcional para justificar a denúncia
+    const [reportReason, setReportReason] = useState(""); // Campo para selecionar o motivo da denúncia
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [hasReported, setHasReported] = useState(false); // Novo estado para controlar se o usuário já denunciou
@@ -50,8 +51,8 @@ const ProfileOutros = () => {
             return;
         }
 
-        if (reportText.trim() === "") {
-            setErrorMessage("A justificativa da denúncia não pode estar vazia.");
+        if (reportReason === "") {
+            setErrorMessage("Por favor, selecione um motivo para a denúncia.");
             return;
         }
 
@@ -66,12 +67,14 @@ const ProfileOutros = () => {
             // Adiciona uma denúncia na subcoleção "reports" do usuário denunciado
             await db.collection("users").doc(id).collection("reports").add({
                 emailDenunciante: currentUser.email, // Email de quem está denunciando
-                justificativa: reportText, // Justificativa da denúncia
+                motivo: reportReason, // Motivo da denúncia
+                justificativa: reportText || null, // Justificativa opcional da denúncia
                 timestamp: new Date() // Data da denúncia
             });
 
             setSuccessMessage("Denúncia enviada com sucesso.");
-            setReportText(""); // Limpa o campo de texto após enviar
+            setReportReason(""); // Limpa o motivo após enviar
+            setReportText(""); // Limpa o campo de justificativa após enviar
             setHasReported(true); // Define que o usuário já denunciou
         } catch (error) {
             console.error("Erro ao enviar denúncia:", error);
@@ -105,14 +108,33 @@ const ProfileOutros = () => {
                     <p style={{ color: 'red' }}>Você já enviou uma denúncia para este usuário.</p>
                 ) : (
                     <>
+                        <label htmlFor="reportReason">Motivo da denúncia:</label>
+                        <select
+                            id="reportReason"
+                            value={reportReason}
+                            onChange={(e) => setReportReason(e.target.value)}
+                            style={{ width: '100%', marginBottom: '10px' }}
+                            required
+                        >
+                            <option value="">Selecione um motivo</option>
+                            <option value="conteúdo impróprio">Conteúdo impróprio</option>
+                            <option value="discurso de ódio">Discurso de ódio</option>
+                            <option value="assédio ou bullying">Assédio ou bullying</option>
+                            <option value="spam ou fraude">Spam ou fraude</option>
+                            <option value="falsidade ideológica">Falsidade ideológica</option>
+                        </select>
+
+                        <label htmlFor="reportText">Justificativa (opcional):</label>
                         <textarea
+                            id="reportText"
                             value={reportText}
                             onChange={(e) => setReportText(e.target.value)}
-                            placeholder="Escreva a justificativa para denunciar este perfil"
+                            placeholder="Escreva uma justificativa para a denúncia (opcional)"
                             rows="5"
                             cols="50"
                             style={{ width: '100%', marginBottom: '10px' }}
                         ></textarea>
+
                         <button onClick={handleReport}>Enviar Denúncia</button>
                     </>
                 )}
