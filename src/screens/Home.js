@@ -377,104 +377,113 @@ const Home = (props) => {
           />
         )}
 
-        {openModalVisualizar && (
-          <div id="container-posts" className="modal-posts">
-            {posts.map((post) => (
-              <div key={post.id} className="post">
-                <h2>{post.post.title}</h2>
-                <img
-                  style={{ width: "100%" }}
-                  src={post.post.imageUrl}
-                  alt={post.post.title}
-                />
-                <p>{post.post.description}</p>
+{openModalVisualizar && (
+  <div id="container-posts" className="modal-posts">
+    {posts.map((post) => (
+      <div key={post.id} className="post">
+        {/* Exibe o nome do usuário que postou */}
+        <p>{post.post.postUserName}</p>
 
-                <button
-                  id="btn-curtir"
-                  onClick={() => handleLike(post.id, post.post.likes)}
-                  style={{
-                    color: userReactions[post.id] === "like" ? "blue" : "black",
-                  }} // Destaca se já curtiu
-                >
-                  <img
-                    src={
-                      userReactions[post.id] === "like"
-                        ? Joia_puzz_closed
-                        : Joia_puzz
-                    }
-                    width={40}
-                  />{" "}
-                  ({post.post.likes})
-                </button>
+        {/* Título do post */}
+        <h2>{post.post.title}</h2>
 
-                <button
-                  id="btn-curtir"
-                  onClick={() => handleLove(post.id, post.post.loves)}
-                  style={{
-                    color: userReactions[post.id] === "love" ? "red" : "black",
-                  }} // Destaca se já amou
-                >
-                  <img
-                    src={
-                      userReactions[post.id] === "love"
-                        ? Heart_puzz_closed
-                        : Heart_puzz
-                    }
-                    width={40}
-                  />{" "}
-                  ({post.post.loves})
-                </button>
+        {/* Imagem do post */}
+        <img
+          style={{ width: "100%" }}
+          src={post.post.imageUrl}
+          alt={post.post.title}
+        />
 
-                {/* Botão comentar sempre visível */}
-                <button
-                  id="btn-coment"
-                  onClick={() =>
-                    setCurrentPostId(post.id === currentPostId ? null : post.id)
-                  }
-                >
-                  {currentPostId === post.id ? "Comentar" : "Comentar"}
-                </button>
+        {/* Descrição do post */}
+        <p>{post.post.description}</p>
+        
+        {/* Código restante permanece igual */}
+        <button
+          id="btn-curtir"
+          onClick={() => handleLike(post.id, post.post.likes)}
+          style={{
+            color: userReactions[post.id] === "like" ? "blue" : "black",
+          }}
+        >
+          <img
+            src={
+              userReactions[post.id] === "like"
+                ? Joia_puzz_closed
+                : Joia_puzz
+            }
+            width={40}
+          />{" "}
+          ({post.post.likes})
+        </button>
 
-                {currentPostId === post.id && (
-                  <div className="comment-form">
-                    <textarea
-                      id="comentario"
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="Escreva um comentário..."
-                    />
+        <button
+          id="btn-curtir"
+          onClick={() => handleLove(post.id, post.post.loves)}
+          style={{
+            color: userReactions[post.id] === "love" ? "red" : "black",
+          }}
+        >
+          <img
+            src={
+              userReactions[post.id] === "love"
+                ? Heart_puzz_closed
+                : Heart_puzz
+            }
+            width={40}
+          />{" "}
+          ({post.post.loves})
+        </button>
 
-                    <div className="button-group">
-                      <button
-                        id="btn-coment-enviar"
-                        onClick={() => handleCommentSubmit(post.id)}
-                      >
-                        Enviar
-                      </button>
-                      <button
-                        id="btn-coment-fechar"
-                        onClick={() => setCurrentPostId(null)}
-                      >
-                        Fechar
-                      </button>
-                    </div>
-                  </div>
-                )}
+        <button
+          id="btn-coment"
+          onClick={() =>
+            setCurrentPostId(post.id === currentPostId ? null : post.id)
+          }
+        >
+          {currentPostId === post.id ? "Comentar" : "Comentar"}
+        </button>
 
-                <div className="comments">
-                  <h3>Comentários:</h3>
-                  {post.comments.map((comment) => (
-                    <div key={comment.id} className="comment">
-                      <p>
-                        <strong>{comment.user}:</strong> {comment.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+        {currentPostId === post.id && (
+          <div className="comment-form">
+            <textarea
+              id="comentario"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Escreva um comentário..."
+            />
+
+            <div className="button-group">
+              <button
+                id="btn-coment-enviar"
+                onClick={() => handleCommentSubmit(post.id)}
+              >
+                Enviar
+              </button>
+              <button
+                id="btn-coment-fechar"
+                onClick={() => setCurrentPostId(null)}
+              >
+                Fechar
+              </button>
+            </div>
           </div>
         )}
+
+        <div className="comments">
+          <h3>Comentários:</h3>
+          {post.comments.map((comment) => (
+            <div key={comment.id} className="comment">
+              <p>
+                <strong>{comment.user}:</strong> {comment.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
       </div>
     </div>
   );
