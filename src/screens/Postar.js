@@ -96,6 +96,7 @@ const Postar = (props) => {
               imageUrl: url,
               timestamp: new Date(),
               user: currentUser.uid,
+              postUserName: currentUser.displayName,
               likes: 0,
               loves: 0,
             });
@@ -107,6 +108,7 @@ const Postar = (props) => {
                 imageUrl: url,
                 timestamp: new Date(),
                 user: currentUser.uid,
+                postUserName: currentUser.displayName,
                 likes: 0,
                 loves: 0,
               })
