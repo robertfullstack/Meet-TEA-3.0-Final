@@ -249,7 +249,7 @@ const Postar = (props) => {
 
       {openModalPublicar && (
         <div id="container-publicar" className="modal-publicar">
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={uploadPost}>
             <label>Título</label>
             <input
               type="text"
