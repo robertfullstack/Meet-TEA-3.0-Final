@@ -259,7 +259,7 @@ const Postar = (props) => {
             />
 
             <label>Imagem:</label>
-            <input type="file" id="imagePost" placeholder="Image..." required />
+            <input type="file" id="imagePost" onChange={(e) => setFile(e.target.files[0])} placeholder="Image..." required />
 
             <label>Descrição</label>
             <textarea
