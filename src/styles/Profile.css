@@ -4,11 +4,31 @@
   padding-left: 250px;
 }
 
+.profile-outros-container {
+  height: 100%;
+  width: 100%;
+  padding-left: 250px;
+}
+
 .profile-border {
   padding: 50px;
   background-color: #30405f;
   margin: 100px auto 0;
   width: 70%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.profile-outros-border {
+  padding: 50px;
+  font-family: "Nunito";
+  background-color: #30405f;
+  margin: 100px auto 0;
+  width: 60%;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
@@ -32,6 +52,29 @@
   border-radius: 100px;
   justify-content: center;
   text-align: center;
+  object-fit: contain;
+  max-width: 100%;
+}
+
+#profile-other-icon {
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.ban-form {
+  border-radius: 30px;
+  background-color: #de995a;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+.info-outros {
+  margin-top: 10px;
+  color: white;
 }
 
 #infos {
@@ -51,10 +94,14 @@
   font-size: 18px;
   font-family: "Nunito";
 }
+#sobre-nome {
+  margin-top: 10px;
+}
 
 #sobre-nome,
 #sobre,
 #sobre-info {
+  font-family: "Nunito";
   color: white;
 }
 
@@ -78,6 +125,17 @@
 
 #ciptea-link:hover {
   color: white;
+}
+
+.profile-post h3 {
+  margin-top: 10px;
+  color: white;
+}
+
+#no-post {
+  margin-top: 10px;
+  color: white;
+  opacity: 80%;
 }
 
 .navbar-mobile {
@@ -110,6 +168,33 @@
     justify-content: center;
     word-wrap: break-word;
   }
+  .info-outros {
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    word-wrap: break-word;
+  }
+
+  .ban-form {
+    padding: 15px;
+    align-items: center;
+    justify-self: center;
+    word-wrap: break-word;
+    place-self: center;
+    width: 80%;
+  }
+
+  .ban-form label {
+    display: block;
+    width: 100%;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .ban-form button {
+    text-align: center;
+    width: 50%;
+  }
 
   #texto1,
   #texto2 {
@@ -117,6 +202,14 @@
     width: 100%;
   }
   .profile-container {
+    align-items: start;
+    justify-content: start;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    text-align: start;
+    padding: 0;
+  }
+  .profile-outros-container {
     align-items: start;
     justify-content: start;
     flex-wrap: wrap;

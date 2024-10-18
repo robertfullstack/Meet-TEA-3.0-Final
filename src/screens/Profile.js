@@ -383,7 +383,7 @@ export const Profile = () => {
               </div>
             </div>
           )}
-          <div>
+          <div className="profile-post">
             <h3>Minhas Postagens</h3>
             {userPosts.length > 0 ? (
               userPosts.map((post) => (
@@ -402,7 +402,7 @@ export const Profile = () => {
                 </div>
               ))
             ) : (
-              <p>Você ainda não tem posts.</p>
+              <p id="no-post">Você ainda não tem posts.</p>
             )}
           </div>
         </div>
