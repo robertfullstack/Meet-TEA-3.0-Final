@@ -192,25 +192,20 @@ input #file-upload-button {
   gap: 10px; /* Espaçamento entre os itens */
 }
 
-.nav-buttons1 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  align-items: flex-start; /* Alinha os botões à esquerda */
-}
 #offcanvasNavbar {
   background-color: #5c77a8;
+  width: 50%;
 }
 .offcanvas-body {
   width: 100%;
 }
 .nav-buttons1 {
-  margin-top: 15vh; /* Adapta a margem superior para evitar sobreposição com o topo */
-  width: 90%; /* Ajusta a largura dos botões */
+  margin-top: 53vh; /* Adapta a margem superior para evitar sobreposição com o topo */
+  max-width: 200px; /* Ajusta a largura dos botões */
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
