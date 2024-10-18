@@ -3,6 +3,7 @@ body,
 html {
   font-family: Arial, sans-serif;
   background-color: #f5eeda;
+  overflow: auto !important;
 }
 
 .container-home {
@@ -180,15 +181,37 @@ input #file-upload-button {
   background-color: #5c77a8;
   color: #000;
   font-family: "Poetsen One";
-  font-size: 20px;
+  width: 100%;
+  height: 100vh; /* Ocupa toda a altura da tela */
+  /* font-size: auto; */
 }
-.nav-buttons1 {
-  margin-top: 17em;
+
+.nav-items {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  gap: 10px; /* Espaçamento entre os itens */
+}
+
+.nav-buttons1 {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-  width: 13em;
+  width: 100%;
+  align-items: flex-start; /* Alinha os botões à esquerda */
+}
+#offcanvasNavbar {
+  background-color: #5c77a8;
+}
+.offcanvas-body {
+  width: 100%;
+}
+.nav-buttons1 {
+  margin-top: 15vh; /* Adapta a margem superior para evitar sobreposição com o topo */
+  width: 90%; /* Ajusta a largura dos botões */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .offcanvas-header {
@@ -382,10 +405,14 @@ input #file-upload-button {
     padding: 0;
   }
 
-  .navbar-mobile {
+  /* .navbar-mobile {
     width: 0;
     height: 0;
+  } */
+  body {
+    overflow-y: auto; /* Permite a rolagem vertical */
   }
+
   #container-publicar {
     width: 90%; /* Ajusta a largura para 90% em dispositivos móveis */
     padding: 15px;
