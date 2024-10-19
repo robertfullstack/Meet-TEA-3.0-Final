@@ -90,7 +90,7 @@ const LoginRegistro = (props) => {
                     setBloqueioAtivo(true);
                     toast.error('Você excedeu o número de tentativas. Você pode tentar novamente em 3 minutos.');
                 } else {
-                    toast.error('Erro ao logar: ' + error.message);
+                    toast.error('Erro ao logar, tente novamente ');
                 }
                 return novaTentativa;
             });
@@ -159,7 +159,7 @@ const LoginRegistro = (props) => {
             });
 
         } catch (error) {
-            toast.error('Erro ao criar uma conta: ' + error.message);
+            toast.error('Erro ao criar uma conta: ');
         }
     };
 
@@ -184,7 +184,7 @@ const LoginRegistro = (props) => {
                 toast.success('E-mail de redefinição de senha enviado!');
                 setShowResetPassword(false);
             })
-            .catch((error) => toast.error('Erro ao enviar e-mail de redefinição de senha: ' + error.message));
+            .catch((error) => toast.error('Erro ao enviar e-mail de redefinição de senha: '));
     };
 
     return (
