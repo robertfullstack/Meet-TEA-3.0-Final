@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+import  "../styles/Admin.css";
 
 export const Admin = () => {
     const [users, setUsers] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [adminName, setAdminName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
-    const [showModal, setShowModal] = useState(false);
-    const [selectedReports, setSelectedReports] = useState([]);
+    const navigate = useNavigate();
+    const openReportsPage = (reports) => {
+        navigate('/denuncia', { state: { reports } });
+    };
+    
 
     const handleLogin = () => {
         const validAdmins = ['Robert', 'Julia', 'Isabella', 'Marcos'];
@@ -54,6 +59,10 @@ export const Admin = () => {
         fetchUsers();
     }, [isLoggedIn]);
 
+    const redirectToDenuncia = (reports) => {
+        navigate('/denuncias', { state: { reports } });
+    };
+
     const banUser = async (userId) => {
         try {
             await db.collection('users').doc(userId).update({
@@ -69,15 +78,7 @@ export const Admin = () => {
         }
     };
 
-    const openReportsModal = (reports) => {
-        setSelectedReports(reports);
-        setShowModal(true);
-    };
-
-    const closeModal = () => {
-        setShowModal(false);
-        setSelectedReports([]);
-    };
+    
 
     if (!isLoggedIn) {
         return (
@@ -110,11 +111,12 @@ export const Admin = () => {
 
     return (
         <div>
-            <h1>Usuários Cadastrados</h1>
-            <table>
+            <h1 id="title-admin">Usuários Cadastrados</h1>
+            <div className='container-admin'> 
+            <table id="table-admin" >
                 <thead>
-                    <tr>
-                        <th>ID do Usuário:</th>
+                    <tr id="tr-admin" >
+                        <th>ID do Usuário:</th> 
                         <th>Email:</th>
                         <th>Arquivo/Carteirinha:</th>
                         <th>Denúncias:</th>
@@ -134,15 +136,17 @@ export const Admin = () => {
                                 )}
                             </td>
                             <td>
-                                {user.reports.length > 0 ? (
-                                    <button onClick={() => openReportsModal(user.reports)}>Exibir Denúncias</button>
-                                ) : (
-                                    'Nenhuma denúncia'
-                                )}
-                            </td>
+                            {user.reports.length > 0 ? (
+                                <button id="btn-denuncia" onClick={() => openReportsPage(user.reports)}>
+                                    Exibir Denúncias
+                                </button>
+                            ) : (
+                                'Nenhuma denúncia'
+                            )}
+                        </td>
                             <td>
                                 {!user.banned ? (
-                                    <button onClick={() => banUser(user.id)}>Banir</button>
+                                    <button id="btn-banir" onClick={() => banUser(user.id)}>Banir</button>
                                 ) : (
                                     <span>Banido</span>
                                 )}
@@ -151,32 +155,8 @@ export const Admin = () => {
                     ))}
                 </tbody>
             </table>
-
-            {showModal && (
-                <div className="modal-confirmation">
-                    <div className="modal-content">
-                        <h4>Denúncias do Usuário</h4>
-                        {selectedReports.length > 0 ? (
-                            <ul>
-                                {selectedReports.map((report) => (
-                                    <li key={report.id}>
-                                        <strong>Email do Denunciante:</strong> {report.emailDenunciante} <br />
-                                        <strong>Motivo:</strong> {report.motivo} <br />
-                                        <strong>Justificativa:</strong> {report.justificativa || 'Nenhuma justificativa'} <br />
-                                        <strong>Data:</strong> {new Date(report.timestamp?.seconds * 1000).toLocaleString()}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>Nenhuma denúncia encontrada.</p>
-                        )}
-                        <div className="modal-buttons">
-                            <button className="btn-cancel" onClick={closeModal}>Fechar</button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
+    </div>
     );
 };
 

@@ -7,6 +7,15 @@
   pointer-events: none;
 }
 
+#fonte{
+  background-color:rgb(48, 64, 95);
+  border: none;
+  border-radius: 10px;
+  margin-right: 20px;
+  width: 50px;
+  color: white;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

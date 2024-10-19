@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
 
 import LoginRegistro from "./screens/LoginRegistro";
 import Home from './screens/Home';
@@ -9,6 +10,7 @@ import ProfileOutros from './screens/ProfileOutros';
 import TermosPrivacidade from './screens/TermosPrivacidade.js';
 import Postar from './screens/Postar.js';
 import Configuracoes from './screens/Configuracoes.js';
+import Denuncia from './screens/Denuncia.js';
 
 const App = () => {
   const [user, setUser] = useState();
@@ -44,10 +46,10 @@ const App = () => {
     <div style={{ fontSize: `${fontSize}px` }}> {/* Aplica o tamanho da fonte dinamicamente */}
       <Router>
         <div style={{ position: 'fixed', top: 10, right: 10 }}>
-          <button onClick={aumentarFonte} style={{ fontSize: '18px', padding: '10px', marginRight: '5px' }}>
+          <button id="fonte" onClick={aumentarFonte} style={{ fontSize: '18px', padding: '10px' }}>
             A+
           </button>
-          <button onClick={diminuirFonte} style={{ fontSize: '18px', padding: '10px' }}>
+          <button id="fonte" onClick={diminuirFonte} style={{ fontSize: '18px', padding: '10px' }}>
             A-
           </button>
         </div>
@@ -61,6 +63,7 @@ const App = () => {
           <Route path="/termos-privacidade" element={<TermosPrivacidade/>} />
           <Route path="/postar" element={<Postar/>}/>
           <Route path="/configuracoes" element={<Configuracoes/>}/>
+          <Route path="/denuncia" element={<Denuncia/>}/>
         </Routes>
       </Router>
     </div>

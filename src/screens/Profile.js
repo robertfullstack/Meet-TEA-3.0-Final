@@ -25,7 +25,6 @@ export const Profile = () => {
   const [showChat, setShowChat] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
-  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const navigate = useNavigate();
   const user = auth.currentUser;
   const [formData, setFormData] = useState({
@@ -55,13 +54,7 @@ export const Profile = () => {
     setShowModal(true);
   };
 
-  const openModalToDeleteAccount = () => {
-    setShowDeleteAccountModal(true);
-  };
-
-  const closeModalDeleteAccount = () => {
-    setShowDeleteAccountModal(false);
-  };
+  
 
   const handleDeletePost = async () => {
     if (!postToDelete) return;
@@ -126,60 +119,7 @@ export const Profile = () => {
     }
   }, [user]);
 
-  const handleDeleteAccount = async () => {
-    const user = auth.currentUser;
-
-    if (!user) return alert("Nenhum usuário autenticado!");
-
-    const confirmDelete = window.confirm(
-      "Tem certeza de que deseja excluir sua conta? Esta ação é irreversível!"
-    );
-
-    if (confirmDelete) {
-      try {
-        const postsSnapshot = await db
-          .collection("posts")
-          .where("user", "==", user.uid)
-          .get();
-        const deletePromises = postsSnapshot.docs.map(async (doc) => {
-          const postData = doc.data();
-          if (postData.imageUrl) {
-            const imageRef = storage.refFromURL(postData.imageUrl);
-            await imageRef.delete(); // Excluir a imagem do Storage
-          }
-          await db.collection("posts").doc(doc.id).delete(); // Excluir o post do Firestore
-        });
-
-        await Promise.all(deletePromises);
-        console.log("Todos os posts do usuário foram excluídos.");
-
-        if (userData.profilePhotoURL) {
-          const photoRef = storage.refFromURL(userData.profilePhotoURL);
-          await photoRef.delete();
-          console.log("Foto de perfil excluída do Storage.");
-        }
-
-        await db.collection("users").doc(user.uid).delete();
-        console.log("Dados do Firestore excluídos.");
-
-        await user.delete();
-        console.log("Conta excluída com sucesso.");
-
-        window.location.href = "/";
-      } catch (error) {
-        console.error("Erro ao excluir a conta:", error);
-
-        if (error.code === "auth/requires-recent-login") {
-          alert(
-            "Para segurança, você precisa fazer login novamente antes de excluir sua conta."
-          );
-          auth.signOut().then(() => {
-            window.location.href = "/login";
-          });
-        }
-      }
-    }
-  };
+  
 
   if (loading) return <div>Carregando...</div>;
 
@@ -356,33 +296,10 @@ export const Profile = () => {
                   </a>
                 </div>
               )}
-              <button id="btn-excluir-conta" onClick={openModalToDeleteAccount}>
-                Excluir Conta
-              </button>
             </div>
           </div>
 
-          {showDeleteAccountModal && (
-            <div className="modal-confirmation">
-              <div className="modal-content">
-                <h4>
-                  Tem certeza de que deseja excluir sua conta? Esta ação é
-                  irreversível!
-                </h4>
-                <div className="modal-buttons">
-                  <button className="btn-confirm" onClick={handleDeleteAccount}>
-                    Sim
-                  </button>
-                  <button
-                    className="btn-cancel"
-                    onClick={closeModalDeleteAccount}
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          
           <div className="profile-post">
             <h3>Minhas Postagens</h3>
             {userPosts.length > 0 ? (
