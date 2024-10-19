@@ -11,6 +11,7 @@ import TermosPrivacidade from './screens/TermosPrivacidade.js';
 import Postar from './screens/Postar.js';
 import Configuracoes from './screens/Configuracoes.js';
 import Denuncia from './screens/Denuncia.js';
+import ExcluirConta from './screens/ExcluirConta.js';
 
 const App = () => {
   const [user, setUser] = useState();
@@ -64,6 +65,7 @@ const App = () => {
           <Route path="/postar" element={<Postar/>}/>
           <Route path="/configuracoes" element={<Configuracoes/>}/>
           <Route path="/denuncia" element={<Denuncia/>}/>
+          <Route path="/excluir-conta" element={<ExcluirConta/>}/>
         </Routes>
       </Router>
     </div>

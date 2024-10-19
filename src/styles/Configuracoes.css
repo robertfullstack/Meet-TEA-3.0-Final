@@ -114,8 +114,9 @@
   width: 60%;
   justify-content: center;
   align-items: center;
-  padding: 8px;
+  padding: 10px;
   display: flex;
+  font-size: 15px;
 }
 
 #btn-excluir-conta:hover {

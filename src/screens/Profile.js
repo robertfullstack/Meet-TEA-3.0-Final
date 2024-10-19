@@ -310,12 +310,7 @@ export const Profile = () => {
                   {post.imageUrl && (
                     <img src={post.imageUrl} alt="Post" width={200} />
                   )}
-                  <button
-                    className="btn-delete"
-                    onClick={() => openModalToDelete(post)}
-                  >
-                    Excluir
-                  </button>
+                  <button className="btn-delete" onClick={() => openModalToDelete(post)}>Excluir</button>
                 </div>
               ))
             ) : (

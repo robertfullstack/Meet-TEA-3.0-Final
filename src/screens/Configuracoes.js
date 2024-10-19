@@ -378,10 +378,9 @@ const Configuracoes = () => {
               {showDeleteAccountModal && (
             <div className="modal-confirmation">
               <div className="modal-content">
-                <h4 id="confirma-excluir">
-                  Tem certeza de que deseja excluir sua conta? Esta ação é
-                  irreversível!
-                </h4>
+              <h4 id="confirma-excluir">Antes de excluir sua conta, leia os{" "}
+                <a href="/excluir-conta" onClick={() => navigate("/excluir-conta")}>termos de exclusão de conta</a>
+               </h4>
                 <div className="modal-buttons">
                   <button className="btn-confirm" onClick={handleDeleteAccount}>
                     Sim
