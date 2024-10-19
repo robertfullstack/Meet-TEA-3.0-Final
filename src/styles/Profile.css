@@ -94,6 +94,7 @@
   padding: 20px;
   box-sizing: border-box;
   flex-wrap: wrap;
+  margin: 0 auto;
 }
 
 #infos p {
