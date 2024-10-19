@@ -18,6 +18,19 @@ const Configuracoes = () => {
     birthDate: "",
     email: "",
   });
+
+  const checkBanStatus = async () => {
+    const authUser = auth.currentUser;
+    if (authUser) {
+        const userDoc = await db.collection('users').doc(authUser.uid).get();
+        if (userDoc.exists && userDoc.data().banned) {
+            // toast.error('Sua conta foi banida. Fale com algum ADM.');
+            await auth.signOut();
+            navigate('/');
+        }
+    }
+};
+
   const [showChat, setShowChat] = useState(false);
 
   const handleOpenChat = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../firebase';
+import { auth, db, storage } from "../firebase.js";
 import { useNavigate } from 'react-router-dom';
-import  "../styles/Admin.css";
+import "../styles/Admin.css";
 
 export const Admin = () => {
     const [users, setUsers] = useState([]);
@@ -9,18 +9,34 @@ export const Admin = () => {
     const [adminName, setAdminName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
     const navigate = useNavigate();
+
+    // Função para verificar se o admin já está logado ao carregar a página
+    useEffect(() => {
+        const storedAdmin = localStorage.getItem('isAdminLoggedIn');
+        if (storedAdmin === 'true') {
+            setIsLoggedIn(true);
+        }
+    }, []);
+
     const openReportsPage = (reports) => {
         navigate('/denuncia', { state: { reports } });
     };
-    
 
     const handleLogin = () => {
         const validAdmins = ['Robert', 'Julia', 'Isabella', 'Marcos'];
         if (validAdmins.includes(adminName) && adminPassword === 'MeetTEA') {
             setIsLoggedIn(true);
+            // Salva o estado de login no localStorage
+            localStorage.setItem('isAdminLoggedIn', 'true');
         } else {
             alert('Nome ou senha incorretos!');
         }
+    };
+
+    // Função para fazer logout e limpar o localStorage
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        localStorage.removeItem('isAdminLoggedIn');
     };
 
     useEffect(() => {
@@ -45,7 +61,7 @@ export const Admin = () => {
                         id: userDoc.id,
                         email: userData.email,
                         fileURL,
-                        banned: userData.banned || false,
+                        banned: userData.banned || false, // Verifica se o usuário está banido
                         reports,
                     });
                 }
@@ -63,22 +79,24 @@ export const Admin = () => {
         navigate('/denuncias', { state: { reports } });
     };
 
-    const banUser = async (userId) => {
+    
+    const toggleBanUser = async (userId, currentStatus) => {
         try {
+            
             await db.collection('users').doc(userId).update({
-                banned: true,
+                banned: !currentStatus 
             });
 
-            setUsers(users.map(user =>
-                user.id === userId ? { ...user, banned: true } : user
+            
+            setUsers(users.map(user => 
+                user.id === userId ? { ...user, banned: !currentStatus } : user
             ));
-            console.log('Usuário banido com sucesso!');
+
+            console.log(`Usuário ${currentStatus ? 'desbanido' : 'banido'} com sucesso.`);
         } catch (error) {
-            console.error('Erro ao banir o usuário:', error);
+            console.error('Erro ao banir/desbanir o usuário:', error);
         }
     };
-
-    
 
     if (!isLoggedIn) {
         return (
@@ -112,55 +130,58 @@ export const Admin = () => {
     return (
         <div>
             <h1 id="title-admin">Usuários Cadastrados</h1>
-            <div className='container-admin'> 
-            <table id="table-admin" >
-                <thead>
-                    <tr id="tr-admin" >
-                        <th>ID do Usuário:</th> 
-                        <th>Email:</th>
-                        <th>Arquivo/Carteirinha:</th>
-                        <th>Denúncias:</th>
-                        <th>Ações (ADM):</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                {user.fileURL ? (
-                                    <a href={user.fileURL} target="_blank" rel="noopener noreferrer">Download</a>
-                                ) : (
-                                    'Nenhum arquivo'
-                                )}
-                            </td>
-                            <td>
-                            {user.reports.length > 0 ? (
-                                <button id="btn-denuncia" onClick={() => openReportsPage(user.reports)}>
-                                    Exibir Denúncias
-                                </button>
-                            ) : (
-                                'Nenhuma denúncia'
-                            )}
-                        </td>
-                            <td>
-                                {!user.banned ? (
-                                    <button id="btn-banir" onClick={() => banUser(user.id)}>Banir</button>
-                                ) : (
-                                    <span>Banido</span>
-                                )}
-                            </td>
+            <button onClick={handleLogout}>Logout</button>
+            <div className='container-admin'>
+                <table id="table-admin" >
+                    <thead>
+                        <tr id="tr-admin" >
+                            <th>ID do Usuário:</th>
+                            <th>Email:</th>
+                            <th>Arquivo/Carteirinha:</th>
+                            <th>Denúncias:</th>
+                            <th>Ações (ADM):</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id}>
+                                <td>{user.id}</td>
+                                <td>{user.email}</td>
+                                <td>
+                                    {user.fileURL ? (
+                                        <a href={user.fileURL} target="_blank" rel="noopener noreferrer">Download</a>
+                                    ) : (
+                                        'Nenhum arquivo'
+                                    )}
+                                </td>
+                                <td>
+                                    {user.reports.length > 0 ? (
+                                        <button id="btn-denuncia" onClick={() => openReportsPage(user.reports)}>
+                                            Exibir Denúncias
+                                        </button>
+                                    ) : (
+                                        'Nenhuma denúncia'
+                                    )}
+                                </td>
+                                <td>
+                                    {!user.banned ? (
+                                        <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Banir</button>
+                                    ) : (
+                                        <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Desbanir</button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
     );
 };
 
 export default Admin;
+
+
 
 
 

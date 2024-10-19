@@ -41,6 +41,23 @@ const Home = (props) => {
   };
 
   useEffect(() => {
+    const checkBanStatus = async () => {
+        const authUser = auth.currentUser;
+        if (authUser) {
+            const userDoc = await db.collection('users').doc(authUser.uid).get();
+            if (userDoc.exists && userDoc.data().banned) {
+                // toast.error('Sua conta foi banida. Fale com algum ADM.');
+                await auth.signOut();
+                navigate('/');
+            }
+        }
+    };
+
+    checkBanStatus();
+}, []);
+
+
+  useEffect(() => {
     // Ativa a visualização dos posts automaticamente ao carregar o componente
     setOpenModalVisualizar(true);
 
@@ -176,58 +193,67 @@ const Home = (props) => {
   };
 
   const handleLike = async (postId, currentLikes) => {
-    // Garante que o número de likes seja um número, inicializando com 0 se necessário
-    const validLikes = currentLikes ? currentLikes : 0;
     const userReaction = userReactions[postId];
+
+    // Garante que o número de likes seja um número, inicializando com 0 se necessário
+    const validLikes = currentLikes || 0;
+
+    // Referência do post
+    const postRef = db.collection("posts").doc(postId);
+    const postSnapshot = await postRef.get(); // Obtém o estado atual do post
+    const postData = postSnapshot.data();
+    
+    const currentLoves = postData.loves || 0; // Obtém o número atual de loves
 
     if (userReaction === "like") {
       // Se já curtiu, descurtir
-      await db
-        .collection("posts")
-        .doc(postId)
-        .update({
+      await postRef.update({
           likes: validLikes - 1,
-        });
+      });
       setUserReactions((prev) => ({ ...prev, [postId]: null })); // Remove a reação
     } else {
       // Se não curtiu ainda, adicionar "Curtir" e remover "Amei" se estiver ativo
-      const postRef = db.collection("posts").doc(postId);
       const decrementLoves = userReaction === "love" ? 1 : 0;
 
       await postRef.update({
-        likes: validLikes + 1,
-        loves: postRef.loves ? postRef.loves - decrementLoves : 0, // Garante que loves seja um número
+          likes: validLikes + 1,
+          loves: currentLoves - decrementLoves, // Atualiza o loves baseado no valor atual
       });
       setUserReactions((prev) => ({ ...prev, [postId]: "like" })); // Marca como "Curtir"
     }
-  };
+};
 
-  const handleLove = async (postId, currentLoves) => {
-    // Garante que o número de loves seja um número, inicializando com 0 se necessário
-    const validLoves = currentLoves ? currentLoves : 0;
+const handleLove = async (postId, currentLoves) => {
     const userReaction = userReactions[postId];
+
+    // Garante que o número de loves seja um número, inicializando com 0 se necessário
+    const validLoves = currentLoves || 0;
+
+    // Referência do post
+    const postRef = db.collection("posts").doc(postId);
+    const postSnapshot = await postRef.get(); // Obtém o estado atual do post
+    const postData = postSnapshot.data();
+
+    const currentLikes = postData.likes || 0; // Obtém o número atual de likes
 
     if (userReaction === "love") {
       // Se já reagiu com "Amei", remover reação
-      await db
-        .collection("posts")
-        .doc(postId)
-        .update({
+      await postRef.update({
           loves: validLoves - 1,
-        });
+      });
       setUserReactions((prev) => ({ ...prev, [postId]: null })); // Remove a reação
     } else {
       // Se não reagiu com "Amei", adicionar "Amei" e remover "Curtir" se estiver ativo
-      const postRef = db.collection("posts").doc(postId);
       const decrementLikes = userReaction === "like" ? 1 : 0;
 
       await postRef.update({
-        loves: validLoves + 1,
-        likes: postRef.likes ? postRef.likes - decrementLikes : 0, // Garante que likes seja um número
+          loves: validLoves + 1,
+          likes: currentLikes - decrementLikes, // Atualiza o likes baseado no valor atual
       });
       setUserReactions((prev) => ({ ...prev, [postId]: "love" })); // Marca como "Amei"
     }
-  };
+};
+
 
   const handleProfileClick = (profileId) => {
     navigate(`/profile/${profileId}`);
