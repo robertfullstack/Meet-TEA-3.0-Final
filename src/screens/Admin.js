@@ -21,6 +21,7 @@ export const Admin = () => {
     const openReportsPage = (reports) => {
         navigate('/denuncia', { state: { reports } });
     };
+    
 
     const handleLogin = () => {
         const validAdmins = ['Robert', 'Julia', 'Isabella', 'Marcos'];
@@ -131,6 +132,7 @@ export const Admin = () => {
         <div>
             <h1 id="title-admin">Usuários Cadastrados</h1>
             <button onClick={handleLogout}>Logout</button>
+            <button onClick={() => navigate("/DenunciaPost")}>Denúncias de Posts</button>
             <div className='container-admin'>
                 <table id="table-admin" >
                     <thead>

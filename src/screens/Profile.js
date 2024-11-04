@@ -58,18 +58,29 @@ export const Profile = () => {
 
   const handleDeletePost = async () => {
     if (!postToDelete) return;
+  
     try {
-      const imageRef = storage.refFromURL(postToDelete.imageUrl);
-      await imageRef.delete();
+      // Verifica se há uma URL de imagem para exclusão no Storage
+      if (postToDelete.imageUrl) {
+        const imageRef = storage.refFromURL(postToDelete.imageUrl);
+        await imageRef.delete();
+      }
+  
+      // Apaga o post no Firestore usando o ID do documento
       await db.collection("posts").doc(postToDelete.id).delete();
-      setUserPosts(userPosts.filter((post) => post.id !== postToDelete.id));
+  
+      // Atualiza a lista de posts do usuário removendo o post excluído
+      setUserPosts((prevPosts) => prevPosts.filter((post) => post.id !== postToDelete.id));
+  
       console.log("Postagem excluída com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir postagem:", error);
+      alert("Erro ao excluir postagem. Tente novamente.");
     } finally {
-      setShowModal(false);
+      setShowModal(false); // Fecha o modal após a operação de exclusão
     }
   };
+  
 
   const fetchUserPosts = async () => {
     try {
@@ -77,17 +88,18 @@ export const Profile = () => {
         .collection("posts")
         .where("user", "==", user.uid)
         .get();
-
+  
       const posts = postsSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
+  
       setUserPosts(posts);
     } catch (error) {
       console.error("Erro ao buscar posts do usuário:", error);
     }
   };
+  
 
   useEffect(() => {
     if (user) {

@@ -11,10 +11,9 @@ const Postar = (props) => {
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800); 
+  const [isSubmitting, setIsSubmitting] = useState(false); // Novo estado para desativar o botão
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800); // Estado para verificar se é mobile
-
-  // useEffect para monitorar o estado de autenticação
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -25,14 +24,14 @@ const Postar = (props) => {
     });
 
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 800); // Atualiza o estado se for mobile
+      setIsMobile(window.innerWidth <= 800);
     };
 
-    window.addEventListener("resize", handleResize); // Listener para o resize da tela
+    window.addEventListener("resize", handleResize);
 
     return () => {
       unsubscribe();
-      window.removeEventListener("resize", handleResize); // Cleanup listener
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -54,23 +53,27 @@ const Postar = (props) => {
 
   const uploadPost = (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // Verifica se o formulário já está sendo enviado
+
+    setIsSubmitting(true); // Define o estado para desativar o botão
 
     const titlePost = document.getElementById("titlePost").value;
     const descricaoPost = document.getElementById("descricaoPost").value;
 
-    // Verifica se um arquivo foi selecionado
     if (!file) {
       alert("Selecione um arquivo para upload");
+      setIsSubmitting(false);
       return;
     }
 
-    // Verifica se o usuário está autenticado
     if (!currentUser) {
       alert("Usuário não autenticado.");
+      setIsSubmitting(false);
       return;
     }
 
-    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+    const uniqueImageName = crypto.randomUUID();
+    const uploadTask = storage.ref(`images/${uniqueImageName}`).put(file);
 
     uploadTask.on(
       "state_changed",
@@ -83,26 +86,18 @@ const Postar = (props) => {
       (error) => {
         console.error("Erro no upload:", error);
         alert(error.message);
+        setIsSubmitting(false);
       },
       () => {
         storage
           .ref("images")
-          .child(file.name)
+          .child(uniqueImageName)
           .getDownloadURL()
           .then((url) => {
-            console.log("Dados do Post:", {
-              title: titlePost,
-              description: descricaoPost,
-              imageUrl: url,
-              timestamp: new Date(),
-              user: currentUser.uid,
-              postUserName: currentUser.displayName,
-              likes: 0,
-              loves: 0,
-            });
-
-            db.collection("posts")
-              .add({
+            const newPostRef = db.collection("posts").doc();
+            newPostRef
+              .set({
+                id: newPostRef.id,
                 title: titlePost,
                 description: descricaoPost,
                 imageUrl: url,
@@ -117,15 +112,18 @@ const Postar = (props) => {
                 setFile(null);
                 setOpenModalPublicar(false);
                 alert("Postagem criada com sucesso!");
+                navigate("/Home"); // Redireciona para a rota Home
               })
               .catch((error) => {
                 console.error("Erro ao adicionar documento: ", error);
                 alert("Erro ao criar postagem.");
+                setIsSubmitting(false);
               });
           })
           .catch((error) => {
             console.error("Erro ao obter URL da imagem:", error);
             alert("Erro ao obter URL da imagem.");
+            setIsSubmitting(false);
           });
       }
     );
@@ -261,7 +259,13 @@ const Postar = (props) => {
             />
 
             <label>Imagem:</label>
-            <input type="file" id="imagePost" onChange={(e) => setFile(e.target.files[0])} placeholder="Image..." required />
+            <input
+              type="file"
+              id="imagePost"
+              onChange={(e) => setFile(e.target.files[0])}
+              placeholder="Image..."
+              required
+            />
 
             <label>Descrição</label>
             <textarea
@@ -270,8 +274,8 @@ const Postar = (props) => {
               required
             ></textarea>
 
-            <button id="publicar" type="submit">
-              Publicar
+            <button id="publicar" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Publicando..." : "Publicar"}
             </button>
             <button
               id="fechar1"

@@ -24,6 +24,20 @@ const Home = (props) => {
   const [genderFilter, setGenderFilter] = useState(""); // Novo estado para sexo
   const [userReactions, setUserReactions] = useState({});
   const navigate = useNavigate();
+  const [reportPostReason, setReportPostReason] = useState("");
+  const [reportPostText, setReportPostText] = useState("");
+  const [hasReportedPost, setHasReportedPost] = useState(false);
+  const [openModalDenuncia, setOpenModalDenuncia] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
+
+  const handleSubmitReport = () => {
+    // Lógica para enviar a denúncia, como uma requisição à API ou manipulação de estado
+    console.log("Denúncia enviada:", { motivo: reportReason, descrição: reportDescription });
+    setOpenModalDenuncia(false); // Fecha o modal após o envio
+  };
+
+
 
   //calcula a idade com base na data de nascimento
   const calcularIdade = (birthDate) => {
@@ -42,19 +56,19 @@ const Home = (props) => {
 
   useEffect(() => {
     const checkBanStatus = async () => {
-        const authUser = auth.currentUser;
-        if (authUser) {
-            const userDoc = await db.collection('users').doc(authUser.uid).get();
-            if (userDoc.exists && userDoc.data().banned) {
-                // toast.error('Sua conta foi banida. Fale com algum ADM.');
-                await auth.signOut();
-                navigate('/');
-            }
+      const authUser = auth.currentUser;
+      if (authUser) {
+        const userDoc = await db.collection('users').doc(authUser.uid).get();
+        if (userDoc.exists && userDoc.data().banned) {
+          // toast.error('Sua conta foi banida. Fale com algum ADM.');
+          await auth.signOut();
+          navigate('/');
         }
+      }
     };
 
     checkBanStatus();
-}, []);
+  }, []);
 
 
   useEffect(() => {
@@ -180,9 +194,9 @@ const Home = (props) => {
         prevPosts.map((post) =>
           post.id === postId
             ? {
-                ...post,
-                comments: [...post.comments, newComment],
-              }
+              ...post,
+              comments: [...post.comments, newComment],
+            }
             : post
         )
       );
@@ -202,13 +216,13 @@ const Home = (props) => {
     const postRef = db.collection("posts").doc(postId);
     const postSnapshot = await postRef.get(); // Obtém o estado atual do post
     const postData = postSnapshot.data();
-    
+
     const currentLoves = postData.loves || 0; // Obtém o número atual de loves
 
     if (userReaction === "like") {
       // Se já curtiu, descurtir
       await postRef.update({
-          likes: validLikes - 1,
+        likes: validLikes - 1,
       });
       setUserReactions((prev) => ({ ...prev, [postId]: null })); // Remove a reação
     } else {
@@ -216,14 +230,14 @@ const Home = (props) => {
       const decrementLoves = userReaction === "love" ? 1 : 0;
 
       await postRef.update({
-          likes: validLikes + 1,
-          loves: currentLoves - decrementLoves, // Atualiza o loves baseado no valor atual
+        likes: validLikes + 1,
+        loves: currentLoves - decrementLoves, // Atualiza o loves baseado no valor atual
       });
       setUserReactions((prev) => ({ ...prev, [postId]: "like" })); // Marca como "Curtir"
     }
-};
+  };
 
-const handleLove = async (postId, currentLoves) => {
+  const handleLove = async (postId, currentLoves) => {
     const userReaction = userReactions[postId];
 
     // Garante que o número de loves seja um número, inicializando com 0 se necessário
@@ -239,7 +253,7 @@ const handleLove = async (postId, currentLoves) => {
     if (userReaction === "love") {
       // Se já reagiu com "Amei", remover reação
       await postRef.update({
-          loves: validLoves - 1,
+        loves: validLoves - 1,
       });
       setUserReactions((prev) => ({ ...prev, [postId]: null })); // Remove a reação
     } else {
@@ -247,17 +261,60 @@ const handleLove = async (postId, currentLoves) => {
       const decrementLikes = userReaction === "like" ? 1 : 0;
 
       await postRef.update({
-          loves: validLoves + 1,
-          likes: currentLikes - decrementLikes, // Atualiza o likes baseado no valor atual
+        loves: validLoves + 1,
+        likes: currentLikes - decrementLikes, // Atualiza o likes baseado no valor atual
       });
       setUserReactions((prev) => ({ ...prev, [postId]: "love" })); // Marca como "Amei"
     }
-};
+  };
 
 
   const handleProfileClick = (profileId) => {
     navigate(`/profile/${profileId}`);
   };
+
+  const handleReportPost = async (postId) => {
+    if (!auth.currentUser) {
+      console.error("Você precisa estar logado para denunciar uma postagem.");
+      return;
+    }
+
+    if (reportPostReason === "") {
+      console.error("Por favor, selecione um motivo para a denúncia.");
+      return;
+    }
+
+    if (hasReportedPost) {
+      console.error("Você já enviou uma denúncia para esta postagem.");
+      return;
+    }
+
+    try {
+      const currentUser = auth.currentUser;
+
+      // Adiciona uma denúncia na subcoleção "reports" da postagem denunciada
+      await db
+        .collection("posts")
+        .doc(postId)
+        .collection("reports")
+        .add({
+          id: postId,
+          emailDenunciante: currentUser.email, // Email de quem está denunciando
+          motivo: reportPostReason, // Motivo da denúncia
+          justificativa: reportPostText || null, // Justificativa opcional da denúncia
+          timestamp: new Date(), // Data da denúncia
+        });
+
+      console.log("Denúncia de postagem enviada com sucesso.");
+      setReportPostReason(""); // Limpa o motivo após enviar
+      setReportPostText(""); // Limpa o campo de justificativa após enviar
+      setHasReportedPost(true); // Define que o usuário já denunciou
+    } catch (error) {
+      console.error("Erro ao enviar denúncia de postagem:", error);
+      console.error("Erro ao enviar denúncia. Tente novamente mais tarde.");
+    }
+  };
+
 
   return (
     <div className="container-home">
@@ -477,10 +534,62 @@ const handleLove = async (postId, currentLoves) => {
           />
         )}
 
+        {openModalDenuncia && (
+          <div id="container-denuncia" className="modal-denuncia">
+            <div className="report-controls">
+              <h3>Denunciar Post</h3>
+
+              <label>Motivo da Denúncia:</label>
+              <select
+                id="motivo"
+                value={reportReason}
+                onChange={(e) => setReportReason(e.target.value)}
+              >
+                <option value="">Selecione um motivo</option>
+                <option value="Spam">Spam</option>
+                <option value="Conteúdo Inapropriado">Conteúdo Inapropriado</option>
+                <option value="Assédio">Assédio</option>
+                <option value="Fake News">Fake News</option>
+                <option value="Outro">Outro</option>
+              </select>
+              <br></br>
+              <br></br>
+
+              <label>Descrição (opcional):</label>
+              <textarea
+                id="descricao"
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                placeholder="Descreva o motivo da denúncia"
+              ></textarea>
+              <br></br>
+              <br></br>
+
+              <button className="btn-submit" onClick={handleSubmitReport}>
+                Enviar
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setOpenModalDenuncia(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
+
         {openModalVisualizar && (
           <div id="container-posts" className="modal-posts">
             {posts.map((post) => (
               <div key={post.id} className="post">
+                <button
+          className="btn-report"
+          onClick={() => setOpenModalDenuncia(!openModalDenuncia)}
+        >
+          {openModalDenuncia ? "Fechar" : "Denunciar"} Post
+        </button>
+
                 {/* Exibe o nome do usuário que postou */}
                 <p>{post.post.postUserName}</p>
 

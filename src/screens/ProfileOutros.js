@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { db, auth } from "../firebase"; // Ajuste o caminho conforme necessário
+import { db, auth, storage} from "../firebase"; // Ajuste o caminho conforme necessário
 import { useNavigate } from "react-router-dom";
 
 const ProfileOutros = () => {
@@ -240,7 +240,7 @@ const ProfileOutros = () => {
         )}
         <div className="info-outros">
           <p>
-            <strong>Nome:</strong> {user.name}
+            <strong>Nome:</strong> {user.displayName}
           </p>
           <p>
             <strong>Email:</strong> {user.email}

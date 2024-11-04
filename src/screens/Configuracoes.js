@@ -22,14 +22,14 @@ const Configuracoes = () => {
   const checkBanStatus = async () => {
     const authUser = auth.currentUser;
     if (authUser) {
-        const userDoc = await db.collection('users').doc(authUser.uid).get();
-        if (userDoc.exists && userDoc.data().banned) {
-            // toast.error('Sua conta foi banida. Fale com algum ADM.');
-            await auth.signOut();
-            navigate('/');
-        }
+      const userDoc = await db.collection('users').doc(authUser.uid).get();
+      if (userDoc.exists && userDoc.data().banned) {
+        // toast.error('Sua conta foi banida. Fale com algum ADM.');
+        await auth.signOut();
+        navigate('/');
+      }
     }
-};
+  };
 
   const [showChat, setShowChat] = useState(false);
 
@@ -142,17 +142,29 @@ const Configuracoes = () => {
           .collection("posts")
           .where("user", "==", user.uid)
           .get();
+
         const deletePromises = postsSnapshot.docs.map(async (doc) => {
           const postData = doc.data();
-          if (postData.imageUrl) {
-            const imageRef = storage.refFromURL(postData.imageUrl);
-            await imageRef.delete(); // Excluir a imagem do Storage
+
+          try {
+            // Tenta excluir a imagem, se houver
+            if (postData.imageUrl) {
+              const imageRef = storage.refFromURL(postData.imageUrl);
+              await imageRef.delete();
+            }
+
+            // Exclui o post do Firestore
+            await db.collection("posts").doc(doc.id).delete();
+            console.log(`Post com ID ${doc.id} excluído com sucesso`);
+          } catch (error) {
+            console.error(`Erro ao excluir o post com ID ${doc.id}:`, error);
           }
-          await db.collection("posts").doc(doc.id).delete(); // Excluir o post do Firestore
         });
 
+        // Aguarda a conclusão de todas as exclusões
         await Promise.all(deletePromises);
-        console.log("Todos os posts do usuário foram excluídos.");
+        console.log("Todos os posts e imagens associadas foram excluídos com sucesso.");
+
 
         if (userData.profilePhotoURL) {
           const photoRef = storage.refFromURL(userData.profilePhotoURL);
@@ -384,16 +396,16 @@ const Configuracoes = () => {
           </button>
         </div>
 
-        <div className="container-excluir"> 
-        <button id="btn-excluir-conta" onClick={openModalToDeleteAccount}>
-                Excluir Conta
-              </button>
-              {showDeleteAccountModal && (
+        <div className="container-excluir">
+          <button id="btn-excluir-conta" onClick={openModalToDeleteAccount}>
+            Excluir Conta
+          </button>
+          {showDeleteAccountModal && (
             <div className="modal-confirmation">
               <div className="modal-content">
-              <h4 id="confirma-excluir">Antes de excluir sua conta, leia os{" "}
-                <a href="/excluir-conta" onClick={() => navigate("/excluir-conta")}>termos de exclusão de conta</a>
-               </h4>
+                <h4 id="confirma-excluir">Antes de excluir sua conta, leia os{" "}
+                  <a href="/excluir-conta" onClick={() => navigate("/excluir-conta")}>termos de exclusão de conta</a>
+                </h4>
                 <div className="modal-buttons">
                   <button className="btn-confirm" onClick={handleDeleteAccount}>
                     Sim
@@ -409,7 +421,7 @@ const Configuracoes = () => {
               </div>
             </div>
           )}
-          </div>
+        </div>
       </div>
     </div>
 
