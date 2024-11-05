@@ -32,7 +32,6 @@ const Home = (props) => {
   const [reportDescription, setReportDescription] = useState("");
 
   const handleSubmitReport = () => {
-    // Lógica para enviar a denúncia, como uma requisição à API ou manipulação de estado
     console.log("Denúncia enviada:", { motivo: reportReason, descrição: reportDescription });
     setOpenModalDenuncia(false); // Fecha o modal após o envio
   };
@@ -531,12 +530,13 @@ const Home = (props) => {
           </div>
         )}
 
-        {showChat && (
+{showChat && (
           <iframe
-            src="https://meet-tea-3db7c.web.app/"
+            src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
             style={{ width: "100%", height: "100vh" }}
           />
         )}
+
 
         {openModalDenuncia && (
           <div id="container-denuncia" className="modal-denuncia">
