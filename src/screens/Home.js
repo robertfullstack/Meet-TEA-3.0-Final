@@ -526,12 +526,14 @@ const Home = (props) => {
           </div>
         )}
 
-        {showChat && (
-          <iframe
-            src="https://chat-meet-tea-2-0-76ot4b0ql.vercel.app/"
-            style={{ width: "100%", height: "100vh" }}
-          />
-        )}
+  {showChat && (
+  <embed
+    src="https://chat-meet-tea-2-0-76ot4b0ql.vercel.app/"
+    style={{ width: "100%", height: "100vh" }}
+    type="text/html"
+  />
+)}
+
 
         {openModalDenuncia && (
           <div id="container-denuncia" className="modal-denuncia">
