@@ -4,7 +4,8 @@ import "../styles/Admin.css";
 
 export const DenunciaPost = () => {
     const [showModal, setShowModal] = useState(true);
-    const [reports, setReports] = useState([]); // Estado para armazenar todas as denúncias
+    // const [reports, setReports] = useState([]); // Estado para armazenar todas as denúncias
+    const reports = location.state?.reports || []; // Obtém as denúncias do estado ou lista vazia
     const navigate = useNavigate();
 
     // Função para buscar todas as denúncias de todas as postagens

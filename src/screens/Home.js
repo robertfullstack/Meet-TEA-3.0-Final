@@ -24,11 +24,11 @@ const Home = (props) => {
   const [genderFilter, setGenderFilter] = useState(""); // Novo estado para sexo
   const [userReactions, setUserReactions] = useState({});
   const navigate = useNavigate();
-  const [reportPostReason, setReportPostReason] = useState("");
+  const [reportReason, setReportPostReason] = useState("");
   const [reportPostText, setReportPostText] = useState("");
   const [hasReportedPost, setHasReportedPost] = useState(false);
   const [openModalDenuncia, setOpenModalDenuncia] = useState(false);
-  const [reportReason, setReportReason] = useState("");
+
   const [reportDescription, setReportDescription] = useState("");
 
   const handleSubmitReport = () => {
@@ -274,12 +274,13 @@ const Home = (props) => {
   };
 
   const handleReportPost = async (postId) => {
+    
     if (!auth.currentUser) {
       console.error("Você precisa estar logado para denunciar uma postagem.");
       return;
     }
 
-    if (reportPostReason === "") {
+    if (reportReason === "") {
       console.error("Por favor, selecione um motivo para a denúncia.");
       return;
     }
@@ -288,7 +289,8 @@ const Home = (props) => {
       console.error("Você já enviou uma denúncia para esta postagem.");
       return;
     }
-
+    
+    setCurrentPostId(postId);
     try {
       const currentUser = auth.currentUser;
 
@@ -296,16 +298,18 @@ const Home = (props) => {
       await db
         .collection("posts")
         .doc(postId)
-        .collection("reports")
+        .collection("reportsPosts")
+        db.collection("posts").doc(postId).get()
         .add({
           id: postId,
           emailDenunciante: currentUser.email, // Email de quem está denunciando
-          motivo: reportPostReason, // Motivo da denúncia
+          motivo: reportReason, // Motivo da denúncia
           justificativa: reportPostText || null, // Justificativa opcional da denúncia
           timestamp: new Date(), // Data da denúncia
         });
 
       console.log("Denúncia de postagem enviada com sucesso.");
+      setOpenModalDenuncia(false); // Fecha o modal após o envio
       setReportPostReason(""); // Limpa o motivo após enviar
       setReportPostText(""); // Limpa o campo de justificativa após enviar
       setHasReportedPost(true); // Define que o usuário já denunciou
@@ -543,7 +547,7 @@ const Home = (props) => {
               <select
                 id="motivo"
                 value={reportReason}
-                onChange={(e) => setReportReason(e.target.value)}
+                onChange={(e) => setReportPostReason(e.target.value)}
               >
                 <option value="">Selecione um motivo</option>
                 <option value="Spam">Spam</option>
@@ -565,7 +569,7 @@ const Home = (props) => {
               <br></br>
               <br></br>
 
-              <button className="btn-submit" onClick={handleSubmitReport}>
+              <button className="btn-submit" onClick={handleReportPost}>
                 Enviar
               </button>
               <button
