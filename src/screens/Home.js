@@ -32,7 +32,6 @@ const Home = (props) => {
   const [reportDescription, setReportDescription] = useState("");
 
   const handleSubmitReport = () => {
-    // Lógica para enviar a denúncia, como uma requisição à API ou manipulação de estado
     console.log("Denúncia enviada:", { motivo: reportReason, descrição: reportDescription });
     setOpenModalDenuncia(false); // Fecha o modal após o envio
   };
