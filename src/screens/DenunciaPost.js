@@ -5,8 +5,9 @@ import "../styles/Admin.css";
 
 export const DenunciaPost = () => {
     const [showModal, setShowModal] = useState(true);
-    const [reportsPosts, setReportsPosts] = useState([]); // Estado para armazenar todas as denúncias
-    const [posts, setPosts] = useState([]); // Armazena todos os posts
+    const [reportsPosts, setReportsPosts] = useState([]);
+    const [posts, setPosts] = useState([]);
+    const [confirmDelete, setConfirmDelete] = useState(null); // Armazena a denúncia a ser confirmada para exclusão
     const navigate = useNavigate();
 
     // Função para buscar todas as denúncias de todas as postagens
@@ -15,7 +16,6 @@ export const DenunciaPost = () => {
             const postsSnapshot = await db.collection("posts").get();
             const allReports = [];
 
-            // Itera por cada post para buscar as denúncias na subcoleção "reportsPosts"
             for (const postDoc of postsSnapshot.docs) {
                 const postId = postDoc.id;
                 const reportsSnapshot = await db
@@ -24,7 +24,6 @@ export const DenunciaPost = () => {
                     .collection("reportsPosts")
                     .get();
 
-                // Adiciona as denúncias de cada post ao array `allReports`
                 reportsSnapshot.docs.forEach((doc) =>
                     allReports.push({
                         id: doc.id,
@@ -34,7 +33,7 @@ export const DenunciaPost = () => {
                 );
             }
 
-            setReportsPosts(allReports); // Usa a variável correta para definir o estado
+            setReportsPosts(allReports);
         } catch (error) {
             console.error("Erro ao carregar todas as denúncias:", error);
         }
@@ -51,12 +50,59 @@ export const DenunciaPost = () => {
     };
 
     useEffect(() => {
-        handleFetchAllReports(); // Chama a função ao montar o componente
-        fetchPosts(); // Busca todos os posts ao montar o componente
+        handleFetchAllReports();
+        fetchPosts();
     }, []);
 
     const closeReportsPage = () => {
         navigate('/admin');
+    };
+
+    // Função para excluir uma denúncia específica
+    const handleDeleteReport = async (reportId, postId) => {
+        try {
+            await db.collection("posts").doc(postId).collection("reportsPosts").doc(reportId).delete();
+            setReportsPosts(reportsPosts.filter(report => !(report.id === reportId && report.postId === postId)));
+            alert("Denúncia excluída com sucesso!");
+        } catch (error) {
+            console.error("Erro ao excluir denúncia:", error);
+        }
+    };
+
+    // Função para excluir um post e todos os seus dados (inclui denúncias e comentários)
+    const handleDeletePost = async (postId) => {
+        try {
+            // Excluir todas as denúncias associadas ao post
+            const reportsSnapshot = await db.collection("posts").doc(postId).collection("reportsPosts").get();
+            reportsSnapshot.forEach((doc) => doc.ref.delete());
+
+            // Excluir todos os comentários associados ao post
+            const commentsSnapshot = await db.collection("posts").doc(postId).collection("comments").get();
+            commentsSnapshot.forEach((doc) => doc.ref.delete());
+
+            // Excluir o próprio post
+            await db.collection("posts").doc(postId).delete();
+
+            setPosts(posts.filter(post => post.id !== postId));
+            setReportsPosts(reportsPosts.filter(report => report.postId !== postId));
+            alert("Postagem e todas as suas denúncias foram excluídas com sucesso!");
+        } catch (error) {
+            console.error("Erro ao excluir post e dados associados:", error);
+        }
+    };
+
+    // Função para confirmar exclusão da denúncia ou do post
+    const confirmDeleteAction = (type, reportId, postId) => {
+        setConfirmDelete({ type, reportId, postId });
+    };
+
+    const handleConfirmDelete = () => {
+        if (confirmDelete?.type === "report") {
+            handleDeleteReport(confirmDelete.reportId, confirmDelete.postId);
+        } else if (confirmDelete?.type === "post") {
+            handleDeletePost(confirmDelete.postId);
+        }
+        setConfirmDelete(null);
     };
 
     return (
@@ -69,7 +115,6 @@ export const DenunciaPost = () => {
                         {reportsPosts.length > 0 ? (
                             <ul id="ul1">
                                 {reportsPosts.map((report) => {
-                                    // Encontrar o post correspondente à denúncia
                                     const post = posts.find((p) => p.id === report.postId);
                                     return (
                                         <li id="li1" key={report.id}>
@@ -79,26 +124,22 @@ export const DenunciaPost = () => {
                                             <strong>Justificativa:</strong> {report.justificativa || 'Nenhuma justificativa'} <br />
                                             <strong>Data:</strong> {new Date(report.timestamp?.seconds * 1000).toLocaleString() || 'Data não disponível'}
                                             
-                                            {/* Verifica se o post foi encontrado e exibe os dados */}
                                             {post && (
                                                 <>
-                                                    {/* Título do post */}
                                                     <h2>{post.title}</h2>
-
-                                                    {/* Nome do usuário que publicou */}
                                                     <p><strong>Publicado por:</strong> {post.postUserName}</p>
-
-                                                    {/* Imagem do post */}
                                                     {post.imageUrl && (
                                                         <img
-                                                            style={{ width: "30%", Height: "30%", objectFit: "cover" }}
+                                                            style={{ width: "30%", height: "30%", objectFit: "cover" }}
                                                             src={post.imageUrl}
                                                             alt={post.title}
                                                         />
                                                     )}
-
-                                                    {/* Descrição do post */}
                                                     <p>{post.description}</p>
+
+                                                    {/* Botões de ação */}
+                                                    <button onClick={() => confirmDeleteAction("post", null, post.id)}>Excluir Post</button>
+                                                    <button onClick={() => confirmDeleteAction("report", report.id, report.postId)}>Excluir Denúncia</button>
                                                 </>
                                             )}
                                         </li>
@@ -111,6 +152,17 @@ export const DenunciaPost = () => {
                         <div className="modal-buttons">
                             <button className="btn-cancel1" onClick={closeReportsPage}>Fechar</button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de confirmação para exclusão */}
+            {confirmDelete && (
+                <div className="modal-confirm-delete">
+                    <div className="modal-delete-content">
+                        <p>Tem certeza de que deseja {confirmDelete.type === "report" ? "excluir esta denúncia?" : "excluir este post e todos os seus dados?"}</p>
+                        <button onClick={handleConfirmDelete}>Sim, excluir</button>
+                        <button onClick={() => setConfirmDelete(null)}>Cancelar</button>
                     </div>
                 </div>
             )}
