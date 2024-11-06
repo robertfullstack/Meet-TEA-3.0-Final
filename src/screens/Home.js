@@ -273,50 +273,49 @@ const Home = (props) => {
   };
 
   const handleReportPost = async (postId) => {
-    
     if (!auth.currentUser) {
-      console.error("Você precisa estar logado para denunciar uma postagem.");
-      return;
+        alert("Você precisa estar logado para denunciar uma postagem.");
+        return;
     }
 
-    if (reportReason === "") {
-      console.error("Por favor, selecione um motivo para a denúncia.");
-      return;
+    if (!reportReason) {
+        alert("Por favor, selecione um motivo para a denúncia.");
+        return;
     }
 
     if (hasReportedPost) {
-      console.error("Você já enviou uma denúncia para esta postagem.");
-      return;
+        alert("Você já enviou uma denúncia para esta postagem.");
+        return;
     }
-    
+
     setCurrentPostId(postId);
     try {
-      const currentUser = auth.currentUser;
+        const currentUser = auth.currentUser;
 
-      // Adiciona uma denúncia na subcoleção "reports" da postagem denunciada
-      await db
-        .collection("posts")
-        .doc(postId)
-        .collection("reportsPosts")
-        db.collection("posts").doc(postId).get()
-        .add({
-          id: postId,
-          emailDenunciante: currentUser.email, // Email de quem está denunciando
-          motivo: reportReason, // Motivo da denúncia
-          justificativa: reportPostText || null, // Justificativa opcional da denúncia
-          timestamp: new Date(), // Data da denúncia
-        });
+        await db
+            .collection("posts")
+            .doc(postId)
+            .collection("reportsPosts")
+            .add({
+                id: postId,
+                emailDenunciante: currentUser.email,
+                motivo: reportReason,
+                justificativa: reportPostText || null,
+                timestamp: new Date(),
+            });
 
-      console.log("Denúncia de postagem enviada com sucesso.");
-      setOpenModalDenuncia(false); // Fecha o modal após o envio
-      setReportPostReason(""); // Limpa o motivo após enviar
-      setReportPostText(""); // Limpa o campo de justificativa após enviar
-      setHasReportedPost(true); // Define que o usuário já denunciou
+        alert("Denúncia de postagem enviada com sucesso.");
+        setHasReportedPost(true);
     } catch (error) {
-      console.error("Erro ao enviar denúncia de postagem:", error);
-      console.error("Erro ao enviar denúncia. Tente novamente mais tarde.");
+        console.error("Erro ao enviar denúncia de postagem:", error);
+        alert("Erro ao enviar denúncia. Tente novamente mais tarde.");
+    } finally {
+        setOpenModalDenuncia(false);
+        setReportPostReason("");
+        setReportPostText("");
     }
-  };
+};
+
 
 
   return (
@@ -548,6 +547,7 @@ const Home = (props) => {
                 id="motivo"
                 value={reportReason}
                 onChange={(e) => setReportPostReason(e.target.value)}
+                required
               >
                 <option value="">Selecione um motivo</option>
                 <option value="Spam">Spam</option>
@@ -562,14 +562,14 @@ const Home = (props) => {
               <label>Descrição (opcional):</label>
               <textarea
                 id="descricao"
-                value={reportDescription}
-                onChange={(e) => setReportDescription(e.target.value)}
+                value={reportPostText}
+                onChange={(e) => setReportPostText(e.target.value)}
                 placeholder="Descreva o motivo da denúncia"
               ></textarea>
               <br></br>
               <br></br>
 
-              <button className="btn-submit" onClick={handleReportPost}>
+              <button className="btn-submit" onClick={() => handleReportPost(currentPostId)}>
                 Enviar
               </button>
               <button
@@ -589,9 +589,9 @@ const Home = (props) => {
               <div key={post.id} className="post">
                 <button
           className="btn-report"
-          onClick={() => setOpenModalDenuncia(!openModalDenuncia)}
+          onClick={() => setOpenModalDenuncia(!openModalDenuncia)+ setCurrentPostId(post.id)}
         >
-          {openModalDenuncia ? "Fechar" : "Denunciar"} Post
+          {openModalDenuncia ? "Fechar Denúncia" : "Denunciar Post"}
         </button>
 
                 {/* Exibe o nome do usuário que postou */}
