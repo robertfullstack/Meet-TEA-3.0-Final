@@ -62,7 +62,7 @@ html {
 /* Modal de publicação */
 .modal-publicar {
   display: grid;
-  margin-top: 130px;
+  margin-top: 30px;
   width: 50em;
   padding: 1.5rem;
   border-radius: 10px;
@@ -286,9 +286,46 @@ input #file-upload-button {
   background-color: #de995a;
   color: #361e07;
   margin-bottom: 15px;
-  padding: 5px;
+  padding: 2px;
+  border: 2px solid #000;
+  margin-right: 4px;
+}
+
+#btn-amei {
+  border-radius: 18px;
+  background-color: #de995a;
+  color: #361e07;
+  margin-bottom: 15px;
+  padding: 0px;
   border: 2px solid #000;
 }
+
+
+#btn-point{
+  position: relative;
+  border:none;
+  background-color:#314263;
+  left:90%;
+}
+
+#btn-denuncia-point{
+  margin-left: 2%;
+  border:none;
+  font-family: "Nunito";
+  background-color: white;
+  text-align: center;
+}
+
+#li-papai{
+  position: relative;
+  text-align: center;
+  justify-content: center;
+}
+#menu-denuncia{
+  text-align: center;
+  justify-content: center;
+}
+
 
 #btn-coment,
 #btn-coment-enviar {
@@ -355,8 +392,43 @@ input #file-upload-button {
   font-family: "Nunito";
  }
 
+#desc-texto{
+  color:black;
+  font-size: 15px;
+}
+#motivo, #descricao{
+  font-size: 15px;
+  border-radius: 6px;
+}
 
+#btn-enviar{
+  background-color: #0d6efd;
+}
 
+#btn-enviar:hover{
+  background-color: rgb(72, 177, 72);
+  transition: 0.5s;
+}
+
+#btn-cancel{
+  background-color: #6c757d;
+}
+
+#btn-cancel:hover{
+  background-color: #8f1717;
+  transition: 0.5s;
+}
+.modal-content{
+  background-color: #365a8e;
+  width: fit-content;
+}
+
+.modal-dialog{
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 100%;
+    width: 40%;
+}
 /* Esconda a segunda navbar em telas maiores */
 .navbar-mobile {
   display: none;
@@ -421,6 +493,7 @@ input #file-upload-button {
     align-content: start;
     justify-content: start;
   }
+
   .modal-publicar form,
   #fechar1,
   #publicar {

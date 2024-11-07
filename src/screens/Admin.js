@@ -102,28 +102,30 @@ export const Admin = () => {
     if (!isLoggedIn) {
         return (
             <div>
-                <h1>Admin Login</h1>
+                <h1 h1 id="title-admin-1">Admin Login</h1>
                 <div>
                     <label>
-                        Nome Admin:
                         <input
+                            id="btn-input"
                             type="text"
                             value={adminName}
                             onChange={(e) => setAdminName(e.target.value)}
+                            placeholder='Nome Admin'
                         />
                     </label>
                 </div>
                 <div>
                     <label>
-                        Senha Admin:
                         <input
+                            id="btn-input"
                             type="password"
                             value={adminPassword}
                             onChange={(e) => setAdminPassword(e.target.value)}
+                            placeholder='Senha Admin'
                         />
                     </label>
+                    <button id="btn-admin" onClick={handleLogin}>Entrar</button>
                 </div>
-                <button onClick={handleLogin}>Entrar</button>
             </div>
         );
     }
@@ -131,8 +133,8 @@ export const Admin = () => {
     return (
         <div>
             <h1 id="title-admin">Usuários Cadastrados</h1>
-            <button onClick={handleLogout}>Logout</button>
-            <button onClick={() => navigate("/DenunciaPost")}>Denúncias de Posts</button>
+            <button id="btn-logout"onClick={handleLogout}>Logout</button>
+            <button id="btn-denuncia-post" onClick={() => navigate("/DenunciaPost")}>Denúncias de Posts</button>
             <div className='container-admin'>
                 <table id="table-admin" >
                     <thead>

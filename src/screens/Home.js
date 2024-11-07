@@ -7,6 +7,7 @@ import Heart_puzz from "../img/LogoTEAoutline_heart_puzz1.png";
 import Heart_puzz_closed from "../img/LogoTEAoutline_heart_puzz_closed1.png";
 import Joia_puzz from "../img/Teacurteecompartilha.png";
 import Joia_puzz_closed from "../img/Teacurteecompartilhamandajoia.png";
+import pontinhos from "../img/pontinhos.png";
 import "@fontsource/poetsen-one";
 import "@fontsource/nunito";
 
@@ -32,11 +33,12 @@ const Home = (props) => {
   const [reportDescription, setReportDescription] = useState("");
 
   const handleSubmitReport = () => {
-    console.log("Denúncia enviada:", { motivo: reportReason, descrição: reportDescription });
+    console.log("Denúncia enviada:", {
+      motivo: reportReason,
+      descrição: reportDescription,
+    });
     setOpenModalDenuncia(false); // Fecha o modal após o envio
   };
-
-
 
   //calcula a idade com base na data de nascimento
   const calcularIdade = (birthDate) => {
@@ -57,18 +59,17 @@ const Home = (props) => {
     const checkBanStatus = async () => {
       const authUser = auth.currentUser;
       if (authUser) {
-        const userDoc = await db.collection('users').doc(authUser.uid).get();
+        const userDoc = await db.collection("users").doc(authUser.uid).get();
         if (userDoc.exists && userDoc.data().banned) {
           // toast.error('Sua conta foi banida. Fale com algum ADM.');
           await auth.signOut();
-          navigate('/');
+          navigate("/");
         }
       }
     };
 
     checkBanStatus();
   }, []);
-
 
   useEffect(() => {
     // Ativa a visualização dos posts automaticamente ao carregar o componente
@@ -193,9 +194,9 @@ const Home = (props) => {
         prevPosts.map((post) =>
           post.id === postId
             ? {
-              ...post,
-              comments: [...post.comments, newComment],
-            }
+                ...post,
+                comments: [...post.comments, newComment],
+              }
             : post
         )
       );
@@ -267,56 +268,53 @@ const Home = (props) => {
     }
   };
 
-
   const handleProfileClick = (profileId) => {
     navigate(`/profile/${profileId}`);
   };
 
   const handleReportPost = async (postId) => {
     if (!auth.currentUser) {
-        alert("Você precisa estar logado para denunciar uma postagem.");
-        return;
+      alert("Você precisa estar logado para denunciar uma postagem.");
+      return;
     }
 
     if (!reportReason) {
-        alert("Por favor, selecione um motivo para a denúncia.");
-        return;
+      alert("Por favor, selecione um motivo para a denúncia.");
+      return;
     }
 
     if (hasReportedPost) {
-        alert("Você já enviou uma denúncia para esta postagem.");
-        return;
+      alert("Você já enviou uma denúncia para esta postagem.");
+      return;
     }
 
     setCurrentPostId(postId);
     try {
-        const currentUser = auth.currentUser;
+      const currentUser = auth.currentUser;
 
-        await db
-            .collection("posts")
-            .doc(postId)
-            .collection("reportsPosts")
-            .add({
-                id: postId,
-                emailDenunciante: currentUser.email,
-                motivo: reportReason,
-                justificativa: reportPostText || null,
-                timestamp: new Date(),
-            });
+      await db
+        .collection("posts")
+        .doc(postId)
+        .collection("reportsPosts")
+        .add({
+          id: postId,
+          emailDenunciante: currentUser.email,
+          motivo: reportReason,
+          justificativa: reportPostText || null,
+          timestamp: new Date(),
+        });
 
-        alert("Denúncia de postagem enviada com sucesso.");
-        setHasReportedPost(true);
+      alert("Denúncia de postagem enviada com sucesso.");
+      setHasReportedPost(true);
     } catch (error) {
-        console.error("Erro ao enviar denúncia de postagem:", error);
-        alert("Erro ao enviar denúncia. Tente novamente mais tarde.");
+      console.error("Erro ao enviar denúncia de postagem:", error);
+      alert("Erro ao enviar denúncia. Tente novamente mais tarde.");
     } finally {
-        setOpenModalDenuncia(false);
-        setReportPostReason("");
-        setReportPostText("");
+      setOpenModalDenuncia(false);
+      setReportPostReason("");
+      setReportPostText("");
     }
-};
-
-
+  };
 
   return (
     <div className="container-home">
@@ -349,8 +347,8 @@ const Home = (props) => {
           <div className="nav-buttons">
             {" "}
             {/* Mova os botões para uma nova div */}
-            <button id="btn-chat" onClick={handleOpenChat}>
-              {showChat ? "Fechar" : "Chat"}
+            <button id="btn-chat" onClick={()=> navigate ("/chat")}>
+              {showChat ? "Fechar" : "Chat"} 
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
               {" "}
@@ -420,8 +418,8 @@ const Home = (props) => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={handleOpenChat}>
-                        {showChat ? "Fechar" : "Chat"}
+                      <button id="btn-chat" onClick={()=> navigate ("/chat")}>
+                       {showChat ? "Fechar" : "Chat"}
                       </button>
                       <button id="btn-pub" onClick={() => navigate("/postar")}>
                         Postar
@@ -505,8 +503,7 @@ const Home = (props) => {
                 <option value="Outro">Outro</option>
               </select>
             </div>
-
-            {filteredProfiles.map((profile) => (
+navigate            {filteredProfiles.map((profile) => (
               <div
                 key={profile.id}
                 className="profile"
@@ -529,72 +526,127 @@ const Home = (props) => {
           </div>
         )}
 
-{showChat && (
+        {showChat && (
           <iframe
             src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
             style={{ width: "100%", height: "100vh" }}
           />
         )}
 
-
-        {openModalDenuncia && (
-          <div id="container-denuncia" className="modal-denuncia">
-            <div className="report-controls">
-              <h3>Denunciar Post</h3>
-
-              <label>Motivo da Denúncia:</label>
-              <select
-                id="motivo"
-                value={reportReason}
-                onChange={(e) => setReportPostReason(e.target.value)}
-                required
-              >
-                <option value="">Selecione um motivo</option>
-                <option value="Spam">Spam</option>
-                <option value="Conteúdo Inapropriado">Conteúdo Inapropriado</option>
-                <option value="Assédio">Assédio</option>
-                <option value="Fake News">Fake News</option>
-                <option value="Outro">Outro</option>
-              </select>
-              <br></br>
-              <br></br>
-
-              <label>Descrição (opcional):</label>
-              <textarea
-                id="descricao"
-                value={reportPostText}
-                onChange={(e) => setReportPostText(e.target.value)}
-                placeholder="Descreva o motivo da denúncia"
-              ></textarea>
-              <br></br>
-              <br></br>
-
-              <button className="btn-submit" onClick={() => handleReportPost(currentPostId)}>
-                Enviar
-              </button>
-              <button
-                className="btn-cancel"
-                onClick={() => setOpenModalDenuncia(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        )}
-
-
         {openModalVisualizar && (
           <div id="container-posts" className="modal-posts">
             {posts.map((post) => (
               <div key={post.id} className="post">
-                <button
-          className="btn-report"
-          onClick={() => setOpenModalDenuncia(!openModalDenuncia)+ setCurrentPostId(post.id)}
-        >
-          {openModalDenuncia ? "Fechar Denúncia" : "Denunciar Post"}
-        </button>
 
+                <div class="dropdown">
+  <button  id="btn-point"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+   <img src={pontinhos} alt={"..."} width="100%" height={"50px"} />
+  </button>
+  <ul id="menu-denuncia" class="dropdown-menu">
+    <li id="li-papai">
+     <button id="btn-denuncia-point" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+         onClick={() => {
+         setCurrentPostId(post.id); // Define o post atual
+         setOpenModalDenuncia(true); // Abre a modal de denúncia
+         }}>Denunciar
+      </button></li>
+      {openModalDenuncia ? "" : ""}
+    <li><a class="dropdown-item" href="#">Compartilhar</a></li>
+  </ul>
+</div>
+              
                 {/* Exibe o nome do usuário que postou */}
+                <div
+                  className="modal fade"
+                  id="staticBackdrop"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabindex="-1"
+                  aria-labelledby="staticBackdropLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h1
+                          className="modal-title fs-5"
+                          id="staticBackdropLabel"
+                        >
+                          Denunciar Post
+                        </h1>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                          onClick={() => setOpenModalDenuncia(false)}
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        {openModalDenuncia && (
+                          <div
+                            id="container-denuncia"
+                            className="modal-denuncia"
+                          >
+                            <div className="report-controls">
+                              <label id="desc-texto">Motivo da Denúncia:</label> <br></br>
+                              <select
+                                id="motivo"
+                                value={reportReason}
+                                onChange={(e) =>
+                                  setReportPostReason(e.target.value)
+                                }
+                                required
+                              >
+                                <option value="">Selecione um motivo</option>
+                                <option value="Spam">Spam</option>
+                                <option value="Conteúdo Inapropriado">
+                                  Conteúdo Inapropriado
+                                </option>
+                                <option value="Assédio">Assédio</option>
+                                <option value="Fake News">Fake News</option>
+                                <option value="Outro">Outro</option>
+                              </select>
+                              <br />
+                              <br />
+
+                              <label id="desc-texto">Descrição (opcional):</label> <br></br>
+                              <textarea
+                                id="descricao"
+                                value={reportPostText}
+                                onChange={(e) =>
+                                  setReportPostText(e.target.value)
+                                }
+                                placeholder="Descreva o motivo da denúncia"
+                              ></textarea>
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          id="btn-cancel"
+                          data-bs-dismiss="modal"
+                          onClick={() => setOpenModalDenuncia(false)}
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          id="btn-enviar"
+                          onClick={() => handleReportPost(currentPostId)}
+                        >
+                          Enviar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <p>{post.post.postUserName}</p>
 
                 {/* Título do post */}
@@ -630,7 +682,7 @@ const Home = (props) => {
                 </button>
 
                 <button
-                  id="btn-curtir"
+                  id="btn-amei"
                   onClick={() => handleLove(post.id, post.post.loves)}
                   style={{
                     color: userReactions[post.id] === "love" ? "red" : "black",

@@ -113,6 +113,13 @@ const ProfileOutros = () => {
     return <div>Carregando informações do usuário...</div>;
   }
 
+  {showChat && (
+    <iframe
+      src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+      style={{ width: "100%", height: "100vh" }}
+    />
+  )}
+  
   return (
     <div className="profile-outros-container">
       <div className="sidbar">

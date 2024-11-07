@@ -4,6 +4,38 @@
 
 #title-admin{
     font-family: "Nunito";
+    text-align: center;
+}
+
+#title-admin-1{
+    font-family: "Nunito";
+    text-align: center;
+    margin-top: 3.5em;
+    font-size: 60px;
+}
+
+#btn-admin{
+    background-color: rgb(46, 139, 87) ;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    color: white;
+    width: 150px;
+    margin-left: 83vh;
+    margin-top: 40px;
+    font-family: "Nunito";
+    font-size: 20px;
+}
+
+#btn-input{
+    border: 1px solid black;
+    border-radius: 7px;
+    margin-left: 70vh;
+    font-family: "Nunito";
+    font-size: 20px;
+    margin-top: 2em;
+    padding: 7px;
+    width: 350px;
 }
 
 tr > th, tr > td {
@@ -11,6 +43,26 @@ tr > th, tr > td {
     text-align: center;
 }
 
+#btn-logout{
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: rgb(26, 26, 109);
+    color: white;
+    font-family: "Nunito";
+    padding: 7px;
+    width: 90px;
+    margin-left: 35px;
+}
+
+#btn-denuncia-post{
+    border: 1px solid rgb(26, 26, 109);
+    background-color: rgb(76, 122, 221);
+    border-radius: 10px;
+    padding: 7px;
+    width: 190px;
+    margin-left: 10px;
+    color: white;
+}
 #btn-banir{
     background-color: rgb(151, 30, 30) ;
     border: none;

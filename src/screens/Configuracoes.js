@@ -205,6 +205,14 @@ const Configuracoes = () => {
   if (!userData) {
     return <div>Carregando...</div>;
   }
+
+  {showChat && (
+    <iframe
+      src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+      style={{ width: "100%", height: "100vh" }}
+    />
+  )}
+  
   return (
     <div className="container-conf">
       <div className="sidbar">

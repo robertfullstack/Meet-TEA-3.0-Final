@@ -13,6 +13,7 @@ import Configuracoes from './screens/Configuracoes.js';
 import Denuncia from './screens/Denuncia.js';
 import ExcluirConta from './screens/ExcluirConta.js';
 import DenunciaPost from './screens/DenunciaPost.js';
+import Chat from './screens/Chat.js';
 
 const App = () => {
   const [user, setUser] = useState();
@@ -68,6 +69,7 @@ const App = () => {
           <Route path="/denuncia" element={<Denuncia/>}/>
           <Route path="/denunciaPost" element={<DenunciaPost/>}/>
           <Route path="/excluir-conta" element={<ExcluirConta/>}/>
+          <Route path="/chat" element={<Chat/>}/>
         </Routes>
       </Router>
     </div>
