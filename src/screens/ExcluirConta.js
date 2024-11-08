@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useNavigate } from 'react-router-dom';
 import capaMeetTea from '../img/capa_meet_tea.png';
 import "../styles/ExcluirConta.css";
 
@@ -14,16 +14,15 @@ const ExcluirConta = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const navigate = useNavigate(); // Definir useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
 
-    // Redirecionar após a submissão
     setTimeout(() => {
-      navigate('/home'); // Redireciona para a página "home" (ou qualquer outra)
-    }, 3000); // Aguarda 3 segundos antes de redirecionar
+      navigate('/home');
+    }, 3000);
   };
 
   return (

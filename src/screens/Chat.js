@@ -6,7 +6,7 @@ import "@fontsource/poetsen-one";
 import "@fontsource/nunito";
 
 const Chat = (props) => {
-    const [showChat, setShowChat] = useState(false);
+    const [showChat, setShowChat] = useState(true);
     const navigate = useNavigate();
     const handleLogout = () => {
         auth

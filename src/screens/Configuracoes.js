@@ -147,13 +147,13 @@ const Configuracoes = () => {
           const postData = doc.data();
 
           try {
-            // Tenta excluir a imagem, se houver
+        
             if (postData.imageUrl) {
               const imageRef = storage.refFromURL(postData.imageUrl);
               await imageRef.delete();
             }
 
-            // Exclui o post do Firestore
+
             await db.collection("posts").doc(doc.id).delete();
             console.log(`Post com ID ${doc.id} excluído com sucesso`);
           } catch (error) {
@@ -161,7 +161,7 @@ const Configuracoes = () => {
           }
         });
 
-        // Aguarda a conclusão de todas as exclusões
+
         await Promise.all(deletePromises);
         console.log("Todos os posts e imagens associadas foram excluídos com sucesso.");
 

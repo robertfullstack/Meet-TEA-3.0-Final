@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Profile.css";
 import defaultProfile from "../img/default-profile.png";
-import { auth, db, storage } from "../firebase"; // Certifique-se de importar corretamente seus módulos do Firebase
+import { auth, db, storage } from "../firebase";
 
 const calcularIdade = (dataNascimento) => {
   const hoje = new Date();
@@ -10,7 +10,6 @@ const calcularIdade = (dataNascimento) => {
   let idade = hoje.getFullYear() - nascimento.getFullYear();
   const mes = hoje.getMonth() - nascimento.getMonth();
 
-  // Verifica se o aniversário ainda não aconteceu neste ano
   if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
     idade--;
   }
@@ -60,16 +59,13 @@ export const Profile = () => {
     if (!postToDelete) return;
   
     try {
-      // Verifica se há uma URL de imagem para exclusão no Storage
       if (postToDelete.imageUrl) {
         const imageRef = storage.refFromURL(postToDelete.imageUrl);
         await imageRef.delete();
       }
   
-      // Apaga o post no Firestore usando o ID do documento
       await db.collection("posts").doc(postToDelete.id).delete();
   
-      // Atualiza a lista de posts do usuário removendo o post excluído
       setUserPosts((prevPosts) => prevPosts.filter((post) => post.id !== postToDelete.id));
   
       console.log("Postagem excluída com sucesso!");
@@ -77,7 +73,7 @@ export const Profile = () => {
       console.error("Erro ao excluir postagem:", error);
       alert("Erro ao excluir postagem. Tente novamente.");
     } finally {
-      setShowModal(false); // Fecha o modal após a operação de exclusão
+      setShowModal(false);
     }
   };
   

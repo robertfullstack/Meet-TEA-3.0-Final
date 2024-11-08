@@ -17,36 +17,33 @@ import Chat from './screens/Chat.js';
 
 const App = () => {
   const [user, setUser] = useState();
-  const [fontSize, setFontSize] = useState(16); // Tamanho de fonte padrão de 16px
+  const [fontSize, setFontSize] = useState(16); 
 
-  // Carrega o tamanho da fonte do localStorage quando o componente é montado
   useEffect(() => {
     const savedFontSize = localStorage.getItem('fontSize');
     if (savedFontSize) {
-      setFontSize(parseInt(savedFontSize)); // Converte de string para número
+      setFontSize(parseInt(savedFontSize)); 
     }
   }, []);
 
-  // Função para aumentar o tamanho da fonte e salvar no localStorage
   const aumentarFonte = () => {
     setFontSize((prevSize) => {
       const newSize = prevSize + 2;
-      localStorage.setItem('fontSize', newSize); // Salva no localStorage
+      localStorage.setItem('fontSize', newSize);
       return newSize;
     });
   };
 
-  // Função para diminuir o tamanho da fonte e salvar no localStorage
   const diminuirFonte = () => {
     setFontSize((prevSize) => {
       const newSize = prevSize > 10 ? prevSize - 2 : prevSize;
-      localStorage.setItem('fontSize', newSize); // Salva no localStorage
+      localStorage.setItem('fontSize', newSize);
       return newSize;
     });
   };
 
   return (
-    <div style={{ fontSize: `${fontSize}px` }}> {/* Aplica o tamanho da fonte dinamicamente */}
+    <div style={{ fontSize: `${fontSize}px` }}> 
       <Router>
         <div style={{ position: 'fixed', top: 10, right: 10 }}>
           <button id="fonte" onClick={aumentarFonte} style={{ fontSize: '18px', padding: '10px' }}>
@@ -77,34 +74,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
-
-
-
-// CASO PRECISE DO ANTIGO CODE.....:
-// import { React, useEffect, useState } from "react";
-// import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
-
-// import LoginRegistro from "./screens/LoginRegistro";
-// import Home from './screens/Home';
-// import Admin from './screens/Admin';
-
-// const App = () => {
-//   const [user, setUser] = useState();
-
-
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<LoginRegistro setUser={setUser} user={user} />} />
-//         <Route path="/home" element={<Home setUser={setUser} user={user} />} />
-//         <Route path="/admin" element={<Admin />} />
-//       </Routes>
-//     </Router>
-//   )
-// }
-
-
-// export default App;

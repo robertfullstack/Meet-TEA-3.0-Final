@@ -12,7 +12,7 @@ const Postar = (props) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800); 
-  const [isSubmitting, setIsSubmitting] = useState(false); // Novo estado para desativar o botão
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -53,9 +53,9 @@ const Postar = (props) => {
 
   const uploadPost = (e) => {
     e.preventDefault();
-    if (isSubmitting) return; // Verifica se o formulário já está sendo enviado
+    if (isSubmitting) return;
 
-    setIsSubmitting(true); // Define o estado para desativar o botão
+    setIsSubmitting(true);
 
     const titlePost = document.getElementById("titlePost").value;
     const descricaoPost = document.getElementById("descricaoPost").value;
@@ -112,7 +112,7 @@ const Postar = (props) => {
                 setFile(null);
                 setOpenModalPublicar(false);
                 alert("Postagem criada com sucesso!");
-                navigate("/Home"); // Redireciona para a rota Home
+                navigate("/Home");
               })
               .catch((error) => {
                 console.error("Erro ao adicionar documento: ", error);
@@ -138,7 +138,6 @@ const Postar = (props) => {
 
   return (
     <div className="container-Postar">
-      {/* Sidebar fixa */}
       <div className="sidbar">
         <nav className="nav flex-column navbar-desktop">
           <a
@@ -177,7 +176,6 @@ const Postar = (props) => {
         </nav>
       </div>
 
-      {/* Navbar Mobile */}
       <div class="navbar-mobile">
         <nav class="navbar fixed-top">
           <div class="container-fluid">

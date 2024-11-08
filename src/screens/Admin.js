@@ -10,7 +10,6 @@ export const Admin = () => {
     const [adminPassword, setAdminPassword] = useState('');
     const navigate = useNavigate();
 
-    // Função para verificar se o admin já está logado ao carregar a página
     useEffect(() => {
         const storedAdmin = localStorage.getItem('isAdminLoggedIn');
         if (storedAdmin === 'true') {
@@ -27,14 +26,14 @@ export const Admin = () => {
         const validAdmins = ['Robert', 'Julia', 'Isabella', 'Marcos'];
         if (validAdmins.includes(adminName) && adminPassword === 'MeetTEA') {
             setIsLoggedIn(true);
-            // Salva o estado de login no localStorage
+           
             localStorage.setItem('isAdminLoggedIn', 'true');
         } else {
             alert('Nome ou senha incorretos!');
         }
     };
 
-    // Função para fazer logout e limpar o localStorage
+
     const handleLogout = () => {
         setIsLoggedIn(false);
         localStorage.removeItem('isAdminLoggedIn');
@@ -62,7 +61,7 @@ export const Admin = () => {
                         id: userDoc.id,
                         email: userData.email,
                         fileURL,
-                        banned: userData.banned || false, // Verifica se o usuário está banido
+                        banned: userData.banned || false,
                         reports,
                     });
                 }
@@ -184,104 +183,3 @@ export const Admin = () => {
 };
 
 export default Admin;
-
-
-
-
-
-
-
-
-
-// PARA CASO PRECISE DO CODE ANTIGO>....
-// import React, { useEffect, useState } from 'react';
-// import { db } from '../firebase';
-
-// export const Admin = () => {
-//     const [users, setUsers] = useState([]);
-
-//     useEffect(() => {
-//         const fetchUsers = async () => {
-//             try {
-//                 const usersCollection = await db.collection('users').get();
-
-//                 const usersList = [];
-
-//                 for (const userDoc of usersCollection.docs) {
-//                     const userData = userDoc.data();
-//                     const fileURL = userData.fileURL;
-
-//                     usersList.push({
-//                         id: userDoc.id,
-//                         email: userData.email,
-//                         fileURL,
-//                         banned: userData.banned || false,
-//                         // esse campo banned é o de banimento.
-//                     });
-//                 }
-
-//                 setUsers(usersList);
-//             } catch (error) {
-//                 console.error('Erro ao buscar usuários:', error);
-//             }
-//         };
-
-//         fetchUsers();
-//     }, []);
-
-//     const banUser = async (userId) => {
-//         try {
-//             // Atualiza o campo 'banned' do usuário no Firestore
-//             await db.collection('users').doc(userId).update({
-//                 banned: true,
-//             });
-//             // Atualiza a lista de usuários localmente
-//             setUsers(users.map(user =>
-//                 user.id === userId ? { ...user, banned: true } : user
-//             ));
-//             console.log('Usuário banido com sucesso!');
-//         } catch (error) {
-//             console.error('Erro ao banir o usuário:', error);
-//         }
-//     };
-
-//     return (
-//         <div>
-//             <h1>Usuários Cadastrados</h1>
-//             <table>
-//                 <thead>
-//                     <tr>
-//                         <th>ID do Usuário:</th>
-//                         <th>Email:</th>
-//                         <th>Arquivo/Carteirinha:</th>
-//                         <th>Ações (ADM):</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     {users.map((user) => (
-//                         <tr key={user.id}>
-//                             <td>{user.id}</td>
-//                             <td>{user.email}</td>
-//                             <td>
-//                                 {user.fileURL ? (
-//                                     <a href={user.fileURL} target="_blank" rel="noopener noreferrer">Download</a>
-//                                 ) : (
-//                                     'Nenhum arquivo'
-//                                 )}
-//                             </td>
-//                             <td>
-//                                 {!user.banned ? (
-//                                     <button onClick={() => banUser(user.id)}>Banir</button>
-//                                 ) : (
-//                                     <span>Banido</span>
-//                                 )}
-//                             </td>
-//                         </tr>
-//                     ))}
-//                 </tbody>
-//             </table>
-//         </div>
-//     );
-// }
-
-// export default Admin;

@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import "../styles/Admin.css";
 
 export const Denuncia = () => {
-    const [showModal, setShowModal] = useState(true); // Define modal como aberta ao entrar na página
-    const location = useLocation(); // Hook para acessar os dados passados pela navegação
-    const reports = location.state?.reports || []; // Obtém as denúncias do estado ou lista vazia
+    const [showModal, setShowModal] = useState(true);
+    const location = useLocation();
+    const reports = location.state?.reports || [];
     const navigate = useNavigate();
 
     const closeReportsPage = () => {
@@ -21,7 +21,6 @@ export const Denuncia = () => {
         <div>
             <h1 id="titulo-denuncia">Denúncias feitas ao usuário</h1>
 
-            {/* Renderiza a modal se showModal for true */}
             {showModal && (
                 <div className="modal-confirmation">
                     <div className="modal-content">

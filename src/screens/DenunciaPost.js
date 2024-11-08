@@ -7,10 +7,10 @@ export const DenunciaPost = () => {
     const [showModal, setShowModal] = useState(true);
     const [reportsPosts, setReportsPosts] = useState([]);
     const [posts, setPosts] = useState([]);
-    const [confirmDelete, setConfirmDelete] = useState(null); // Armazena a denúncia a ser confirmada para exclusão
+    const [confirmDelete, setConfirmDelete] = useState(null); 
     const navigate = useNavigate();
 
-    // Função para buscar todas as denúncias de todas as postagens
+
     const handleFetchAllReports = async () => {
         try {
             const postsSnapshot = await db.collection("posts").get();
@@ -39,7 +39,6 @@ export const DenunciaPost = () => {
         }
     };
 
-    // Função para buscar os dados de todos os posts
     const fetchPosts = async () => {
         const postsSnapshot = await db.collection("posts").orderBy("timestamp", "desc").get();
         const postsData = postsSnapshot.docs.map((doc) => ({
@@ -58,7 +57,7 @@ export const DenunciaPost = () => {
         navigate('/admin');
     };
 
-    // Função para excluir uma denúncia específica
+
     const handleDeleteReport = async (reportId, postId) => {
         try {
             await db.collection("posts").doc(postId).collection("reportsPosts").doc(reportId).delete();
@@ -69,18 +68,17 @@ export const DenunciaPost = () => {
         }
     };
 
-    // Função para excluir um post e todos os seus dados (inclui denúncias e comentários)
+
     const handleDeletePost = async (postId) => {
         try {
-            // Excluir todas as denúncias associadas ao post
+
             const reportsSnapshot = await db.collection("posts").doc(postId).collection("reportsPosts").get();
             reportsSnapshot.forEach((doc) => doc.ref.delete());
 
-            // Excluir todos os comentários associados ao post
+
             const commentsSnapshot = await db.collection("posts").doc(postId).collection("comments").get();
             commentsSnapshot.forEach((doc) => doc.ref.delete());
 
-            // Excluir o próprio post
             await db.collection("posts").doc(postId).delete();
 
             setPosts(posts.filter(post => post.id !== postId));
@@ -91,7 +89,6 @@ export const DenunciaPost = () => {
         }
     };
 
-    // Função para confirmar exclusão da denúncia ou do post
     const confirmDeleteAction = (type, reportId, postId) => {
         setConfirmDelete({ type, reportId, postId });
     };
@@ -137,7 +134,6 @@ export const DenunciaPost = () => {
                                                     )}
                                                     <p>{post.description}</p>
 
-                                                    {/* Botões de ação */}
                                                     <button onClick={() => confirmDeleteAction("post", null, post.id)}>Excluir Post</button>
                                                     <button onClick={() => confirmDeleteAction("report", report.id, report.postId)}>Excluir Denúncia</button>
                                                 </>
@@ -156,7 +152,6 @@ export const DenunciaPost = () => {
                 </div>
             )}
 
-            {/* Modal de confirmação para exclusão */}
             {confirmDelete && (
                 <div className="modal-confirm-delete">
                     <div className="modal-delete-content">

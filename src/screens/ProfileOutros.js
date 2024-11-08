@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { db, auth, storage} from "../firebase"; // Ajuste o caminho conforme necessário
+import { db, auth, storage} from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 const ProfileOutros = () => {
-  const { id } = useParams(); // Obtém o ID da URL
+  const { id } = useParams(); 
   const [user, setUser] = useState(null);
-  const [reportText, setReportText] = useState(""); // Campo opcional para justificar a denúncia
-  const [reportReason, setReportReason] = useState(""); // Campo para selecionar o motivo da denúncia
+  const [reportText, setReportText] = useState("");
+  const [reportReason, setReportReason] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [hasReported, setHasReported] = useState(false); // Novo estado para controlar se o usuário já denunciou
+  const [hasReported, setHasReported] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
 
@@ -47,7 +47,6 @@ const ProfileOutros = () => {
         });
     }
 
-    // Verificar se o usuário logado já fez uma denúncia
     const checkIfAlreadyReported = async () => {
       if (auth.currentUser) {
         const currentUser = auth.currentUser;
@@ -67,7 +66,6 @@ const ProfileOutros = () => {
     checkIfAlreadyReported();
   }, [id]);
 
-  // Função para enviar a denúncia
   const handleReport = async () => {
     if (!auth.currentUser) {
       setErrorMessage("Você precisa estar logado para denunciar.");
@@ -87,22 +85,21 @@ const ProfileOutros = () => {
     try {
       const currentUser = auth.currentUser;
 
-      // Adiciona uma denúncia na subcoleção "reports" do usuário denunciado
       await db
         .collection("users")
         .doc(id)
         .collection("reports")
         .add({
-          emailDenunciante: currentUser.email, // Email de quem está denunciando
-          motivo: reportReason, // Motivo da denúncia
-          justificativa: reportText || null, // Justificativa opcional da denúncia
-          timestamp: new Date(), // Data da denúncia
+          emailDenunciante: currentUser.email,
+          motivo: reportReason,
+          justificativa: reportText || null,
+          timestamp: new Date(),
         });
 
       setSuccessMessage("Denúncia enviada com sucesso.");
-      setReportReason(""); // Limpa o motivo após enviar
-      setReportText(""); // Limpa o campo de justificativa após enviar
-      setHasReported(true); // Define que o usuário já denunciou
+      setReportReason("");
+      setReportText("");
+      setHasReported(true);
     } catch (error) {
       console.error("Erro ao enviar denúncia:", error);
       setErrorMessage("Erro ao enviar denúncia. Tente novamente mais tarde.");
@@ -254,7 +251,6 @@ const ProfileOutros = () => {
           </p>
         </div>
 
-        {/* Formulário para justificar a denúncia */}
         <div className="ban-form" style={{ marginTop: "20px" }}>
           <h3>Denunciar Usuário</h3>
           {hasReported ? (

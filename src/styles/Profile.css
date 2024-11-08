@@ -162,7 +162,6 @@
     display: flex;
   }
 
-  /* Esconda a primeira navbar em telas menores, se necessário */
   .navbar-desktop {
     display: none;
   }
@@ -247,38 +246,4 @@
     background-color: rgb(151, 30, 30) ;
     border-radius: 10px;
   }
-
-  /* @media (max-width: 570px) {
-    .profile-container {
-      align-items: start;
-      justify-content: start;
-      text-align: start;
-      width: 10%;
-    }
-    .profile-border {
-      padding: 20px;
-      width: fit-content;
-      left: 200px;
-      top: 40px;
-      position: relative;
-    }
-    .container-home {
-      margin-left: 0px;
-    }
-    .profile-container {
-      text-align: start !important;
-    }
-
-    #infos {
-      flex-direction: column;
-      padding: 15px;
-      align-items: start;
-    }
-
-    #texto1,
-    #texto2 {
-      margin: 10px 0;
-      width: 100%;
-    }
-  } */
 }

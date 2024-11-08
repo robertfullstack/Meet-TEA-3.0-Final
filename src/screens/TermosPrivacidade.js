@@ -1,7 +1,7 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Importa o CSS do Bootstrap
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Importa o JS do Bootstrap
-import capaMeetTea from '../img/capa_meet_tea.png'; // Certifique-se de que a imagem esteja na pasta correta
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import capaMeetTea from '../img/capa_meet_tea.png'; 
 
 const TermosPrivacidade = () => {
   return (
