@@ -11,7 +11,7 @@ const Postar = (props) => {
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -129,12 +129,14 @@ const Postar = (props) => {
     );
   };
 
-  {showChat && (
-    <iframe
-      src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
-      style={{ width: "100%", height: "100vh" }}
-    />
-  )}
+  {
+    showChat && (
+      <iframe
+        src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+        style={{ width: "100%", height: "100vh" }}
+      />
+    );
+  }
 
   return (
     <div className="container-Postar">
@@ -163,7 +165,7 @@ const Postar = (props) => {
           </a>
 
           <div className="nav-buttons">
-            <button id="btn-chat" onClick={handleOpenChat}>
+            <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -234,7 +236,7 @@ const Postar = (props) => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={handleOpenChat}>
+                      <button id="btn-chat" onClick={() => navigate("/chat")}>
                         {showChat ? "Fechar" : "Chat"}
                       </button>
                       <button id="btn-pub" onClick={() => navigate("/postar")}>

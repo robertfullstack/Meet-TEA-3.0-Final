@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { db, auth, storage} from "../firebase";
+import { db, auth, storage } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 const ProfileOutros = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [reportText, setReportText] = useState("");
   const [reportReason, setReportReason] = useState("");
@@ -110,13 +110,15 @@ const ProfileOutros = () => {
     return <div>Carregando informações do usuário...</div>;
   }
 
-  {showChat && (
-    <iframe
-      src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
-      style={{ width: "100%", height: "100vh" }}
-    />
-  )}
-  
+  {
+    showChat && (
+      <iframe
+        src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+        style={{ width: "100%", height: "100vh" }}
+      />
+    );
+  }
+
   return (
     <div className="profile-outros-container">
       <div className="sidbar">
@@ -143,7 +145,7 @@ const ProfileOutros = () => {
             Configurações
           </a>
           <div className="nav-buttons">
-            <button id="btn-chat" onClick={handleOpenChat}>
+            <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -213,7 +215,7 @@ const ProfileOutros = () => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={handleOpenChat}>
+                      <button id="btn-chat" onClick={() => navigate("/chat")}>
                         {showChat ? "Fechar" : "Chat"}
                       </button>
                       <button id="btn-pub" onClick={() => navigate("/postar")}>

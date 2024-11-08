@@ -22,11 +22,11 @@ const Configuracoes = () => {
   const checkBanStatus = async () => {
     const authUser = auth.currentUser;
     if (authUser) {
-      const userDoc = await db.collection('users').doc(authUser.uid).get();
+      const userDoc = await db.collection("users").doc(authUser.uid).get();
       if (userDoc.exists && userDoc.data().banned) {
         // toast.error('Sua conta foi banida. Fale com algum ADM.');
         await auth.signOut();
-        navigate('/');
+        navigate("/");
       }
     }
   };
@@ -147,12 +147,10 @@ const Configuracoes = () => {
           const postData = doc.data();
 
           try {
-        
             if (postData.imageUrl) {
               const imageRef = storage.refFromURL(postData.imageUrl);
               await imageRef.delete();
             }
-
 
             await db.collection("posts").doc(doc.id).delete();
             console.log(`Post com ID ${doc.id} excluído com sucesso`);
@@ -161,10 +159,10 @@ const Configuracoes = () => {
           }
         });
 
-
         await Promise.all(deletePromises);
-        console.log("Todos os posts e imagens associadas foram excluídos com sucesso.");
-
+        console.log(
+          "Todos os posts e imagens associadas foram excluídos com sucesso."
+        );
 
         if (userData.profilePhotoURL) {
           const photoRef = storage.refFromURL(userData.profilePhotoURL);
@@ -206,13 +204,15 @@ const Configuracoes = () => {
     return <div>Carregando...</div>;
   }
 
-  {showChat && (
-    <iframe
-      src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
-      style={{ width: "100%", height: "100vh" }}
-    />
-  )}
-  
+  {
+    showChat && (
+      <iframe
+        src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+        style={{ width: "100%", height: "100vh" }}
+      />
+    );
+  }
+
   return (
     <div className="container-conf">
       <div className="sidbar">
@@ -240,7 +240,7 @@ const Configuracoes = () => {
           </a>
 
           <div className="nav-buttons">
-            <button id="btn-chat" onClick={handleOpenChat}>
+            <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -311,7 +311,7 @@ const Configuracoes = () => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={handleOpenChat}>
+                      <button id="btn-chat" onClick={() => navigate("/chat")}>
                         {showChat ? "Fechar" : "Chat"}
                       </button>
                       <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -411,8 +411,14 @@ const Configuracoes = () => {
           {showDeleteAccountModal && (
             <div className="modal-confirmation">
               <div className="modal-content">
-                <h4 id="confirma-excluir">Antes de excluir sua conta, leia os{" "}
-                  <a href="/excluir-conta" onClick={() => navigate("/excluir-conta")}>termos de exclusão de conta</a>
+                <h4 id="confirma-excluir">
+                  Antes de excluir sua conta, leia os{" "}
+                  <a
+                    href="/excluir-conta"
+                    onClick={() => navigate("/excluir-conta")}
+                  >
+                    termos de exclusão de conta
+                  </a>
                 </h4>
                 <div className="modal-buttons">
                   <button className="btn-confirm" onClick={handleDeleteAccount}>
@@ -432,7 +438,6 @@ const Configuracoes = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

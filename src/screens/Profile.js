@@ -53,21 +53,21 @@ export const Profile = () => {
     setShowModal(true);
   };
 
-  
-
   const handleDeletePost = async () => {
     if (!postToDelete) return;
-  
+
     try {
       if (postToDelete.imageUrl) {
         const imageRef = storage.refFromURL(postToDelete.imageUrl);
         await imageRef.delete();
       }
-  
+
       await db.collection("posts").doc(postToDelete.id).delete();
-  
-      setUserPosts((prevPosts) => prevPosts.filter((post) => post.id !== postToDelete.id));
-  
+
+      setUserPosts((prevPosts) =>
+        prevPosts.filter((post) => post.id !== postToDelete.id)
+      );
+
       console.log("Postagem excluída com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir postagem:", error);
@@ -76,7 +76,6 @@ export const Profile = () => {
       setShowModal(false);
     }
   };
-  
 
   const fetchUserPosts = async () => {
     try {
@@ -84,18 +83,17 @@ export const Profile = () => {
         .collection("posts")
         .where("user", "==", user.uid)
         .get();
-  
+
       const posts = postsSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-  
+
       setUserPosts(posts);
     } catch (error) {
       console.error("Erro ao buscar posts do usuário:", error);
     }
   };
-  
 
   useEffect(() => {
     if (user) {
@@ -127,17 +125,17 @@ export const Profile = () => {
     }
   }, [user]);
 
-  
-
   if (loading) return <div>Carregando...</div>;
 
-  {showChat && (
-    <iframe
-      src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
-      style={{ width: "100%", height: "100vh" }}
-    />
-  )}
-  
+  {
+    showChat && (
+      <iframe
+        src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+        style={{ width: "100%", height: "100vh" }}
+      />
+    );
+  }
+
   return (
     <div className="profile-container">
       <div className="sidbar">
@@ -164,7 +162,7 @@ export const Profile = () => {
             Configurações
           </a>
           <div className="nav-buttons">
-            <button id="btn-chat" onClick={handleOpenChat}>
+            <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -234,7 +232,7 @@ export const Profile = () => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={handleOpenChat}>
+                      <button id="btn-chat" onClick={() => navigate("/chat")}>
                         {showChat ? "Fechar" : "Chat"}
                       </button>
                       <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -314,7 +312,6 @@ export const Profile = () => {
             </div>
           </div>
 
-          
           <div className="profile-post">
             <h3>Minhas Postagens</h3>
             {userPosts.length > 0 ? (
@@ -325,7 +322,12 @@ export const Profile = () => {
                   {post.imageUrl && (
                     <img src={post.imageUrl} alt="Post" width={200} />
                   )}
-                  <button className="btn-delete" onClick={() => openModalToDelete(post)}>Excluir</button>
+                  <button
+                    className="btn-delete"
+                    onClick={() => openModalToDelete(post)}
+                  >
+                    Excluir
+                  </button>
                 </div>
               ))
             ) : (
