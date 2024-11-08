@@ -102,7 +102,7 @@ export const Admin = () => {
         return (
             <div>
                 <h1 h1 id="title-admin-1">Admin Login</h1>
-                <div>
+                <div id="div-btn-admin"> 
                     <label>
                         <input
                             id="btn-input"
@@ -112,8 +112,6 @@ export const Admin = () => {
                             placeholder='Nome Admin'
                         />
                     </label>
-                </div>
-                <div>
                     <label>
                         <input
                             id="btn-input"
@@ -124,8 +122,8 @@ export const Admin = () => {
                         />
                     </label>
                     <button id="btn-admin" onClick={handleLogin}>Entrar</button>
-                </div>
             </div>
+        </div>
         );
     }
 

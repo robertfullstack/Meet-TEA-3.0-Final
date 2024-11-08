@@ -24,15 +24,16 @@ const Chat = (props) => {
         setShowChat(!showChat);
       };
 
-      {showChat && (
-        <iframe
-          src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
-          style={{ width: "100%", height: "100vh" }}
-        />
-      )}
-
+      
+      
+      
       return (
         <div className="container-home">
+          <iframe
+            id="chat-oficial"
+            src="https://chat-meet-tea-2-0-wm58.vercel.app/?vercelToolbarCode=Com5DEzl90d5zzw"
+            style={{ width: "70%", height: "100vh" }}
+          />
           <div className="sidbar">
             <nav className="nav flex-column">
               <a

@@ -21,7 +21,6 @@
     padding: 10px;
     color: white;
     width: 150px;
-    margin-left: 83vh;
     margin-top: 40px;
     font-family: "Nunito";
     font-size: 20px;
@@ -30,7 +29,6 @@
 #btn-input{
     border: 1px solid black;
     border-radius: 7px;
-    margin-left: 70vh;
     font-family: "Nunito";
     font-size: 20px;
     margin-top: 2em;
@@ -38,6 +36,13 @@
     width: 350px;
 }
 
+#div-btn-admin{
+    justify-content: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
 tr > th, tr > td {
     padding: 25px; 
     text-align: center;
