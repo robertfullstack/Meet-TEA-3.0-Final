@@ -2,6 +2,7 @@
   import { Navigate, useNavigate } from "react-router-dom";
   import { auth, storage, db } from "../firebase";
   import "../styles/Home.css";
+  import { ToastContainer, toast } from 'react-toastify';
   import IconSoloMeetTEA from "../icons/icon-solo-meet-tea.png";
   import Heart_puzz from "../img/LogoTEAoutline_heart_puzz1.png";
   import Heart_puzz_closed from "../img/LogoTEAoutline_heart_puzz_closed1.png";
@@ -29,16 +30,6 @@
     const [reportPostText, setReportPostText] = useState("");
     const [hasReportedPost, setHasReportedPost] = useState(false);
     const [openModalDenuncia, setOpenModalDenuncia] = useState(false);
-
-    const [reportDescription, setReportDescription] = useState("");
-
-    const handleSubmitReport = () => {
-      console.log("Denúncia enviada:", {
-        motivo: reportReason,
-        descrição: reportDescription,
-      });
-      setOpenModalDenuncia(false); // Fecha o modal após o envio
-    };
 
     //calcula a idade com base na data de nascimento
     const calcularIdade = (birthDate) => {
@@ -274,12 +265,12 @@
       }
 
       if (!reportReason) {
-        alert("Por favor, selecione um motivo para a denúncia.");
+        toast.error("Por favor, selecione um motivo para a denúncia.");
         return;
       }
 
       if (hasReportedPost) {
-        alert("Você já enviou uma denúncia para esta postagem.");
+        toast.error("Você já enviou uma denúncia para esta postagem.");
         return;
       }
 
@@ -288,23 +279,24 @@
         const currentUser = auth.currentUser;
 
         await db
-          .collection("posts")
-          .doc(postId)
-          .collection("reportsPosts")
-          .add({
-            id: postId,
-            emailDenunciante: currentUser.email,
-            motivo: reportReason,
-            justificativa: reportPostText || null,
-            timestamp: new Date(),
-          });
+    .collection("posts")
+    .doc(postId)
+    .collection("reportsPosts")
+    .add({
+        emailDenunciante: currentUser.email,
+        motivo: reportReason,
+        justificativa: reportPostText || null,
+        timestamp: new Date(),
+    });
 
-        alert("Denúncia de postagem enviada com sucesso.");
+
+        toast.success("Denúncia de postagem enviada com sucesso.");
         setHasReportedPost(true);
       } catch (error) {
         console.error("Erro ao enviar denúncia de postagem:", error);
-        alert("Erro ao enviar denúncia. Tente novamente mais tarde.");
+        toast.error("Erro ao enviar denúncia. Tente novamente mais tarde.");
       } finally {
+        setOpenModalDenuncia(false);
         setOpenModalDenuncia(false);
         setReportPostReason("");
         setReportPostText("");

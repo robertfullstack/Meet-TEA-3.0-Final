@@ -11,6 +11,7 @@ const ProfileOutros = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [hasReported, setHasReported] = useState(false);
+  const [openModalVisualizar, setOpenModalVisualizar] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
 
@@ -100,6 +101,7 @@ const ProfileOutros = () => {
       setReportReason("");
       setReportText("");
       setHasReported(true);
+      setOpenModalVisualizar(false);
     } catch (error) {
       console.error("Erro ao enviar denúncia:", error);
       setErrorMessage("Erro ao enviar denúncia. Tente novamente mais tarde.");
@@ -253,51 +255,55 @@ const ProfileOutros = () => {
           </p>
         </div>
 
-        <div className="ban-form" style={{ marginTop: "20px" }}>
-          <h3>Denunciar Usuário</h3>
-          {hasReported ? (
-            <p style={{ color: "red" }}>
-              Você já enviou uma denúncia para este usuário.
-            </p>
-          ) : (
-            <>
-              <label htmlFor="reportReason">Motivo da denúncia:</label>
-              <select
-                id="reportReason"
-                value={reportReason}
-                onChange={(e) => setReportReason(e.target.value)}
-                style={{ width: "100%", marginBottom: "10px" }}
-                required
-              >
-                <option value="">Selecione um motivo</option>
-                <option value="conteúdo impróprio">Conteúdo impróprio</option>
-                <option value="discurso de ódio">Discurso de ódio</option>
-                <option value="assédio ou bullying">Assédio ou bullying</option>
-                <option value="spam ou fraude">Spam ou fraude</option>
-                <option value="falsidade ideológica">
-                  Falsidade ideológica
-                </option>
-              </select>
+        <button onClick={() => setOpenModalVisualizar(true)}>Denunciar Usuário</button>
 
-              <label htmlFor="reportText">Justificativa (opcional):</label>
-              <textarea
-                id="reportText"
-                value={reportText}
-                onChange={(e) => setReportText(e.target.value)}
-                placeholder="Escreva uma justificativa para a denúncia (opcional)"
-                rows="5"
-                cols="50"
-                style={{ width: "100%", marginBottom: "10px" }}
-              ></textarea>
+      {/* Modal de denúncia */}
+      {openModalVisualizar && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Denunciar Usuário</h3>
+            {hasReported ? (
+              <p style={{ color: "red" }}>Você já enviou uma denúncia para este usuário.</p>
+            ) : (
+              <>
+                <label htmlFor="reportReason">Motivo da denúncia:</label>
+                <select
+                  id="reportReason"
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  style={{ width: "100%", marginBottom: "10px" }}
+                  required
+                >
+                  <option value="">Selecione um motivo</option>
+                  <option value="conteúdo impróprio">Conteúdo impróprio</option>
+                  <option value="discurso de ódio">Discurso de ódio</option>
+                  <option value="assédio ou bullying">Assédio ou bullying</option>
+                  <option value="spam ou fraude">Spam ou fraude</option>
+                  <option value="falsidade ideológica">Falsidade ideológica</option>
+                </select>
 
-              <button onClick={handleReport}>Enviar Denúncia</button>
-            </>
-          )}
-          {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+                <label htmlFor="reportText">Justificativa (opcional):</label>
+                <textarea
+                  id="reportText"
+                  value={reportText}
+                  onChange={(e) => setReportText(e.target.value)}
+                  placeholder="Escreva uma justificativa para a denúncia (opcional)"
+                  rows="5"
+                  cols="50"
+                  style={{ width: "100%", marginBottom: "10px" }}
+                ></textarea>
+
+                <button onClick={handleReport}>Enviar Denúncia</button>
+                <button onClick={() => setOpenModalVisualizar(false)}>Fechar</button>
+              </>
+            )}
+            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          </div>
         </div>
+      )}
       </div>
-    </div>
+      </div>
   );
 };
 
