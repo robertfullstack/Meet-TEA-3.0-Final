@@ -169,6 +169,19 @@
       setShowChat(!showChat);
     };
 
+    const handleSharePost = (postId) => {
+      const postUrl = `${window.location.origin}/post/${postId}`; // Isso cria um link para a postagem
+    
+      // Tenta copiar o link para a área de transferência
+      navigator.clipboard.writeText(postUrl).then(() => {
+        toast.success("Link copiado para a área de transferência!");
+      }).catch((error) => {
+        console.error("Erro ao copiar o link: ", error);
+        toast.error("Falha ao copiar o link. Tente novamente.");
+      });
+    };
+    
+
     const handleCommentSubmit = (postId) => {
       if (commentText.trim()) {
         const newComment = {
@@ -296,7 +309,6 @@
         console.error("Erro ao enviar denúncia de postagem:", error);
         toast.error("Erro ao enviar denúncia. Tente novamente mais tarde.");
       } finally {
-        setOpenModalDenuncia(false);
         setOpenModalDenuncia(false);
         setReportPostReason("");
         setReportPostText("");
@@ -535,8 +547,8 @@
           setOpenModalDenuncia(true);
           }}>Denunciar
         </button></li>
-        {openModalDenuncia ? "" : ""}
-      <li><a class="dropdown-item" href="#">Compartilhar</a></li>
+        
+      <li><button class="dropdown-item" onClick={() => handleSharePost(post.id)}>Compartilhar</button></li>
     </ul>
   </div>
                 

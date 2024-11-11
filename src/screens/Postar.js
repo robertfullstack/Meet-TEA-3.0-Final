@@ -13,6 +13,7 @@ const Postar = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [shareLink, setShareLink] = useState("");  // Novo estado para o link de compartilhamento
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -112,6 +113,11 @@ const Postar = (props) => {
                 setFile(null);
                 setOpenModalPublicar(false);
                 alert("Postagem criada com sucesso!");
+
+                // Gera o link para a postagem recém-criada
+                const generatedLink = `${window.location.origin}/post/${newPostRef.id}`;
+                setShareLink(generatedLink);
+
                 navigate("/Home");
               })
               .catch((error) => {
@@ -127,6 +133,13 @@ const Postar = (props) => {
           });
       }
     );
+  };
+
+  // Função para copiar o link de compartilhamento
+  const copyShareLink = () => {
+    navigator.clipboard.writeText(shareLink).then(() => {
+      alert("Link copiado para a área de transferência!");
+    });
   };
 
   {
@@ -280,6 +293,13 @@ const Postar = (props) => {
               id="descricaoPost"
               required
             ></textarea>
+            {shareLink && (
+        <div>
+          <p>Compartilhe sua postagem com este link:</p>
+          <input type="text" value={shareLink} readOnly />
+          <button onClick={copyShareLink}>Copiar Link</button>
+        </div>
+      )}
 
             <button id="publicar" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Publicando..." : "Publicar"}
