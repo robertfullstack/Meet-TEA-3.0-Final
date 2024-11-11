@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { db, auth, storage } from "../firebase";
+import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 const ProfileOutros = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
   const [reportText, setReportText] = useState("");
   const [reportReason, setReportReason] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -15,9 +17,117 @@ const ProfileOutros = () => {
   const [showChat, setShowChat] = useState(false);
   const navigate = useNavigate();
 
-  const handleOpenChat = () => {
-    setShowChat(!showChat);
+  const [followersData, setFollowersData] = useState([]); // Novo estado para armazenar dados dos seguidores
+  const [openModalSeguidores, setOpenModalSeguidores] = useState(false); // Estado para abrir o modal
+
+  useEffect(() => {
+    if (id) {
+      db.collection("users")
+        .doc(id)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setUser(doc.data());
+            setFollowersCount(doc.data().followersCount || 0);
+          } else {
+            console.log("Usuário não encontrado");
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar usuário:", error);
+        });
+
+      // Verifica se o usuário atual já está seguindo este perfil
+      checkIfFollowing();
+      // Carrega dados dos seguidores
+      fetchFollowers();
+    }
+  }, [id]);
+
+  const checkIfFollowing = async () => {
+    if (auth.currentUser) {
+      const currentUser = auth.currentUser.uid;
+      const followerDoc = await db
+        .collection("users")
+        .doc(id)
+        .collection("followers")
+        .doc(currentUser)
+        .get();
+
+      setIsFollowing(followerDoc.exists);
+    }
   };
+
+  const fetchFollowers = async () => {
+    if (id) {
+        try {
+            const followersSnapshot = await db
+                .collection("users")
+                .doc(id)
+                .collection("followers")
+                .get();
+    
+            const followers = await Promise.all(
+                followersSnapshot.docs.map(async (doc) => {
+                    // Recupera os dados do seguidor usando o ID da chave
+                    const followerData = await db.collection("users").doc(doc.id).get();
+                    return followerData.exists ? followerData.data() : null;
+                })
+            );
+    
+            // Salva apenas dados válidos e remove nulos
+            const validFollowers = followers.filter(Boolean);
+            setFollowersData(validFollowers);
+    
+            console.log("Dados dos seguidores carregados:", validFollowers); // Verificação de dados
+    
+        } catch (error) {
+            console.error("Erro ao carregar seguidores:", error);
+        }
+    }
+};
+
+  
+  const handleProfileClick = (profileId) => {
+    navigate(`/profile/${profileId}`);
+  };
+
+
+  const toggleFollow = async () => {
+    if (!auth.currentUser) {
+        alert("Você precisa estar logado para seguir usuários.");
+        return;
+    }
+
+    const currentUser = auth.currentUser.uid;
+    const userRef = db.collection("users").doc(id); // O perfil que está sendo seguido
+    const followerRef = userRef.collection("followers").doc(currentUser); // O seguidor atual
+
+    try {
+        if (isFollowing) {
+            // Se já está seguindo, "desseguir"
+            await followerRef.delete();
+            await userRef.update({
+                followersCount: followersCount - 1,
+            });
+            setFollowersCount(followersCount - 1);
+        } else {
+            // Caso contrário, "seguir"
+            await followerRef.set({
+                followedAt: new Date(),
+            });
+            await userRef.update({
+                followersCount: followersCount + 1,
+            });
+            setFollowersCount(followersCount + 1);
+        }
+
+        setIsFollowing(!isFollowing); // Inverte o estado de seguir/desseguir
+    } catch (error) {
+        console.error("Erro ao seguir/desseguir o usuário:", error);
+    }
+};
+
 
   const handleLogout = () => {
     auth
@@ -30,42 +140,6 @@ const ProfileOutros = () => {
         console.error("Erro ao tentar deslogar:", error);
       });
   };
-
-  useEffect(() => {
-    if (id) {
-      db.collection("users")
-        .doc(id)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setUser(doc.data());
-          } else {
-            console.log("Usuário não encontrado");
-          }
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar usuário:", error);
-        });
-    }
-
-    const checkIfAlreadyReported = async () => {
-      if (auth.currentUser) {
-        const currentUser = auth.currentUser;
-        const reportsSnapshot = await db
-          .collection("users")
-          .doc(id)
-          .collection("reports")
-          .where("emailDenunciante", "==", currentUser.email)
-          .get();
-
-        if (!reportsSnapshot.empty) {
-          setHasReported(true);
-        }
-      }
-    };
-
-    checkIfAlreadyReported();
-  }, [id]);
 
   const handleReport = async () => {
     if (!auth.currentUser) {
@@ -253,14 +327,54 @@ const ProfileOutros = () => {
           <p>
             <strong>Email:</strong> {user.email}
           </p>
+          <p>Seguidores: {followersCount}</p>
+      <button onClick={toggleFollow}>
+        {isFollowing ? "Deixar de Seguir" : "Seguir"}
+      </button>
+      <button onClick={() => setOpenModalSeguidores(true)}>
+            Ver Seguidores
+          </button>
         </div>
+
+      {/* Modal para exibir seguidores */}
+{openModalSeguidores && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Seguidores</h3>
+      <button onClick={() => setOpenModalSeguidores(false)}>Fechar</button>
+      <ul>
+        {followersData.length > 0 ? (
+          followersData.map((follower, index) => (
+            <li key={index} className="follower-item">
+              <img
+                src={follower.profilePhotoURL || "/default-avatar.png"} // Verifica imagem
+                alt={follower.displayName || "Usuário Anônimo"}
+                className="follower-photo"
+                style={{width: "10%", height: "10%"}}
+              />
+              <span
+                onClick={() => handleProfileClick(follower.uid)}
+                style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
+              >
+                {follower.displayName || "Usuário Anônimo"}
+              </span>
+              <li>{follower.id}</li>
+            </li>
+          ))
+        ) : (
+          <li>Este usuário ainda não possui seguidores.</li>
+        )}
+      </ul>
+    </div>
+  </div>
+)}
 
         <button onClick={() => setOpenModalVisualizar(true)}>Denunciar Usuário</button>
 
       {/* Modal de denúncia */}
       {openModalVisualizar && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="ban-form" style={{ marginTop: "20px" }}>
             <h3>Denunciar Usuário</h3>
             {hasReported ? (
               <p style={{ color: "red" }}>Você já enviou uma denúncia para este usuário.</p>

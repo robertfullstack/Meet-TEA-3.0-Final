@@ -92,76 +92,6 @@ export const Admin = () => {
         }
     };
 
-    const handleDeleteUser = async (userId) => {
-        if (window.confirm("Você tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita.")) {
-            try {
-                // Excluir posts associados ao usuário
-                const postsSnapshot = await db.collection("posts")
-                    .where("user", "==", userId)
-                    .get();
-    
-                const deletePromises = postsSnapshot.docs.map(async (doc) => {
-                    const postData = doc.data();
-                    try {
-                        if (postData.imageUrl) {
-                            const imageRef = storage.refFromURL(postData.imageUrl);
-                            await imageRef.delete();
-                        }
-                        await db.collection("posts").doc(doc.id).delete();
-                    } catch (error) {
-                        console.error(`Erro ao excluir o post com ID ${doc.id}:`, error);
-                    }
-                });
-    
-                await Promise.all(deletePromises);
-    
-                // Excluir dados do usuário no Firestore
-                const userDoc = await db.collection("users").doc(userId).get();
-                const userData = userDoc.data();
-    
-                if (userData?.profilePhotoURL) {
-                    const photoRef = storage.refFromURL(userData.profilePhotoURL);
-                    await photoRef.delete();
-                }
-    
-                await db.collection("users").doc(userId).delete();
-    
-                // Excluir arquivos do usuário no Storage (se houver)
-                const userFilesRef = storage.ref().child(`user_files/${userId}`);
-                await userFilesRef.delete().catch((error) => {
-                    console.warn("Nenhum arquivo extra para excluir.", error);
-                });
-    
-                // Exclusão do usuário no Firebase Authentication
-                const userToDelete = await auth.getUser(userId);
-                await auth.deleteUser(userToDelete);
-    
-                // Remover da lista de usuários imediatamente
-                setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-                alert('Usuário excluído com sucesso!');
-    
-                // Desativar sessão ativa (opcional)
-                if (auth.currentUser && auth.currentUser.uid === userId) {
-                    await auth.signOut();
-                    window.location.href = "/";
-                }
-                
-            } catch (error) {
-                console.error('Erro ao excluir usuário:', error);
-    
-                if (error.code === "auth/requires-recent-login") {
-                    alert("Você precisa fazer login novamente para excluir a conta.");
-                    await auth.signOut();
-                    window.location.href = "/login";
-                } else {
-                    alert("Ocorreu um erro ao excluir o usuário.");
-                }
-            }
-        }
-    };
-    
-    
-
     if (!isLoggedIn) {
         return (
             <div>
@@ -234,7 +164,6 @@ export const Admin = () => {
                                     ) : (
                                         <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Desbanir</button>
                                     )}
-                                    <button id="btn-banir" onClick={() => handleDeleteUser(user.id)}>Excluir Conta</button>
                                 </td>
                             </tr>
                         ))}

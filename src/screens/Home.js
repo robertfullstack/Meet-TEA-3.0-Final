@@ -25,6 +25,7 @@
     const [ageFilter, setAgeFilter] = useState(""); // Novo estado para idade
     const [genderFilter, setGenderFilter] = useState(""); // Novo estado para sexo
     const [userReactions, setUserReactions] = useState({});
+    const [following, setFollowing] = useState([]);
     const navigate = useNavigate();
     const [reportReason, setReportPostReason] = useState("");
     const [reportPostText, setReportPostText] = useState("");
@@ -62,10 +63,26 @@
       checkBanStatus();
     }, []);
 
-    useEffect(() => {
-      // Ativa a visualização dos posts automaticamente ao carregar o componente
-      setOpenModalVisualizar(true);
+  // Função para buscar os usuários seguidos
+  const fetchFollowing = async () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const followingSnapshot = await db
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("following")
+        .get();
 
+      const followingList = followingSnapshot.docs.map((doc) => doc.id);
+      setFollowing(followingList);
+    }
+  };
+
+  // Atualização dos posts com prioridade para os seguidos
+  useEffect(() => {
+    setOpenModalVisualizar(true);
+    // Carrega os usuários seguidos e os posts depois disso
+    fetchFollowing().then(() => {
       if (openModalVisualizar) {
         db.collection("posts")
           .orderBy("timestamp", "desc")
@@ -88,10 +105,23 @@
                 comments: comments,
               };
             });
-            Promise.all(postPromises).then((posts) => setPosts(posts));
+
+            Promise.all(postPromises).then((posts) => {
+              // Ordenação: coloca os posts dos seguidos no topo da lista
+              const sortedPosts = posts.sort((a, b) => {
+                const isAFollowed = following.includes(a.post.userId);
+                const isBFollowed = following.includes(b.post.userId);
+
+                if (isAFollowed && !isBFollowed) return -1;
+                if (!isAFollowed && isBFollowed) return 1;
+                return 0; // Mantém a ordem original entre seguidos
+              });
+              setPosts(sortedPosts);
+            });
           });
       }
-    }, [openModalVisualizar]);
+    });
+  }, [openModalVisualizar]);
 
     useEffect(() => {
       if (openModalPerfis) {
@@ -170,14 +200,13 @@
     };
 
     const handleSharePost = (postId) => {
-      const postUrl = `${window.location.origin}/post/${postId}`; // Isso cria um link para a postagem
+      const postUrl = `${window.location.origin}/post/${postId}`; 
     
-      // Tenta copiar o link para a área de transferência
       navigator.clipboard.writeText(postUrl).then(() => {
-        toast.success("Link copiado para a área de transferência!");
+        alert("Link copiado para a área de transferência!");
       }).catch((error) => {
         console.error("Erro ao copiar o link: ", error);
-        toast.error("Falha ao copiar o link. Tente novamente.");
+        alert("Falha ao copiar o link. Tente novamente.");
       });
     };
     
@@ -278,12 +307,12 @@
       }
 
       if (!reportReason) {
-        toast.error("Por favor, selecione um motivo para a denúncia.");
+        alert("Por favor, selecione um motivo para a denúncia.");
         return;
       }
 
       if (hasReportedPost) {
-        toast.error("Você já enviou uma denúncia para esta postagem.");
+        alert("Você já enviou uma denúncia para esta postagem.");
         return;
       }
 
@@ -303,11 +332,11 @@
     });
 
 
-        toast.success("Denúncia de postagem enviada com sucesso.");
+        alert("Denúncia de postagem enviada com sucesso.");
         setHasReportedPost(true);
       } catch (error) {
         console.error("Erro ao enviar denúncia de postagem:", error);
-        toast.error("Erro ao enviar denúncia. Tente novamente mais tarde.");
+        alert("Erro ao enviar denúncia. Tente novamente mais tarde.");
       } finally {
         setOpenModalDenuncia(false);
         setReportPostReason("");
