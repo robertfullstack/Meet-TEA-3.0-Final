@@ -124,7 +124,7 @@ const PostComp = (props) => {
         <div className="post">
           <h1>{post.title}</h1>
           <p>Postado por: {post.postUserName}</p>
-          <img src={post.imageUrl} alt={post.title} />
+          <img id="post-img" src={post.imageUrl} alt={post.title} />
           <p>{post.description}</p>
 
           <div>

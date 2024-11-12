@@ -42,7 +42,6 @@ html {
   padding-left: 245px;
 }
 
-/* Cabeçalho */
 .header {
   text-align: center;
   justify-content: center;
@@ -157,6 +156,9 @@ html {
   overflow: hidden;
 }
 
+#post-img {
+  width: 100%;
+}
 input #file-upload-button {
   background-color: #000;
 }
