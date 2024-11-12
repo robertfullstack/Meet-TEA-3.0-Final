@@ -60,32 +60,30 @@ const ProfileOutros = () => {
 
   const fetchFollowers = async () => {
     if (id) {
-        try {
-            const followersSnapshot = await db
-                .collection("users")
-                .doc(id)
-                .collection("followers")
-                .get();
-    
-            const followers = await Promise.all(
-                followersSnapshot.docs.map(async (doc) => {
-                    // Recupera os dados do seguidor usando o ID da chave
-                    const followerData = await db.collection("users").doc(doc.id).get();
-                    return followerData.exists ? followerData.data() : null;
-                })
-            );
-    
-            // Salva apenas dados válidos e remove nulos
-            const validFollowers = followers.filter(Boolean);
-            setFollowersData(validFollowers);
-    
-            console.log("Dados dos seguidores carregados:", validFollowers); // Verificação de dados
-    
-        } catch (error) {
-            console.error("Erro ao carregar seguidores:", error);
-        }
+      try {
+        const followersSnapshot = await db
+          .collection("users")
+          .doc(id)
+          .collection("followers")
+          .get();
+  
+        const followers = await Promise.all(
+          followersSnapshot.docs.map(async (doc) => {
+            const followerData = await db.collection("users").doc(doc.id).get();
+            return followerData.exists
+              ? { ...followerData.data(), uid: doc.id } // inclui o ID do seguidor
+              : null;
+          })
+        );
+  
+        const validFollowers = followers.filter(Boolean);
+        setFollowersData(validFollowers);
+      } catch (error) {
+        console.error("Erro ao carregar seguidores:", error);
+      }
     }
-};
+  };
+  
 
   
   const handleProfileClick = (profileId) => {
