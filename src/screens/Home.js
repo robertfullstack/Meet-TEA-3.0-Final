@@ -9,6 +9,7 @@
   import Joia_puzz from "../img/Teacurteecompartilha.png";
   import Joia_puzz_closed from "../img/Teacurteecompartilhamandajoia.png";
   import pontinhos from "../img/pontinhos.png";
+  import defaultProfile from "../img/default-profile.png";
   import "@fontsource/poetsen-one";
   import "@fontsource/nunito";
 
@@ -535,6 +536,14 @@
                   className="profile"
                   onClick={() => handleProfileClick(profile.id)}
                 >
+                  <img
+            id="img-perfil"
+            src={profile.profilePhotoURL || defaultProfile}
+          alt=""
+            width={200}
+            height={200}
+          />
+
                   <p>
                     <strong>Nome:</strong> {profile.displayName}
                   </p>
@@ -672,7 +681,14 @@
                       </div>
                     </div>
                   </div>
-                  <p>{post.post.postUserName}</p>
+                <img
+                    style={{ width: "10%" }}
+                  src={post.post.profilePhotoURL || defaultProfile}
+                alt=""
+                onClick={() => handleProfileClick(post.post.user)}
+                  />
+
+                  <p onClick={() => handleProfileClick(post.post.user)}>{post.post.postUserName}</p>
 
                   <h2>{post.post.title}</h2>
 

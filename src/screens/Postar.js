@@ -52,30 +52,42 @@ const Postar = (props) => {
       });
   };
 
-  const uploadPost = (e) => {
+  const uploadPost = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-
+  
     setIsSubmitting(true);
-
+  
     const titlePost = document.getElementById("titlePost").value;
     const descricaoPost = document.getElementById("descricaoPost").value;
-
+  
     if (!file) {
       alert("Selecione um arquivo para upload");
       setIsSubmitting(false);
       return;
     }
-
+  
     if (!currentUser) {
       alert("Usuário não autenticado.");
       setIsSubmitting(false);
       return;
     }
-
+  
+    // Busca a URL da foto de perfil do usuário
+    let profilePhotoURL = "";
+    try {
+      const userDoc = await db.collection("users").doc(currentUser.uid).get();
+      profilePhotoURL = userDoc.exists ? userDoc.data().profilePhotoURL : null;
+    } catch (error) {
+      console.error("Erro ao buscar foto de perfil:", error);
+      alert("Erro ao buscar foto de perfil do usuário.");
+      setIsSubmitting(false);
+      return;
+    }
+  
     const uniqueImageName = crypto.randomUUID();
     const uploadTask = storage.ref(`images/${uniqueImageName}`).put(file);
-
+  
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -105,6 +117,7 @@ const Postar = (props) => {
                 timestamp: new Date(),
                 user: currentUser.uid,
                 postUserName: currentUser.displayName,
+                profilePhotoURL: profilePhotoURL, // Adiciona a foto de perfil do usuário ao post
                 likes: 0,
                 loves: 0,
               })
@@ -113,11 +126,11 @@ const Postar = (props) => {
                 setFile(null);
                 setOpenModalPublicar(false);
                 alert("Postagem criada com sucesso!");
-
+  
                 // Gera o link para a postagem recém-criada
                 const generatedLink = `${window.location.origin}/post/${newPostRef.id}`;
                 setShareLink(generatedLink);
-
+  
                 navigate("/Home");
               })
               .catch((error) => {
@@ -134,6 +147,7 @@ const Postar = (props) => {
       }
     );
   };
+  
 
   // Função para copiar o link de compartilhamento
   const copyShareLink = () => {

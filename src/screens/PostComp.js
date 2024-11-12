@@ -135,6 +135,9 @@ const PostComp = () => {
         />
         <button type="submit">Comentar</button>
       </form>
+      <button onClick={() => navigate("/Home")}>
+          Ir à página incicial
+        </button>
     </div>
   );
 };

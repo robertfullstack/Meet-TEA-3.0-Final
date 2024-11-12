@@ -20,9 +20,11 @@ const calcularIdade = (dataNascimento) => {
 export const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [followers, setFollowers] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [mostrarSeguidores, setMostrarSeguidores] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const navigate = useNavigate();
   const user = auth.currentUser;
@@ -47,6 +49,29 @@ export const Profile = () => {
         console.error("Erro ao tentar deslogar:", error);
       });
   };
+
+  const fetchFollowers = async () => {
+    try {
+      const followersSnapshot = await db
+        .collection("users")
+        .doc(user.uid)
+        .collection("followers")
+        .get();
+  
+      const followersList = await Promise.all(
+        followersSnapshot.docs.map(async (doc) => {
+          const followerData = await db.collection("users").doc(doc.id).get();
+          return followerData.exists ? { id: followerData.uid, ...followerData.data() } : null;
+        })
+      );
+  
+      const validFollowers = followersList.filter(Boolean); // Remove seguidores nulos
+      setFollowers(validFollowers);
+    } catch (error) {
+      console.error("Erro ao buscar seguidores:", error);
+    }
+  };
+  
 
   const openModalToDelete = (post) => {
     setPostToDelete(post);
@@ -119,6 +144,7 @@ export const Profile = () => {
 
       fetchUserData();
       fetchUserPosts();
+      fetchFollowers();
     } else {
       console.log("Usuário não autenticado.");
       setLoading(false);
@@ -311,6 +337,28 @@ export const Profile = () => {
               )}
             </div>
           </div>
+          <button onClick={() => setMostrarSeguidores(true)}>Seguidores</button>
+          {mostrarSeguidores && (
+          <div className="followers-section">
+            <h3>Seguidores</h3>
+            {followers.length > 0 ? (
+              followers.map((follower) => (
+                <div key={follower.uid} className="follower">
+                  <img
+                    src={follower.profilePhotoURL || defaultProfile}
+                    alt="Seguidor"
+                    width={50}
+                    height={50}
+                  />
+                  <p>{follower.displayName}</p>
+                </div>
+              ))
+            ) : (
+              <p id="no-followers">Você ainda não tem seguidores.</p>
+            )}
+            <button onClick={() => setMostrarSeguidores(false)}>Fechar</button>
+          </div>
+          )};
 
           <div className="profile-post">
             <h3>Minhas Postagens</h3>
