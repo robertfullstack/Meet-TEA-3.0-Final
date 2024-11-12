@@ -508,6 +508,13 @@ input #file-upload-button {
     overflow-wrap: break-word;
     overflow: hidden;
   }
+  .modal-posts {
+    display: flex;
+    width: 100%;
+  }
+  #post-img {
+    width: 100%;
+  }
 }
 
 @media (max-width: 400px) {
