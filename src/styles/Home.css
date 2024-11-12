@@ -6,13 +6,20 @@ html {
 }
 
 .container-home {
-  display: grid;
-  grid-gap: 5px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-template-rows: auto;
+  display: flex;
+  justify-content: center;
   width: 100%;
   padding: 10px;
   height: 100%;
+}
+
+#img-profile-post {
+  width: 45px;
+  height: 45px;
+  min-width: 12px;
+  min-height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .container-Postar {
   display: flex;
@@ -206,7 +213,7 @@ input #file-upload-button {
 }
 
 .nav {
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 #container-posts {
@@ -227,7 +234,7 @@ input #file-upload-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: auto; 
+  margin-top: auto;
   gap: 20px;
 }
 #comentario {
@@ -294,32 +301,30 @@ input #file-upload-button {
   border: 2px solid #000;
 }
 
-
-#btn-point{
+#btn-point {
   position: relative;
-  border:none;
-  background-color:#314263;
-  left:90%;
+  border: none;
+  background-color: #314263;
+  left: 90%;
 }
 
-#btn-denuncia-point{
+#btn-denuncia-point {
   margin-left: 2%;
-  border:none;
+  border: none;
   font-family: "Nunito";
   background-color: white;
   text-align: center;
 }
 
-#li-papai{
+#li-papai {
   position: relative;
   text-align: center;
   justify-content: center;
 }
-#menu-denuncia{
+#menu-denuncia {
   text-align: center;
   justify-content: center;
 }
-
 
 #btn-coment,
 #btn-coment-enviar {
@@ -376,7 +381,7 @@ input #file-upload-button {
   object-fit: cover;
   border-radius: 50%;
 }
- .profile{
+.profile {
   border: 1px solid #30405f;
   background-color: #30405f;
   margin-top: 10px;
@@ -384,44 +389,45 @@ input #file-upload-button {
   color: white;
   padding: 10px;
   font-family: "Nunito";
- }
+}
 
-#desc-texto{
-  color:black;
+#desc-texto {
+  color: black;
   font-size: 15px;
 }
-#motivo, #descricao{
+#motivo,
+#descricao {
   font-size: 15px;
   border-radius: 6px;
 }
 
-#btn-enviar{
+#btn-enviar {
   background-color: #0d6efd;
 }
 
-#btn-enviar:hover{
+#btn-enviar:hover {
   background-color: rgb(72, 177, 72);
   transition: 0.5s;
 }
 
-#btn-cancel{
+#btn-cancel {
   background-color: #6c757d;
 }
 
-#btn-cancel:hover{
+#btn-cancel:hover {
   background-color: #8f1717;
   transition: 0.5s;
 }
-.modal-content{
+.modal-content {
   background-color: #365a8e;
   width: fit-content;
 }
 
-.modal-dialog{
-    margin-right: auto;
-    margin-left: auto;
-    max-width: 100%;
-    width: 40%;
+.modal-dialog {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100%;
+  width: 40%;
 }
 .navbar-mobile {
   display: none;
@@ -473,9 +479,13 @@ input #file-upload-button {
     padding: 0;
   }
 
-
   body {
     overflow-y: auto;
+  }
+
+  #img-profile-post {
+    width: 35px;
+    height: 35px;
   }
 
   #container-publicar {

@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { db, auth } from '../firebase';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { db, auth } from "../firebase";
+import "../styles/Home.css";
+import Heart_puzz from "../img/LogoTEAoutline_heart_puzz1.png";
+import Heart_puzz_closed from "../img/LogoTEAoutline_heart_puzz_closed1.png";
+import Joia_puzz from "../img/Teacurteecompartilha.png";
+import Joia_puzz_closed from "../img/Teacurteecompartilhamandajoia.png";
 
-const PostComp = () => {
+const PostComp = (props) => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [likes, setLikes] = useState(0);
@@ -11,11 +16,12 @@ const PostComp = () => {
   const [comments, setComments] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoved, setIsLoved] = useState(false);
+  const [currentPostId, setCurrentPostId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
-      const postRef = db.collection('posts').doc(id);
+      const postRef = db.collection("posts").doc(id);
       const postSnapshot = await postRef.get();
       if (postSnapshot.exists) {
         const postData = postSnapshot.data();
@@ -23,7 +29,6 @@ const PostComp = () => {
         setLikes(postData.likes || 0);
         setLoves(postData.loves || 0);
 
-        // Carrega os comentários do post
         const commentsSnapshot = await postRef.collection("comments").get();
         const loadedComments = commentsSnapshot.docs.map((doc) => doc.data());
         setComments(loadedComments);
@@ -44,7 +49,7 @@ const PostComp = () => {
 
   const handleLike = async () => {
     if (!checkAuth()) return;
-    const postRef = db.collection('posts').doc(id);
+    const postRef = db.collection("posts").doc(id);
 
     if (isLiked) {
       await postRef.update({ likes: likes - 1 });
@@ -63,7 +68,7 @@ const PostComp = () => {
 
   const handleLove = async () => {
     if (!checkAuth()) return;
-    const postRef = db.collection('posts').doc(id);
+    const postRef = db.collection("posts").doc(id);
 
     if (isLoved) {
       await postRef.update({ loves: loves - 1 });
@@ -80,20 +85,32 @@ const PostComp = () => {
     setIsLoved(!isLoved);
   };
 
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    if (!checkAuth()) return;
-
+  const handleCommentSubmit = async (postId) => {
     if (commentText.trim()) {
+      if (!auth.currentUser || !auth.currentUser.displayName) {
+        alert("Você precisa estar logado para comentar.");
+        return;
+      }
+
       const newComment = {
         text: commentText,
         user: auth.currentUser.displayName,
         timestamp: new Date(),
       };
 
-      await db.collection("posts").doc(id).collection("comments").add(newComment);
-      setComments((prevComments) => [...prevComments, newComment]);
-      setCommentText("");
+      try {
+        await db
+          .collection("posts")
+          .doc(postId)
+          .collection("comments")
+          .add(newComment);
+
+        setComments((prevComments) => [...prevComments, newComment]);
+        setCommentText("");
+        setCurrentPostId(null);
+      } catch (error) {
+        console.error("Erro ao adicionar comentário:", error);
+      }
     }
   };
 
@@ -102,42 +119,81 @@ const PostComp = () => {
   }
 
   return (
-    <div>
-      <h1>{post.title}</h1>
-      <p>Postado por: {post.postUserName}</p>
-      <img src={post.imageUrl} alt={post.title} />
-      <p>{post.description}</p>
+    <div className="container-home">
+      <div id="container-post" className="modal-posts">
+        <div className="post">
+          <h1>{post.title}</h1>
+          <p>Postado por: {post.postUserName}</p>
+          <img src={post.imageUrl} alt={post.title} />
+          <p>{post.description}</p>
 
-      <div>
-        <button onClick={handleLike}>
-          {isLiked ? "Descurtir" : "Curtir"} ({likes})
-        </button>
-        <button onClick={handleLove}>
-          {isLoved ? "Remover Love" : "Love"} ({loves})
-        </button>
-      </div>
-
-      <div>
-        <h3>Comentários:</h3>
-        {comments.map((comment, index) => (
-          <div key={index}>
-            <p><strong>{comment.user}:</strong> {comment.text}</p>
+          <div>
+            <button id="btn-curtir" onClick={handleLike}>
+              <img
+                src={isLiked ? Joia_puzz_closed : Joia_puzz}
+                width={40}
+                alt={isLiked ? "Like ativo" : "Like inativo"}
+              />
+              ({likes})
+            </button>
+            <button id="btn-amei" onClick={handleLove}>
+              <img
+                src={isLoved ? Heart_puzz_closed : Heart_puzz}
+                width={40}
+                alt={isLoved ? "Amor ativo" : "Amor inativo"}
+              />
+              ({loves})
+            </button>
           </div>
-        ))}
-      </div>
 
-      <form onSubmit={handleCommentSubmit}>
-        <input
-          type="text"
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          placeholder="Adicione um comentário..."
-        />
-        <button type="submit">Comentar</button>
-      </form>
-      <button onClick={() => navigate("/Home")}>
-          Ir à página incicial
-        </button>
+          <button
+            id="btn-coment"
+            onClick={() =>
+              setCurrentPostId(post.id === currentPostId ? null : post.id)
+            }
+          >
+            {currentPostId === post.id ? "Comentar" : "Comentar"}
+          </button>
+
+          {currentPostId === post.id && (
+            <div className="comment-form">
+              <textarea
+                id="comentario"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Escreva um comentário..."
+              />
+
+              <div className="button-group">
+                <button
+                  id="btn-coment-enviar"
+                  onClick={() => handleCommentSubmit(post.id)}
+                >
+                  Enviar
+                </button>
+                <button
+                  id="btn-coment-fechar"
+                  onClick={() => setCurrentPostId(null)}
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          )}
+          <div>
+            <h3>Comentários:</h3>
+            {comments.map((comment, index) => (
+              <div key={index}>
+                <p>
+                  <strong>{comment.user}:</strong> {comment.text}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <button onClick={() => navigate("/Home")}>Ir à página inicial</button>
+        </div>
+      </div>
     </div>
   );
 };
