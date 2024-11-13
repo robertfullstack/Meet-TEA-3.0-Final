@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase';
+import defaultProfile from "../img/default-profile.png";
 
 const PostComp = () => {
   const { id } = useParams();
@@ -104,7 +105,11 @@ const PostComp = () => {
   return (
     <div>
       <h1>{post.title}</h1>
-      <p>Postado por: {post.postUserName}</p>
+      <p><img
+                    style={{ width: "10%" }}
+                  src={post.profilePhotoURL || defaultProfile}
+                alt=""
+                  />Postado por: {post.postUserName}</p>
       <img src={post.imageUrl} alt={post.title} />
       <p>{post.description}</p>
 
