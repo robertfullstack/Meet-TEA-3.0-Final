@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db, auth } from "../firebase";
 import "../styles/Home.css";
+import defaultProfile from "../img/default-profile.png";
 import Heart_puzz from "../img/LogoTEAoutline_heart_puzz1.png";
 import Heart_puzz_closed from "../img/LogoTEAoutline_heart_puzz_closed1.png";
 import Joia_puzz from "../img/Teacurteecompartilha.png";
@@ -124,6 +125,11 @@ const PostComp = (props) => {
         <div className="post">
           <h1>{post.title}</h1>
           <p>Postado por: {post.postUserName}</p>
+          <img
+                  id="img-profile-post"
+                  src={post.profilePhotoURL || defaultProfile}
+                  alt=""
+                />
           <img id="post-img" src={post.imageUrl} alt={post.title} />
           <p>{post.description}</p>
 
