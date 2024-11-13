@@ -17,7 +17,7 @@ html {
   width: 45px;
   height: 45px;
   min-width: 12px;
-  min-height: 100%;
+  min-height: 12px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -488,6 +488,10 @@ input #file-upload-button {
   #img-profile-post {
     width: 35px;
     height: 35px;
+    min-width: 12px;
+    min-height: 12px;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   #container-publicar {
