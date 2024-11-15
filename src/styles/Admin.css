@@ -1,5 +1,6 @@
 .container-admin {
     font-family: "Nunito";
+    display: flex;
   }
   
   #title-admin {
@@ -43,10 +44,37 @@
     align-content: center;
     align-items: center;
   }
-  tr > th,
   tr > td {
-    padding: 25px;
+    padding: 45px;
     text-align: center;
+    font-size: 18px;
+  }
+  #th-id{
+  margin-left: 130px;
+  }
+
+  #th-email{
+    margin-left: 330px;
+  }
+
+  #th-arquivo{
+    margin-left: 220px;
+  }
+
+  #th-denuncia{
+    margin-left: 110px;
+  }
+
+  #th-ação{
+    margin-left: 110px;
+  }
+
+  #th-admin{
+    display: flex;
+    padding: 10px;
+    flex-direction:  row;
+    text-align: center;
+    font-size: 18px;
   }
   
   #btn-logout {

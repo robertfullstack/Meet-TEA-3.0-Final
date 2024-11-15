@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { auth, db, storage } from "../firebase.js";
 import { useNavigate } from 'react-router-dom';
 import "../styles/Admin.css";
+import loading1 from "../img/loading-meet-tea.gif";
 
 export const Admin = () => {
     const [users, setUsers] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [adminName, setAdminName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
     const navigate = useNavigate();
@@ -66,6 +68,8 @@ export const Admin = () => {
                 setUsers(usersList);
             } catch (error) {
                 console.error('Erro ao buscar usuários:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -95,8 +99,8 @@ export const Admin = () => {
     if (!isLoggedIn) {
         return (
             <div>
-                <h1 h1 id="title-admin-1">Admin Login</h1>
-                <div id="div-btn-admin"> 
+                <h1 id="title-admin-1">Admin Login</h1>
+                <div id="div-btn-admin">
                     <label>
                         <input
                             id="btn-input"
@@ -130,44 +134,60 @@ export const Admin = () => {
                 <table id="table-admin">
                     <thead>
                         <tr id="tr-admin">
-                            <th>ID do Usuário:</th>
-                            <th>Email:</th>
-                            <th>Arquivo/Carteirinha:</th>
-                            <th>Denúncias:</th>
-                            <th>Ações (ADM):</th>
+                            <div id="th-admin"> 
+                            <th id="th-id">ID do Usuário:</th>
+                            <th id="th-email">Email:</th>
+                            <th id="th-arquivo">Arquivo/Carteirinha:</th>
+                            <th id="th-denuncia">Denúncias:</th>
+                            <th id="th-ação">Ações (ADM):</th>
+                            </div>
                         </tr>
                     </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user.id}>
-                                <td>{user.id}</td>
-                                <td>{user.email}</td>
-                                <td>
-                                    {user.fileURL ? (
-                                        <a href={user.fileURL} target="_blank" rel="noopener noreferrer">Download</a>
-                                    ) : (
-                                        'Nenhum arquivo'
-                                    )}
-                                </td>
-                                <td>
-                                    {user.reports.length > 0 ? (
-                                        <button id="btn-denuncia" onClick={() => openReportsPage(user.reports)}>
-                                            Exibir Denúncias
-                                        </button>
-                                    ) : (
-                                        'Nenhuma denúncia'
-                                    )}
-                                </td>
-                                <td>
-                                    {!user.banned ? (
-                                        <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Banir</button>
-                                    ) : (
-                                        <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Desbanir</button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+                    <div>
+                        {loading ? (
+                            <div className="loading">
+                                <img
+                                    className="loading"
+                                    src={loading1}
+                                    alt="Xicará com quebra-cabeça balançando como formato de carregamento da página"
+                                    width={600}
+                                    height={800}
+                                />
+                            </div>
+                        ) : (
+                            <tbody>
+                                {users.map((user) => (
+                                    <tr key={user.id}>
+                                        <td>{user.id}</td>
+                                        <td>{user.email}</td>
+                                        <td>
+                                            {user.fileURL ? (
+                                                <a href={user.fileURL} target="_blank" rel="noopener noreferrer">Download</a>
+                                            ) : (
+                                                'Nenhum arquivo'
+                                            )}
+                                        </td>
+                                        <td>
+                                            {user.reports.length > 0 ? (
+                                                <button id="btn-denuncia" onClick={() => openReportsPage(user.reports)}>
+                                                    Exibir Denúncias
+                                                </button>
+                                            ) : (
+                                                'Nenhuma denúncia'
+                                            )}
+                                        </td>
+                                        <td>
+                                            {!user.banned ? (
+                                                <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Banir</button>
+                                            ) : (
+                                                <button id="btn-banir" onClick={() => toggleBanUser(user.id, user.banned)}>Desbanir</button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        )}
+                    </div>
                 </table>
             </div>
         </div>

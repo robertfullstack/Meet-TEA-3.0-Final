@@ -3,10 +3,12 @@ import { auth, db, storage } from "../firebase.js";
 import "../styles/Configuracoes.css";
 import defaultProfile from "../img/default-profile.png";
 import { useNavigate } from "react-router-dom";
+import loading1 from "../img/loading-meet-tea.gif";
 
 const Configuracoes = () => {
   const [userData, setUserData] = useState(null);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const navigate = useNavigate();
@@ -201,7 +203,12 @@ const Configuracoes = () => {
   };
 
   if (!userData) {
-    return <div>Carregando...</div>;
+    return <div className="loading"><img className="loading"
+    src={loading1}
+    alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+    width={600}
+    height={800}/> 
+    </div>;
   }
 
   {

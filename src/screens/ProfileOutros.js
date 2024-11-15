@@ -344,12 +344,6 @@ const ProfileOutros = () => {
         {followersData.length > 0 ? (
           followersData.map((follower, index) => (
             <li key={index} className="follower-item">
-              <img
-                src={follower.profilePhotoURL || "/default-avatar.png"} // Verifica imagem
-                alt={follower.displayName || "Usuário Anônimo"}
-                className="follower-photo"
-                style={{width: "10%", height: "10%"}}
-              />
               <span
                 onClick={() => handleProfileClick(follower.uid)}
                 style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}

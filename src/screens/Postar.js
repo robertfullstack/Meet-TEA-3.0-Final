@@ -3,7 +3,6 @@ import { auth, storage, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 import "@fontsource/nunito";
-
 const Postar = (props) => {
   const [openModalPublicar, setOpenModalPublicar] = useState(true);
   const [file, setFile] = useState(null);

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../styles/Profile.css";
 import defaultProfile from "../img/default-profile.png";
 import { auth, db, storage } from "../firebase";
+import loading1 from "../img/loading-meet-tea.gif";
+import pontinhos from "../img/pontinhos.png";
 
 const calcularIdade = (dataNascimento) => {
   const hoje = new Date();
@@ -18,6 +21,8 @@ const calcularIdade = (dataNascimento) => {
 };
 
 export const Profile = () => {
+  const { id } = useParams();
+  const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [followers, setFollowers] = useState([]);
@@ -25,9 +30,10 @@ export const Profile = () => {
   const [showChat, setShowChat] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [mostrarSeguidores, setMostrarSeguidores] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
   const [postToDelete, setPostToDelete] = useState(null);
   const navigate = useNavigate();
-  const user = auth.currentUser;
+  const currentUser = auth.currentUser; // Verificação de autenticação
   const [formData, setFormData] = useState({
     displayName: "",
     phone: "",
@@ -51,17 +57,19 @@ export const Profile = () => {
   };
 
   const fetchFollowers = async () => {
+    if (!currentUser) return;
+
     try {
       const followersSnapshot = await db
         .collection("users")
-        .doc(user.uid)
+        .doc(currentUser.uid)
         .collection("followers")
         .get();
   
       const followersList = await Promise.all(
         followersSnapshot.docs.map(async (doc) => {
           const followerData = await db.collection("users").doc(doc.id).get();
-          return followerData.exists ? { id: followerData.uid, ...followerData.data() } : null;
+          return followerData.exists ? { id: followerData.id, ...followerData.data() } : null;
         })
       );
   
@@ -71,7 +79,30 @@ export const Profile = () => {
       console.error("Erro ao buscar seguidores:", error);
     }
   };
-  
+
+  const userRef = id ? db.collection("users").doc(id) : null;
+
+  useEffect(() => {
+    if (id) {
+      db.collection("users")
+        .doc(id)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setUser(doc.data());
+            setFollowersCount(doc.data().followersCount || 0);
+          } else {
+            console.log("Usuário não encontrado");
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar usuário:", error);
+        });
+
+      // Carrega dados dos seguidores
+      fetchFollowers();
+    }
+  }, [id]);
 
   const openModalToDelete = (post) => {
     setPostToDelete(post);
@@ -103,10 +134,12 @@ export const Profile = () => {
   };
 
   const fetchUserPosts = async () => {
+    if (!currentUser) return;
+
     try {
       const postsSnapshot = await db
         .collection("posts")
-        .where("user", "==", user.uid)
+        .where("user", "==", currentUser.uid)
         .get();
 
       const posts = postsSnapshot.docs.map((doc) => ({
@@ -121,10 +154,16 @@ export const Profile = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (followers.length) {
+      setFollowersCount(followers.length);
+    }
+  }, [followers]);
+
+  useEffect(() => {
+    if (currentUser) {
       const fetchUserData = async () => {
         try {
-          const userDoc = await db.collection("users").doc(user.uid).get();
+          const userDoc = await db.collection("users").doc(currentUser.uid).get();
           if (userDoc.exists) {
             setUserData(userDoc.data());
             setFormData({
@@ -149,9 +188,15 @@ export const Profile = () => {
       console.log("Usuário não autenticado.");
       setLoading(false);
     }
-  }, [user]);
+  }, [currentUser]);
 
-  if (loading) return <div>Carregando...</div>;
+  if (loading) return <div className="loading">
+  <img className="loading"
+  src={loading1}
+  alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+  width={450}
+  height={800}/> 
+  </div>;
 
   {
     showChat && (
@@ -285,8 +330,52 @@ export const Profile = () => {
             width={200}
             height={200}
           />
-          <p id="sobre-nome">{userData.displayName}</p>
-          <p>
+          <div className="profile-nome"> 
+          <p id="sobre-nome">Seguidores: {followersCount}</p>
+          <p id="sobre-nome1">{userData.displayName}</p>
+          <div class="dropdown">
+                  <button
+                    id="btn-point-personalizar"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <img
+                      src={pontinhos}
+                      alt={"..."}
+                      width="100%"
+                      height={"50px"}
+                    />
+                  </button>
+                  <ul id="personalizar" class="dropdown-menu">
+                    <li id="li-papai">
+                      <button
+                        id="btn-personalizar"
+                        data-bs-target="#staticBackdrop"
+                        onClick={() => {navigate("/configuracoes") }}
+                      >Personalizar
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+          </div>
+              <button id="btn-seguidores" onClick={() => setMostrarSeguidores(true)}>Mostrar Seguidores</button>
+              {mostrarSeguidores && (
+              <div className="followers-section">
+                {followers.length > 0 ? (
+                  followers.map((follower) => (
+                    <div key={follower.uid} className="follower">
+                      <p>{follower.displayName}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p id="no-followers">Você não tem seguidores</p>
+                )}
+              <button id="btn-seguidores" onClick={() => setMostrarSeguidores(false)}>Fechar</button>
+              </div>
+              )}
+          <p> 
+              <br></br>
             <strong id="sobre">Sobre mim:</strong>
           </p>
           <p id="sobre-info">{userData.about}</p>
@@ -337,28 +426,6 @@ export const Profile = () => {
               )}
             </div>
           </div>
-          <button onClick={() => setMostrarSeguidores(true)}>Seguidores</button>
-          {mostrarSeguidores && (
-          <div className="followers-section">
-            <h3>Seguidores</h3>
-            {followers.length > 0 ? (
-              followers.map((follower) => (
-                <div key={follower.uid} className="follower">
-                  <img
-                    src={follower.profilePhotoURL || defaultProfile}
-                    alt="Seguidor"
-                    width={50}
-                    height={50}
-                  />
-                  <p>{follower.displayName}</p>
-                </div>
-              ))
-            ) : (
-              <p id="no-followers">Você ainda não tem seguidores.</p>
-            )}
-            <button onClick={() => setMostrarSeguidores(false)}>Fechar</button>
-          </div>
-          )};
 
           <div className="profile-post">
             <h3>Minhas Postagens</h3>
@@ -384,7 +451,12 @@ export const Profile = () => {
           </div>
         </div>
       ) : (
-        <div>Dados do usuário não encontrados.</div>
+        <div className="loading"><img className="loading"
+        src={loading1}
+        alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+        width={650}
+        height={900}></img>
+        </div>
       )}
       {showModal && (
         <div className="modal-confirmation">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, storage, db } from "../firebase";
 import "../styles/Admin.css";
+import loading1 from "../img/loading-meet-tea.gif";
 
 export const DenunciaPost = () => {
   const [showModal, setShowModal] = useState(true);
@@ -191,8 +192,15 @@ export const DenunciaPost = () => {
                 })}
               </ul>
             ) : (
-              <p>Nenhuma denúncia encontrada.</p>
+              <td> <div className='loading'>
+                 <img className="loading"
+                  src={loading1}
+                  alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+                  width={600}
+                  height={800}/> 
+                  </div>;</td>
             )}
+             
             <div className="modal-buttons">
               <button className="btn-cancel1" onClick={closeReportsPage}>
                 Fechar

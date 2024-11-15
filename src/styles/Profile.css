@@ -109,11 +109,22 @@
   font-size: 18px;
   font-family: "Nunito";
 }
-#sobre-nome {
+
+#sobre-nome,#sobre-nome1 {
   margin-top: 10px;
 }
 
+#sobre-nome{
+  display: flex;
+  justify-content: start;
+}
+#sobre-nome1{
+  display: flex;
+  justify-content: center;
+}
+
 #sobre-nome,
+#sobre-nome1,
 #sobre,
 #sobre-info {
   font-family: "Nunito";
@@ -152,7 +163,33 @@
   color: white;
   opacity: 80%;
 }
+#btn-seguidores{
+  border-radius:10px ;
+  background-color: #edb47f;
+  border: none;
+  font-family: "Nunito";
+  color: black;
+}
+.profile-nome{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin-right: 40px;
+}
 
+#btn-point-personalizar{
+  position: relative;
+  border: none;
+  background-color: #30405f;
+}
+
+#btn-personalizar{
+  border-radius: 10px;
+  border: none;
+  background-color: white;
+}
 .btn-delete {
   border: none;
   margin-top: 10px;
@@ -239,9 +276,24 @@
     padding: 0;
   }
 
+  .profile-nome{
+    gap: 10%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: wrap;
+    margin-right: 0px;
+  }
+
   #img-perfil {
     object-fit: contain;
     max-width: 100%;
     border-radius: 50%;
   }
+}
+
+.loading{
+  display: flex;
+  justify-content: center;
 }
