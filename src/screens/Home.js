@@ -10,6 +10,9 @@ import Joia_puzz from "../img/Teacurteecompartilha.png";
 import Joia_puzz_closed from "../img/Teacurteecompartilhamandajoia.png";
 import pontinhos from "../img/pontinhos.png";
 import defaultProfile from "../img/default-profile.png";
+import IconHome from "../img/icon_home.png";
+import IconConfig from "../img/icon_config.png";
+import IconProfile from "../img/icon_profile.png";
 import "@fontsource/poetsen-one";
 import "@fontsource/nunito";
 
@@ -352,6 +355,7 @@ const Home = (props) => {
             aria-current="page"
             href="./Home"
           >
+            <img src={IconHome} width={30} style={{ margin: "0 10px" }} />
             Inicio
           </a>
           <a
@@ -359,6 +363,7 @@ const Home = (props) => {
             id="perfil"
             onClick={() => navigate("/profile")}
           >
+            <img src={IconProfile} width={30} style={{ margin: "0 10px" }} />
             Perfil
           </a>
           <a
@@ -366,6 +371,12 @@ const Home = (props) => {
             id="config"
             onClick={() => navigate("/configuracoes")}
           >
+            <img
+              id="icon-config"
+              src={IconConfig}
+              width={50}
+              style={{ margin: "0 0px" }}
+            />
             Configurações
           </a>
 
@@ -420,6 +431,11 @@ const Home = (props) => {
                         id="inicio"
                         onClick={() => navigate("/Home")}
                       >
+                        <img
+                          src={IconHome}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Inicio
                       </a>
                     </li>
@@ -429,6 +445,11 @@ const Home = (props) => {
                         id="perfil"
                         onClick={() => navigate("/profile")}
                       >
+                        <img
+                          src={IconProfile}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Perfil
                       </a>
                     </li>
@@ -438,6 +459,12 @@ const Home = (props) => {
                         id="config"
                         onClick={() => navigate("/configuracoes")}
                       >
+                        <img
+                          id="icon-config1"
+                          src={IconConfig}
+                          width={50}
+                          style={{ margin: "0 0px" }}
+                        />
                         Configurações
                       </a>
                     </li>
@@ -526,20 +553,25 @@ const Home = (props) => {
                 <option value="Feminino">Feminino</option>
                 <option value="Outro">Outro</option>
               </select>
-            </div>
-            navigate{" "}
+            </div>{" "}
             {filteredProfiles.map((profile) => (
               <div
                 key={profile.id}
                 className="profile"
                 onClick={() => handleProfileClick(profile.id)}
               >
-                <img
+                <div
                   id="img-perfil"
-                  src={profile.profilePhotoURL || defaultProfile}
-                  alt=""
-                  width={200}
-                  height={200}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "50%",
+                    backgroundImage: `url(${
+                      profile.profilePhotoURL || defaultProfile
+                    })`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
                 />
 
                 <p>

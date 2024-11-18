@@ -27,11 +27,12 @@
   justify-content: center;
 }
 
-.img-perfil {
+#img-perfil {
   max-width: 100%;
   border-radius: 50%;
   margin-bottom: 10px;
   object-fit: contain;
+  border-radius: 100px;
 }
 
 .edit-profile-form {
@@ -105,7 +106,7 @@
   width: 200px;
 }
 
-#btn-excluir-conta{
+#btn-excluir-conta {
   border-radius: 30px;
   border: none;
   background-color: #de995a;
@@ -123,14 +124,14 @@
   background-color: rgb(185, 32, 32);
 }
 
-#confirma-excluir{
+#confirma-excluir {
   font-family: "Nunito";
   color: white;
   padding: 20px;
   justify-content: center;
 }
 
-.modal-buttons{
+.modal-buttons {
   display: flex;
   text-align: center;
   gap: 80%;
@@ -139,22 +140,24 @@
 }
 
 .btn-confirm {
- background-color: rgb(51, 173, 51);
- border: none;
- border-radius: 10px;
- min-width: 100%;
- width: 8px;
+  background-color: rgb(51, 173, 51);
+  border: none;
+  border-radius: 10px;
+  min-width: 100%;
+  width: 8px;
 }
 
-.btn-cancel{
- background-color: rgb(185, 32, 32);
- border: none;
- border-radius: 10px;
- min-width: 100%;
- width: 75px;
+.btn-cancel {
+  background-color: rgb(185, 32, 32);
+  border: none;
+  border-radius: 10px;
+  min-width: 100%;
+  width: 75px;
 }
 
-.container-excluir, .modal-content, .modal-confirmation{
+.container-excluir,
+.modal-content,
+.modal-confirmation {
   display: flex;
   min-width: 100%;
   flex-direction: column;
@@ -190,6 +193,13 @@
   .container-conf {
     padding: 0px;
   }
+
+  #img-perfil {
+    object-fit: contain;
+    max-width: 100%;
+    
+    border-radius: 50%;
+  }
   .profile_atualizar {
     flex-direction: column;
     align-items: center;
@@ -201,7 +211,9 @@
     font-size: 14px;
   }
 
-  .container-excluir, .modal-content, .modal-confirmation{
+  .container-excluir,
+  .modal-content,
+  .modal-confirmation {
     min-width: 100%;
     align-items: center;
     justify-content: center;
@@ -209,7 +221,7 @@
     word-wrap: break-word;
   }
 
-  .modal-buttons{
+  .modal-buttons {
     display: flex;
     text-align: center;
     gap: 10%;
@@ -224,14 +236,14 @@
     border-radius: 10px;
     min-width: 100%;
     width: 8px;
-   }
-   
-   .btn-cancel{
+  }
+
+  .btn-cancel {
     background-color: rgb(185, 32, 32);
     border: none;
     border-radius: 10px;
     min-width: 100%;
     width: 80%;
     gap: 10%;
-   }
+  }
 }

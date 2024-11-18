@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import IconHome from "../img/icon_home.png";
+import IconConfig from "../img/icon_config.png";
+import IconProfile from "../img/icon_profile.png";
+import loading1 from "../img/loading-meet-tea.gif";
+import defaultProfile from "../img/default-profile.png";
 
 const ProfileOutros = () => {
   const { id } = useParams();
@@ -66,7 +71,7 @@ const ProfileOutros = () => {
           .doc(id)
           .collection("followers")
           .get();
-  
+
         const followers = await Promise.all(
           followersSnapshot.docs.map(async (doc) => {
             const followerData = await db.collection("users").doc(doc.id).get();
@@ -75,7 +80,7 @@ const ProfileOutros = () => {
               : null;
           })
         );
-  
+
         const validFollowers = followers.filter(Boolean);
         setFollowersData(validFollowers);
       } catch (error) {
@@ -83,18 +88,15 @@ const ProfileOutros = () => {
       }
     }
   };
-  
 
-  
   const handleProfileClick = (profileId) => {
     navigate(`/profile/${profileId}`);
   };
 
-
   const toggleFollow = async () => {
     if (!auth.currentUser) {
-        alert("Você precisa estar logado para seguir usuários.");
-        return;
+      alert("Você precisa estar logado para seguir usuários.");
+      return;
     }
 
     const currentUser = auth.currentUser.uid;
@@ -102,30 +104,29 @@ const ProfileOutros = () => {
     const followerRef = userRef.collection("followers").doc(currentUser); // O seguidor atual
 
     try {
-        if (isFollowing) {
-            // Se já está seguindo, "desseguir"
-            await followerRef.delete();
-            await userRef.update({
-                followersCount: followersCount - 1,
-            });
-            setFollowersCount(followersCount - 1);
-        } else {
-            // Caso contrário, "seguir"
-            await followerRef.set({
-                followedAt: new Date(),
-            });
-            await userRef.update({
-                followersCount: followersCount + 1,
-            });
-            setFollowersCount(followersCount + 1);
-        }
+      if (isFollowing) {
+        // Se já está seguindo, "desseguir"
+        await followerRef.delete();
+        await userRef.update({
+          followersCount: followersCount - 1,
+        });
+        setFollowersCount(followersCount - 1);
+      } else {
+        // Caso contrário, "seguir"
+        await followerRef.set({
+          followedAt: new Date(),
+        });
+        await userRef.update({
+          followersCount: followersCount + 1,
+        });
+        setFollowersCount(followersCount + 1);
+      }
 
-        setIsFollowing(!isFollowing); // Inverte o estado de seguir/desseguir
+      setIsFollowing(!isFollowing); // Inverte o estado de seguir/desseguir
     } catch (error) {
-        console.error("Erro ao seguir/desseguir o usuário:", error);
+      console.error("Erro ao seguir/desseguir o usuário:", error);
     }
-};
-
+  };
 
   const handleLogout = () => {
     auth
@@ -181,7 +182,17 @@ const ProfileOutros = () => {
   };
 
   if (!user) {
-    return <div>Carregando informações do usuário...</div>;
+    return (
+      <div className="loading">
+        <img
+          className="loading"
+          src={loading1}
+          alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+          width={450}
+          height={800}
+        />
+      </div>
+    );
   }
 
   {
@@ -200,8 +211,10 @@ const ProfileOutros = () => {
           <a
             className="nav-link active"
             id="inicio"
+            aria-current="page"
             onClick={() => navigate("/Home")}
           >
+            <img src={IconHome} width={30} style={{ margin: "0 10px" }} />
             Inicio
           </a>
           <a
@@ -209,6 +222,7 @@ const ProfileOutros = () => {
             id="perfil"
             onClick={() => navigate("/profile")}
           >
+            <img src={IconProfile} width={30} style={{ margin: "0 10px" }} />
             Perfil
           </a>
           <a
@@ -216,14 +230,23 @@ const ProfileOutros = () => {
             id="config"
             onClick={() => navigate("/configuracoes")}
           >
+            <img
+              id="icon-config"
+              src={IconConfig}
+              width={50}
+              style={{ margin: "0 0px" }}
+            />
             Configurações
           </a>
+
           <div className="nav-buttons">
+            {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              Postar
+              {" "}
+              Postar{" "}
             </button>
             <button id="btn-sair" onClick={handleLogout}>
               Sair
@@ -267,6 +290,11 @@ const ProfileOutros = () => {
                         id="inicio"
                         onClick={() => navigate("/Home")}
                       >
+                        <img
+                          src={IconHome}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Inicio
                       </a>
                     </li>
@@ -276,6 +304,11 @@ const ProfileOutros = () => {
                         id="perfil"
                         onClick={() => navigate("/profile")}
                       >
+                        <img
+                          src={IconProfile}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Perfil
                       </a>
                     </li>
@@ -285,6 +318,12 @@ const ProfileOutros = () => {
                         id="config"
                         onClick={() => navigate("/configuracoes")}
                       >
+                        <img
+                          id="icon-config1"
+                          src={IconConfig}
+                          width={50}
+                          style={{ margin: "0 0px" }}
+                        />
                         Configurações
                       </a>
                     </li>
@@ -308,16 +347,19 @@ const ProfileOutros = () => {
       </div>
 
       <div className="profile-outros-border">
-        {user.profilePhotoURL && (
-          <div style={{ marginBottom: "20px" }}>
-            <img
-              id="profile-other-icon"
-              src={user.profilePhotoURL}
-              alt={user.name}
-              style={{ width: "150px", height: "150px", borderRadius: "50%" }}
-            />
-          </div>
-        )}
+        <div id="controle-img">
+          <div
+            id="img-perfil"
+            style={{
+              width: "200px",
+              height: "200px",
+              borderRadius: "50%",
+              backgroundImage: `url(${user.profilePhotoURL || defaultProfile})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        </div>
         <div className="info-outros">
           <p>
             <strong>Nome:</strong> {user.displayName}
@@ -326,90 +368,110 @@ const ProfileOutros = () => {
             <strong>Email:</strong> {user.email}
           </p>
           <p>Seguidores: {followersCount}</p>
-      <button onClick={toggleFollow}>
-        {isFollowing ? "Deixar de Seguir" : "Seguir"}
-      </button>
-      <button onClick={() => setOpenModalSeguidores(true)}>
+          <button onClick={toggleFollow}>
+            {isFollowing ? "Deixar de Seguir" : "Seguir"}
+          </button>
+          <button onClick={() => setOpenModalSeguidores(true)}>
             Ver Seguidores
           </button>
         </div>
 
-      {/* Modal para exibir seguidores */}
-{openModalSeguidores && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h3>Seguidores</h3>
-      <button onClick={() => setOpenModalSeguidores(false)}>Fechar</button>
-      <ul>
-        {followersData.length > 0 ? (
-          followersData.map((follower, index) => (
-            <li key={index} className="follower-item">
-              <span
-                onClick={() => handleProfileClick(follower.uid)}
-                style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
-              >
-                {follower.displayName || "Usuário Anônimo"}
-              </span>
-              <li>{follower.id}</li>
-            </li>
-          ))
-        ) : (
-          <li>Este usuário ainda não possui seguidores.</li>
-        )}
-      </ul>
-    </div>
-  </div>
-)}
-
-        <button onClick={() => setOpenModalVisualizar(true)}>Denunciar Usuário</button>
-
-      {/* Modal de denúncia */}
-      {openModalVisualizar && (
-        <div className="modal-overlay">
-          <div className="ban-form" style={{ marginTop: "20px" }}>
-            <h3>Denunciar Usuário</h3>
-            {hasReported ? (
-              <p style={{ color: "red" }}>Você já enviou uma denúncia para este usuário.</p>
-            ) : (
-              <>
-                <label htmlFor="reportReason">Motivo da denúncia:</label>
-                <select
-                  id="reportReason"
-                  value={reportReason}
-                  onChange={(e) => setReportReason(e.target.value)}
-                  style={{ width: "100%", marginBottom: "10px" }}
-                  required
-                >
-                  <option value="">Selecione um motivo</option>
-                  <option value="conteúdo impróprio">Conteúdo impróprio</option>
-                  <option value="discurso de ódio">Discurso de ódio</option>
-                  <option value="assédio ou bullying">Assédio ou bullying</option>
-                  <option value="spam ou fraude">Spam ou fraude</option>
-                  <option value="falsidade ideológica">Falsidade ideológica</option>
-                </select>
-
-                <label htmlFor="reportText">Justificativa (opcional):</label>
-                <textarea
-                  id="reportText"
-                  value={reportText}
-                  onChange={(e) => setReportText(e.target.value)}
-                  placeholder="Escreva uma justificativa para a denúncia (opcional)"
-                  rows="5"
-                  cols="50"
-                  style={{ width: "100%", marginBottom: "10px" }}
-                ></textarea>
-
-                <button onClick={handleReport}>Enviar Denúncia</button>
-                <button onClick={() => setOpenModalVisualizar(false)}>Fechar</button>
-              </>
-            )}
-            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+        {/* Modal para exibir seguidores */}
+        {openModalSeguidores && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Seguidores</h3>
+              <button onClick={() => setOpenModalSeguidores(false)}>
+                Fechar
+              </button>
+              <ul>
+                {followersData.length > 0 ? (
+                  followersData.map((follower, index) => (
+                    <li key={index} className="follower-item">
+                      <span
+                        onClick={() => handleProfileClick(follower.uid)}
+                        style={{
+                          cursor: "pointer",
+                          color: "blue",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {follower.displayName || "Usuário Anônimo"}
+                      </span>
+                      <li>{follower.id}</li>
+                    </li>
+                  ))
+                ) : (
+                  <li>Este usuário ainda não possui seguidores.</li>
+                )}
+              </ul>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        <button onClick={() => setOpenModalVisualizar(true)}>
+          Denunciar Usuário
+        </button>
+
+        {/* Modal de denúncia */}
+        {openModalVisualizar && (
+          <div className="modal-overlay">
+            <div className="ban-form" style={{ marginTop: "20px" }}>
+              <h3>Denunciar Usuário</h3>
+              {hasReported ? (
+                <p style={{ color: "red" }}>
+                  Você já enviou uma denúncia para este usuário.
+                </p>
+              ) : (
+                <>
+                  <label htmlFor="reportReason">Motivo da denúncia:</label>
+                  <select
+                    id="reportReason"
+                    value={reportReason}
+                    onChange={(e) => setReportReason(e.target.value)}
+                    style={{ width: "100%", marginBottom: "10px" }}
+                    required
+                  >
+                    <option value="">Selecione um motivo</option>
+                    <option value="conteúdo impróprio">
+                      Conteúdo impróprio
+                    </option>
+                    <option value="discurso de ódio">Discurso de ódio</option>
+                    <option value="assédio ou bullying">
+                      Assédio ou bullying
+                    </option>
+                    <option value="spam ou fraude">Spam ou fraude</option>
+                    <option value="falsidade ideológica">
+                      Falsidade ideológica
+                    </option>
+                  </select>
+
+                  <label htmlFor="reportText">Justificativa (opcional):</label>
+                  <textarea
+                    id="reportText"
+                    value={reportText}
+                    onChange={(e) => setReportText(e.target.value)}
+                    placeholder="Escreva uma justificativa para a denúncia (opcional)"
+                    rows="5"
+                    cols="50"
+                    style={{ width: "100%", marginBottom: "10px" }}
+                  ></textarea>
+
+                  <button onClick={handleReport}>Enviar Denúncia</button>
+                  <button onClick={() => setOpenModalVisualizar(false)}>
+                    Fechar
+                  </button>
+                </>
+              )}
+              {successMessage && (
+                <p style={{ color: "green" }}>{successMessage}</p>
+              )}
+              {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+            </div>
+          </div>
+        )}
       </div>
-      </div>
+    </div>
   );
 };
 

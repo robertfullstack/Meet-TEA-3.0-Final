@@ -4,6 +4,9 @@ import "../styles/Configuracoes.css";
 import defaultProfile from "../img/default-profile.png";
 import { useNavigate } from "react-router-dom";
 import loading1 from "../img/loading-meet-tea.gif";
+import IconHome from "../img/icon_home.png";
+import IconConfig from "../img/icon_config.png";
+import IconProfile from "../img/icon_profile.png";
 
 const Configuracoes = () => {
   const [userData, setUserData] = useState(null);
@@ -203,12 +206,17 @@ const Configuracoes = () => {
   };
 
   if (!userData) {
-    return <div className="loading"><img className="loading"
-    src={loading1}
-    alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
-    width={600}
-    height={800}/> 
-    </div>;
+    return (
+      <div className="loading">
+        <img
+          className="loading"
+          src={loading1}
+          alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+          width={500}
+          height={900}
+        />
+      </div>
+    );
   }
 
   {
@@ -227,8 +235,10 @@ const Configuracoes = () => {
           <a
             className="nav-link active"
             id="inicio"
-            onClick={() => navigate("/Home")}
+            aria-current="page"
+            href="./Home"
           >
+            <img src={IconHome} width={30} style={{ margin: "0 10px" }} />
             Inicio
           </a>
           <a
@@ -236,6 +246,7 @@ const Configuracoes = () => {
             id="perfil"
             onClick={() => navigate("/profile")}
           >
+            <img src={IconProfile} width={30} style={{ margin: "0 10px" }} />
             Perfil
           </a>
           <a
@@ -243,15 +254,23 @@ const Configuracoes = () => {
             id="config"
             onClick={() => navigate("/configuracoes")}
           >
+            <img
+              id="icon-config"
+              src={IconConfig}
+              width={50}
+              style={{ margin: "0 0px" }}
+            />
             Configurações
           </a>
 
           <div className="nav-buttons">
+            {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              Postar
+              {" "}
+              Postar{" "}
             </button>
             <button id="btn-sair" onClick={handleLogout}>
               Sair
@@ -259,7 +278,6 @@ const Configuracoes = () => {
           </div>
         </nav>
       </div>
-
       <div class="navbar-mobile">
         <nav class="navbar fixed-top">
           <div class="container-fluid">
@@ -296,6 +314,11 @@ const Configuracoes = () => {
                         id="inicio"
                         onClick={() => navigate("/Home")}
                       >
+                        <img
+                          src={IconHome}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Inicio
                       </a>
                     </li>
@@ -305,6 +328,11 @@ const Configuracoes = () => {
                         id="perfil"
                         onClick={() => navigate("/profile")}
                       >
+                        <img
+                          src={IconProfile}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Perfil
                       </a>
                     </li>
@@ -314,6 +342,12 @@ const Configuracoes = () => {
                         id="config"
                         onClick={() => navigate("/configuracoes")}
                       >
+                        <img
+                          id="icon-config1"
+                          src={IconConfig}
+                          width={50}
+                          style={{ margin: "0 0px" }}
+                        />
                         Configurações
                       </a>
                     </li>
@@ -335,17 +369,24 @@ const Configuracoes = () => {
           </div>
         </nav>
       </div>
-
       <div className="configuracoes-container">
         <h4 id="text-info">Configurações de Perfil</h4>
         <div className="profile-photo-update">
-          <img
-            className="img-perfil"
-            src={userData.profilePhotoURL || defaultProfile}
-            alt="Foto de Perfil"
-            width={200}
-            height={200}
-          />
+          <div id="controle-img">
+            <div
+              id="img-perfil"
+              style={{
+                width: "200px",
+                height: "200px",
+                borderRadius: "50%",
+                backgroundImage: `url(${
+                  userData.profilePhotoURL || defaultProfile
+                })`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+          </div>
           <div className="profile_atualizar">
             <input
               id="bnt-profile"

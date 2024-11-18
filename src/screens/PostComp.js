@@ -7,6 +7,8 @@ import Heart_puzz from "../img/LogoTEAoutline_heart_puzz1.png";
 import Heart_puzz_closed from "../img/LogoTEAoutline_heart_puzz_closed1.png";
 import Joia_puzz from "../img/Teacurteecompartilha.png";
 import Joia_puzz_closed from "../img/Teacurteecompartilhamandajoia.png";
+import IconHome from "../img/icon_home.png";
+import loading1 from "../img/loading-meet-tea.gif";
 
 const PostComp = (props) => {
   const { id } = useParams();
@@ -116,7 +118,17 @@ const PostComp = (props) => {
   };
 
   if (!post) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="loading">
+        <img
+          className="loading"
+          src={loading1}
+          alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+          width={450}
+          height={800}
+        />
+      </div>
+    );
   }
 
   return (
@@ -124,12 +136,12 @@ const PostComp = (props) => {
       <div id="container-post" className="modal-posts">
         <div className="post">
           <h1>{post.title}</h1>
-          <p>Postado por: {post.postUserName}</p>
           <img
-                  id="img-profile-post"
-                  src={post.profilePhotoURL || defaultProfile}
-                  alt=""
-                />
+            id="img-profile-post"
+            src={post.profilePhotoURL || defaultProfile}
+            alt=""
+          />
+          <p>Postado por: {post.postUserName}</p>
           <img id="post-img" src={post.imageUrl} alt={post.title} />
           <p>{post.description}</p>
 
@@ -197,7 +209,10 @@ const PostComp = (props) => {
             ))}
           </div>
 
-          <button onClick={() => navigate("/Home")}>Ir à página inicial</button>
+          <button id="button-home" onClick={() => navigate("/Home")}>
+            <img id="icon-home" src={IconHome} width={30} />
+            Página inicial
+          </button>
         </div>
       </div>
     </div>

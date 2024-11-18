@@ -3,6 +3,10 @@ import { auth, storage, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 import "@fontsource/nunito";
+import IconHome from "../img/icon_home.png";
+import IconConfig from "../img/icon_config.png";
+import IconProfile from "../img/icon_profile.png";
+
 const Postar = (props) => {
   const [openModalPublicar, setOpenModalPublicar] = useState(true);
   const [file, setFile] = useState(null);
@@ -12,7 +16,7 @@ const Postar = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [shareLink, setShareLink] = useState("");  // Novo estado para o link de compartilhamento
+  const [shareLink, setShareLink] = useState(""); // Novo estado para o link de compartilhamento
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -54,24 +58,24 @@ const Postar = (props) => {
   const uploadPost = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-  
+
     setIsSubmitting(true);
-  
+
     const titlePost = document.getElementById("titlePost").value;
     const descricaoPost = document.getElementById("descricaoPost").value;
-  
+
     if (!file) {
       alert("Selecione um arquivo para upload");
       setIsSubmitting(false);
       return;
     }
-  
+
     if (!currentUser) {
       alert("Usuário não autenticado.");
       setIsSubmitting(false);
       return;
     }
-  
+
     // Busca a URL da foto de perfil do usuário
     let profilePhotoURL = "";
     try {
@@ -83,10 +87,10 @@ const Postar = (props) => {
       setIsSubmitting(false);
       return;
     }
-  
+
     const uniqueImageName = crypto.randomUUID();
     const uploadTask = storage.ref(`images/${uniqueImageName}`).put(file);
-  
+
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -125,11 +129,11 @@ const Postar = (props) => {
                 setFile(null);
                 setOpenModalPublicar(false);
                 alert("Postagem criada com sucesso!");
-  
+
                 // Gera o link para a postagem recém-criada
                 const generatedLink = `${window.location.origin}/post/${newPostRef.id}`;
                 setShareLink(generatedLink);
-  
+
                 navigate("/Home");
               })
               .catch((error) => {
@@ -146,7 +150,6 @@ const Postar = (props) => {
       }
     );
   };
-  
 
   // Função para copiar o link de compartilhamento
   const copyShareLink = () => {
@@ -167,12 +170,14 @@ const Postar = (props) => {
   return (
     <div className="container-Postar">
       <div className="sidbar">
-        <nav className="nav flex-column navbar-desktop">
+        <nav className="nav flex-column">
           <a
             className="nav-link active"
             id="inicio"
-            onClick={() => navigate("/Home")}
+            aria-current="page"
+            href="./Home"
           >
+            <img src={IconHome} width={30} style={{ margin: "0 10px" }} />
             Inicio
           </a>
           <a
@@ -180,6 +185,7 @@ const Postar = (props) => {
             id="perfil"
             onClick={() => navigate("/profile")}
           >
+            <img src={IconProfile} width={30} style={{ margin: "0 10px" }} />
             Perfil
           </a>
           <a
@@ -187,15 +193,23 @@ const Postar = (props) => {
             id="config"
             onClick={() => navigate("/configuracoes")}
           >
+            <img
+              id="icon-config"
+              src={IconConfig}
+              width={50}
+              style={{ margin: "0 0px" }}
+            />
             Configurações
           </a>
 
           <div className="nav-buttons">
+            {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              Postar
+              {" "}
+              Postar{" "}
             </button>
             <button id="btn-sair" onClick={handleLogout}>
               Sair
@@ -203,7 +217,6 @@ const Postar = (props) => {
           </div>
         </nav>
       </div>
-
       <div class="navbar-mobile">
         <nav class="navbar fixed-top">
           <div class="container-fluid">
@@ -240,6 +253,11 @@ const Postar = (props) => {
                         id="inicio"
                         onClick={() => navigate("/Home")}
                       >
+                        <img
+                          src={IconHome}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Inicio
                       </a>
                     </li>
@@ -249,6 +267,11 @@ const Postar = (props) => {
                         id="perfil"
                         onClick={() => navigate("/profile")}
                       >
+                        <img
+                          src={IconProfile}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Perfil
                       </a>
                     </li>
@@ -258,6 +281,12 @@ const Postar = (props) => {
                         id="config"
                         onClick={() => navigate("/configuracoes")}
                       >
+                        <img
+                          id="icon-config1"
+                          src={IconConfig}
+                          width={50}
+                          style={{ margin: "0 0px" }}
+                        />
                         Configurações
                       </a>
                     </li>
@@ -307,12 +336,12 @@ const Postar = (props) => {
               required
             ></textarea>
             {shareLink && (
-        <div>
-          <p>Compartilhe sua postagem com este link:</p>
-          <input type="text" value={shareLink} readOnly />
-          <button onClick={copyShareLink}>Copiar Link</button>
-        </div>
-      )}
+              <div>
+                <p>Compartilhe sua postagem com este link:</p>
+                <input type="text" value={shareLink} readOnly />
+                <button onClick={copyShareLink}>Copiar Link</button>
+              </div>
+            )}
 
             <button id="publicar" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Publicando..." : "Publicar"}

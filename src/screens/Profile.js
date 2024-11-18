@@ -6,6 +6,9 @@ import defaultProfile from "../img/default-profile.png";
 import { auth, db, storage } from "../firebase";
 import loading1 from "../img/loading-meet-tea.gif";
 import pontinhos from "../img/pontinhos.png";
+import IconHome from "../img/icon_home.png";
+import IconConfig from "../img/icon_config.png";
+import IconProfile from "../img/icon_profile.png";
 
 const calcularIdade = (dataNascimento) => {
   const hoje = new Date();
@@ -65,14 +68,16 @@ export const Profile = () => {
         .doc(currentUser.uid)
         .collection("followers")
         .get();
-  
+
       const followersList = await Promise.all(
         followersSnapshot.docs.map(async (doc) => {
           const followerData = await db.collection("users").doc(doc.id).get();
-          return followerData.exists ? { id: followerData.id, ...followerData.data() } : null;
+          return followerData.exists
+            ? { id: followerData.id, ...followerData.data() }
+            : null;
         })
       );
-  
+
       const validFollowers = followersList.filter(Boolean); // Remove seguidores nulos
       setFollowers(validFollowers);
     } catch (error) {
@@ -163,7 +168,10 @@ export const Profile = () => {
     if (currentUser) {
       const fetchUserData = async () => {
         try {
-          const userDoc = await db.collection("users").doc(currentUser.uid).get();
+          const userDoc = await db
+            .collection("users")
+            .doc(currentUser.uid)
+            .get();
           if (userDoc.exists) {
             setUserData(userDoc.data());
             setFormData({
@@ -190,13 +198,18 @@ export const Profile = () => {
     }
   }, [currentUser]);
 
-  if (loading) return <div className="loading">
-  <img className="loading"
-  src={loading1}
-  alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
-  width={450}
-  height={800}/> 
-  </div>;
+  if (loading)
+    return (
+      <div className="loading">
+        <img
+          className="loading"
+          src={loading1}
+          alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+          width={450}
+          height={800}
+        />
+      </div>
+    );
 
   {
     showChat && (
@@ -214,8 +227,10 @@ export const Profile = () => {
           <a
             className="nav-link active"
             id="inicio"
-            onClick={() => navigate("/Home")}
+            aria-current="page"
+            href="./Home"
           >
+            <img src={IconHome} width={30} style={{ margin: "0 10px" }} />
             Inicio
           </a>
           <a
@@ -223,6 +238,7 @@ export const Profile = () => {
             id="perfil"
             onClick={() => navigate("/profile")}
           >
+            <img src={IconProfile} width={30} style={{ margin: "0 10px" }} />
             Perfil
           </a>
           <a
@@ -230,14 +246,23 @@ export const Profile = () => {
             id="config"
             onClick={() => navigate("/configuracoes")}
           >
+            <img
+              id="icon-config"
+              src={IconConfig}
+              width={50}
+              style={{ margin: "0 0px" }}
+            />
             Configurações
           </a>
+
           <div className="nav-buttons">
+            {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
               {showChat ? "Fechar" : "Chat"}
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              Postar
+              {" "}
+              Postar{" "}
             </button>
             <button id="btn-sair" onClick={handleLogout}>
               Sair
@@ -281,6 +306,11 @@ export const Profile = () => {
                         id="inicio"
                         onClick={() => navigate("/Home")}
                       >
+                        <img
+                          src={IconHome}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Inicio
                       </a>
                     </li>
@@ -290,6 +320,11 @@ export const Profile = () => {
                         id="perfil"
                         onClick={() => navigate("/profile")}
                       >
+                        <img
+                          src={IconProfile}
+                          width={30}
+                          style={{ margin: "0 10px" }}
+                        />
                         Perfil
                       </a>
                     </li>
@@ -299,6 +334,12 @@ export const Profile = () => {
                         id="config"
                         onClick={() => navigate("/configuracoes")}
                       >
+                        <img
+                          id="icon-config1"
+                          src={IconConfig}
+                          width={50}
+                          style={{ margin: "0 0px" }}
+                        />
                         Configurações
                       </a>
                     </li>
@@ -323,59 +364,75 @@ export const Profile = () => {
 
       {userData ? (
         <div className="profile-border">
-          <img
-            id="img-perfil"
-            src={userData.profilePhotoURL || defaultProfile}
-            alt="Foto de Perfil"
-            width={200}
-            height={200}
-          />
-          <div className="profile-nome"> 
-          <p id="sobre-nome">Seguidores: {followersCount}</p>
-          <p id="sobre-nome1">{userData.displayName}</p>
-          <div class="dropdown">
-                  <button
-                    id="btn-point-personalizar"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img
-                      src={pontinhos}
-                      alt={"..."}
-                      width="100%"
-                      height={"50px"}
-                    />
-                  </button>
-                  <ul id="personalizar" class="dropdown-menu">
-                    <li id="li-papai">
-                      <button
-                        id="btn-personalizar"
-                        data-bs-target="#staticBackdrop"
-                        onClick={() => {navigate("/configuracoes") }}
-                      >Personalizar
-                      </button>
-                    </li>
-                  </ul>
-                </div>
+          <div id="controle-img">
+            <div
+              id="img-perfil"
+              style={{
+                width: "200px",
+                height: "200px",
+                borderRadius: "50%",
+                backgroundImage: `url(${
+                  userData.profilePhotoURL || defaultProfile
+                })`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
           </div>
-              <button id="btn-seguidores" onClick={() => setMostrarSeguidores(true)}>Mostrar Seguidores</button>
-              {mostrarSeguidores && (
-              <div className="followers-section">
-                {followers.length > 0 ? (
-                  followers.map((follower) => (
-                    <div key={follower.uid} className="follower">
-                      <p>{follower.displayName}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p id="no-followers">Você não tem seguidores</p>
-                )}
-              <button id="btn-seguidores" onClick={() => setMostrarSeguidores(false)}>Fechar</button>
-              </div>
+          <div className="profile-nome">
+            <p id="sobre-nome">Seguidores: {followersCount}</p>
+            <p id="sobre-nome1">{userData.displayName}</p>
+            <div class="dropdown">
+              <button
+                id="btn-point-personalizar"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img src={pontinhos} alt={"..."} width="100%" height={"50px"} />
+              </button>
+              <ul id="personalizar" class="dropdown-menu">
+                <li id="li-papai">
+                  <button
+                    id="btn-personalizar"
+                    data-bs-target="#staticBackdrop"
+                    onClick={() => {
+                      navigate("/configuracoes");
+                    }}
+                  >
+                    Personalizar
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button
+            id="btn-seguidores"
+            onClick={() => setMostrarSeguidores(true)}
+          >
+            Mostrar Seguidores
+          </button>
+          {mostrarSeguidores && (
+            <div className="followers-section">
+              {followers.length > 0 ? (
+                followers.map((follower) => (
+                  <div key={follower.uid} className="follower">
+                    <p>{follower.displayName}</p>
+                  </div>
+                ))
+              ) : (
+                <p id="no-followers">Você não tem seguidores</p>
               )}
-          <p> 
-              <br></br>
+              <button
+                id="btn-seguidores"
+                onClick={() => setMostrarSeguidores(false)}
+              >
+                Fechar
+              </button>
+            </div>
+          )}
+          <p>
+            <br></br>
             <strong id="sobre">Sobre mim:</strong>
           </p>
           <p id="sobre-info">{userData.about}</p>
@@ -451,17 +508,24 @@ export const Profile = () => {
           </div>
         </div>
       ) : (
-        <div className="loading"><img className="loading"
-        src={loading1}
-        alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
-        width={650}
-        height={900}></img>
+        <div className="loading">
+          <img
+            className="loading"
+            src={loading1}
+            alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+            width={650}
+            height={900}
+          ></img>
         </div>
       )}
       {showModal && (
         <div className="modal-confirmation">
           <div className="modal-content">
             <h4>Aceitar que essa publicação será excluída?</h4>
+            <h5>
+              Você perderá todos os comentários que estão incluídos na
+              publicação
+            </h5>
             <div className="modal-buttons">
               <button className="btn-confirm" onClick={handleDeletePost}>
                 Sim

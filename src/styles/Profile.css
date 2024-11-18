@@ -70,6 +70,12 @@
   max-width: 100%;
 }
 
+#controle-img {
+  place-content: center;
+  display: flex;
+  align-items: center;
+}
+
 #profile-other-icon {
   object-fit: contain;
   max-width: 100%;
@@ -109,16 +115,21 @@
   font-size: 18px;
   font-family: "Nunito";
 }
-
-#sobre-nome,#sobre-nome1 {
+.followers-section p {
+  margin-top: 10px;
+  font-family: "Nunito";
+  color: white;
+}
+#sobre-nome,
+#sobre-nome1 {
   margin-top: 10px;
 }
 
-#sobre-nome{
+#sobre-nome {
   display: flex;
   justify-content: start;
 }
-#sobre-nome1{
+#sobre-nome1 {
   display: flex;
   justify-content: center;
 }
@@ -163,14 +174,14 @@
   color: white;
   opacity: 80%;
 }
-#btn-seguidores{
-  border-radius:10px ;
+#btn-seguidores {
+  border-radius: 10px;
   background-color: #edb47f;
   border: none;
   font-family: "Nunito";
   color: black;
 }
-.profile-nome{
+.profile-nome {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -179,13 +190,13 @@
   margin-right: 40px;
 }
 
-#btn-point-personalizar{
+#btn-point-personalizar {
   position: relative;
   border: none;
   background-color: #30405f;
 }
 
-#btn-personalizar{
+#btn-personalizar {
   border-radius: 10px;
   border: none;
   background-color: white;
@@ -199,6 +210,78 @@
 }
 .navbar-mobile {
   display: none;
+}
+
+.modal-confirmation {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 0.3s ease-in-out;
+  margin-top: 0px !important;
+}
+
+.modal-content {
+  background-color: #de995a;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 50%;
+  width: 400px !important;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+h5 {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #2e2e2e;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-confirm,
+.btn-cancel {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn-confirm {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: #218838;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
 }
 
 @media (max-width: 800px) {
@@ -276,7 +359,7 @@
     padding: 0;
   }
 
-  .profile-nome{
+  .profile-nome {
     gap: 10%;
     display: flex;
     flex-direction: column-reverse;
@@ -285,15 +368,12 @@
     flex-wrap: wrap;
     margin-right: 0px;
   }
-
-  #img-perfil {
-    object-fit: contain;
-    max-width: 100%;
-    border-radius: 50%;
+  #controle-img {
+    width: 50%;
   }
 }
 
-.loading{
+.loading {
   display: flex;
   justify-content: center;
 }
