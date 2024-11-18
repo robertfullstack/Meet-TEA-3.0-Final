@@ -369,7 +369,8 @@ h5 {
     margin-right: 0px;
   }
   #controle-img {
-    width: 50%;
+    justify-content: center;
+    display: flex;
   }
 }
 
