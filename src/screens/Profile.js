@@ -519,19 +519,19 @@ export const Profile = () => {
         </div>
       )}
       {showModal && (
-        <div className="modal-confirmation">
-          <div className="modal-content">
+        <div className="modal-confirmation1">
+          <div className="modal-content1">
             <h4>Aceitar que essa publicação será excluída?</h4>
             <h5>
               Você perderá todos os comentários que estão incluídos na
               publicação
             </h5>
-            <div className="modal-buttons">
-              <button className="btn-confirm" onClick={handleDeletePost}>
+            <div className="modal-buttons1">
+              <button className="btn-confirm1" onClick={handleDeletePost}>
                 Sim
               </button>
               <button
-                className="btn-cancel"
+                className="btn-cancel1"
                 onClick={() => setShowModal(false)}
               >
                 Cancelar

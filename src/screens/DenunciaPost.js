@@ -192,15 +192,21 @@ export const DenunciaPost = () => {
                 })}
               </ul>
             ) : (
-              <td> <div className='loading'>
-                 <img className="loading"
-                  src={loading1}
-                  alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
-                  width={600}
-                  height={800}/> 
-                  </div>;</td>
+              <td>
+                {" "}
+                <div className="loading">
+                  <img
+                    className="loading"
+                    src={loading1}
+                    alt="Xicára com quebra-cabeça balançando como formato de carregamento da página"
+                    width={600}
+                    height={800}
+                  />
+                </div>
+                ;
+              </td>
             )}
-             
+
             <div className="modal-buttons">
               <button className="btn-cancel1" onClick={closeReportsPage}>
                 Fechar

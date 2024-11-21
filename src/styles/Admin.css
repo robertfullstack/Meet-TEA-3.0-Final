@@ -1,190 +1,220 @@
+.container-admin2 {
+  font-family: "Nunito";
+  display: flex;
+}
+
+#title-admin {
+  font-family: "Nunito";
+  text-align: center;
+}
+
+#title-admin-1 {
+  font-family: "Nunito";
+  text-align: center;
+  font-size: 60px;
+  color: white;
+}
+
+.gif-admin {
+  justify-content: end;
+  display: flex;
+}
+
+#animaAdmin {
+  width: 100%;
+  height: auto;
+}
 .container-admin {
-    font-family: "Nunito";
-    display: flex;
-  }
-  
-  #title-admin {
-    font-family: "Nunito";
-    text-align: center;
-  }
-  
-  #title-admin-1 {
-    font-family: "Nunito";
-    text-align: center;
-    margin-top: 3.5em;
-    font-size: 60px;
-  }
-  
-  #btn-admin {
-    background-color: rgb(46, 139, 87);
-    border: none;
-    border-radius: 7px;
-    padding: 10px;
-    color: white;
-    width: 150px;
-    margin-top: 40px;
-    font-family: "Nunito";
-    font-size: 20px;
-  }
-  
-  #btn-input {
-    border: 1px solid black;
-    border-radius: 7px;
-    font-family: "Nunito";
-    font-size: 20px;
-    margin-top: 2em;
-    padding: 7px;
-    width: 350px;
-  }
-  
-  #div-btn-admin {
-    justify-content: flex-start;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-  }
-  tr > td {
-    padding: 45px;
-    text-align: center;
-    font-size: 18px;
-  }
-  #th-id{
+  display: flex;
+  justify-content: space-around;
+  background-color: #314263;
+  padding: 10px;
+  max-height: 100%;
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  min-width: fit-content;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+}
+
+.admin-login {
+  justify-content: start;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+#btn-admin {
+  background-color: rgb(46, 139, 87);
+  border: none;
+  border-radius: 7px;
+  padding: 10px;
+  color: white;
+  width: 150px;
+  margin-top: 40px;
+  font-family: "Nunito";
+  font-size: 20px;
+}
+
+#btn-input {
+  border: 1px solid black;
+  border-radius: 7px;
+  font-family: "Nunito";
+  font-size: 20px;
+  margin-top: 2em;
+  padding: 7px;
+  width: 350px;
+}
+
+#div-btn-admin {
+  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+tr > td {
+  padding: 45px;
+  text-align: center;
+  font-size: 18px;
+}
+#th-id {
   margin-left: 130px;
-  }
+}
 
-  #th-email{
-    margin-left: 330px;
-  }
+#th-email {
+  margin-left: 330px;
+}
 
-  #th-arquivo{
-    margin-left: 220px;
-  }
+#th-arquivo {
+  margin-left: 220px;
+}
 
-  #th-denuncia{
-    margin-left: 110px;
-  }
+#th-denuncia {
+  margin-left: 110px;
+}
 
-  #th-ação{
-    margin-left: 110px;
-  }
+#th-ação {
+  margin-left: 110px;
+}
 
-  #th-admin{
-    display: flex;
-    padding: 10px;
-    flex-direction:  row;
-    text-align: center;
-    font-size: 18px;
-  }
-  
-  #btn-logout {
-    border: 1px solid black;
-    border-radius: 8px;
-    background-color: rgb(26, 26, 109);
-    color: white;
-    font-family: "Nunito";
-    padding: 7px;
-    width: 90px;
-    margin-left: 35px;
-  }
-  
-  #btn-denuncia-post {
-    border: 1px solid rgb(26, 26, 109);
-    background-color: rgb(76, 122, 221);
-    border-radius: 10px;
-    padding: 7px;
-    width: 190px;
-    margin-left: 10px;
-    color: white;
-  }
-  #btn-banir {
-    background-color: rgb(151, 30, 30);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    width: 90px;
-    color: white;
-  }
-  
-  #btn-denuncia {
-    background-color: rgb(209, 139, 10);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    opacity: 60%;
-  }
-  
-  #div-btn-excluir {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-  }
-  
-  #btn-excluir-post-den,
-  #btn-excluir-post {
-    background-color: rgb(209, 139, 10);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-  }
-  
-  #btn-excluir-post-den:hover,
-  #btn-excluir-post:hover {
-    background-color: rgb(179, 21, 21);
-    transition: 0.5s;
-  }
-  
-  #btn-close {
-    position: relative;
-    margin-left: 10px;
-    background-color: transparent;
-    border: none;
-  }
-  
-  #ul1 > #li1 {
-    list-style: none;
-    margin: 10px;
-    padding: 10px;
-    font-family: "Nunito";
-    border: 1px solid #30405f;
-    background-color: #30405f;
-    border-radius: 10px;
-    color: white;
-  }
-  
-  #info-denuncia {
-    display: flex;
-    font-family: "Nunito";
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-  }
-  
-  #titulo-denuncia {
-    font-family: "Nunito";
-    text-align: center;
-    margin-top: 15px;
-  }
-  
-  .btn-cancel1 {
-    background-color: rgb(185, 32, 32);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    width: 100px;
-    margin-bottom: 10px;
-  }
-  #modal-content {
-    font-family: "Nunito";
-    color: white;
-  }
-  
-  .modal.fade.show {
-    background-color: #00000091;
-  }
-  .modal-confirmation {
-    font-family: "Nunito";
-  }
-  
+#th-admin {
+  display: flex;
+  padding: 10px;
+  flex-direction: row;
+  text-align: center;
+  font-size: 18px;
+}
+
+#btn-logout {
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: rgb(26, 26, 109);
+  color: white;
+  font-family: "Nunito";
+  padding: 7px;
+  width: 90px;
+  margin-left: 35px;
+}
+
+#btn-denuncia-post {
+  border: 1px solid rgb(26, 26, 109);
+  background-color: rgb(76, 122, 221);
+  border-radius: 10px;
+  padding: 7px;
+  width: 190px;
+  margin-left: 10px;
+  color: white;
+}
+#btn-banir {
+  background-color: rgb(151, 30, 30);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  width: 90px;
+  color: white;
+}
+
+#btn-denuncia {
+  background-color: rgb(209, 139, 10);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  opacity: 60%;
+}
+
+#div-btn-excluir {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#btn-excluir-post-den,
+#btn-excluir-post {
+  background-color: rgb(209, 139, 10);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+}
+
+#btn-excluir-post-den:hover,
+#btn-excluir-post:hover {
+  background-color: rgb(179, 21, 21);
+  transition: 0.5s;
+}
+
+#btn-close {
+  position: relative;
+  margin-left: 10px;
+  background-color: transparent;
+  border: none;
+}
+
+#ul1 > #li1 {
+  list-style: none;
+  margin: 10px;
+  padding: 10px;
+  font-family: "Nunito";
+  border: 1px solid #30405f;
+  background-color: #30405f;
+  border-radius: 10px;
+  color: white;
+}
+
+#info-denuncia {
+  display: flex;
+  font-family: "Nunito";
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+#titulo-denuncia {
+  font-family: "Nunito";
+  text-align: center;
+  margin-top: 15px;
+}
+
+.btn-cancel1 {
+  background-color: rgb(185, 32, 32);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100px;
+  margin-bottom: 10px;
+}
+#modal-content {
+  font-family: "Nunito";
+  color: white;
+}
+
+.modal.fade.show {
+  background-color: #00000091;
+}
+.modal-confirmation {
+  font-family: "Nunito";
+}

@@ -457,8 +457,8 @@ const Configuracoes = () => {
             Excluir Conta
           </button>
           {showDeleteAccountModal && (
-            <div className="modal-confirmation">
-              <div className="modal-content">
+            <div className="modal-confirmation1">
+              <div className="modal-content1">
                 <h4 id="confirma-excluir">
                   Antes de excluir sua conta, leia os{" "}
                   <a
@@ -468,9 +468,9 @@ const Configuracoes = () => {
                     termos de exclusão de conta
                   </a>
                 </h4>
-                <div className="modal-buttons">
+                <div className="modal-buttons1">
                   <button className="btn-confirm" onClick={handleDeleteAccount}>
-                    Sim
+                    Concordo
                   </button>
 
                   <button
