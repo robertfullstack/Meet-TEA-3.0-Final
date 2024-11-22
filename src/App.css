@@ -7,8 +7,8 @@
   pointer-events: none;
 }
 
-#fonte{
-  background-color:rgb(48, 64, 95);
+#fonte {
+  background-color: rgb(48, 64, 95);
   border: none;
   border-radius: 10px;
   margin-right: 20px;
@@ -44,4 +44,132 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+button {
+  background-color: #f0f0f0;
+  color: #000000;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark .App-header {
+  background-color: #1e1e1e;
+}
+
+body.dark button {
+  background-color: #333;
+  color: #ffffff;
+}
+
+body.dark .post {
+  background-color: #6d6565;
+  background-image: none;
+  color: #ffffff;
+}
+
+body.dark .off-canvas-header {
+  background-color: #979090;
+  background-image: none;
+  color: black;
+}
+
+body.dark .configuracoes-container {
+  background-color: #979090;
+  background-image: none;
+  color: #ffffff;
+}
+
+body.dark .profile-border {
+  background-color: #979090;
+  background-image: none;
+  color: #ffffff;
+}
+
+body.dark .profile {
+  background-color: #756f6f;
+  background-image: none;
+  color: dark;
+  border: #756f6f;
+}
+
+body.dark #infos {
+  background-color: #756f6f;
+  background-image: none;
+  color: dark;
+}
+
+body.dark #btn-seguidores {
+  background-color: #474343;
+  background-image: none;
+  color: white;
+}
+
+body.dark #btn-curtir,
+body.dark #btn-amei,
+body.dark #btn-atualizar,
+body.dark #btn-save,
+body.dark #btn-excluir-conta {
+  background-color: #474343;
+}
+
+body.dark #btn-coment {
+  background-color: #756f6f;
+  color: white;
+}
+
+body.dark #menu-denuncia,
+body.dark #btn-denuncia-point,
+body.dark .dropdown-item,
+body.dark #personalizar,
+body.dark #btn-personalizar,
+body.dark #denuncia {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark #btn-point {
+  background-color: #6d6565;
+  background-image: none;
+  color: #ffffff;
+}
+body.dark #btn-point-personalizar,
+body.dark #btn-point-denunciar {
+  background-color: #979090;
+}
+
+body.dark #filtro {
+  background-color: #292929;
+  color: white;
+}
+body.dark .profile-outros-border {
+  background-color: #979090;
+  background-image: none;
+  color: #ffffff;
+}
+body.dark .main2 {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark .sidbar {
+  background-color: #979090;
+  background-image: none;
+  color: black;
+}
+
+body.dark .modal-content,
+body.dark .modal-content1 {
+  background-color: rgb(201, 197, 189);
+}
+body.dark .App-link {
+  color: #61dafb;
 }
