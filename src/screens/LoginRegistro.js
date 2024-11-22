@@ -23,8 +23,18 @@ const LoginRegistro = (props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((authUser) => {
+        const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
             if (authUser) {
+                const userDoc = await db.collection('users').doc(authUser.uid).get();
+                
+                if (!userDoc.exists || !userDoc.data().validated) {
+                    toast.error('Sua conta ainda não foi validada por um administrador.');
+                    await auth.signOut();
+                    setUser(null);
+                    localStorage.removeItem('user');
+                    return;
+                }
+    
                 setUser(authUser);
                 props.setUser(authUser.displayName);
                 localStorage.setItem('user', JSON.stringify(authUser));
@@ -34,9 +44,10 @@ const LoginRegistro = (props) => {
                 localStorage.removeItem('user');
             }
         });
-
+    
         return () => unsubscribe();
     }, [navigate, props]);
+    
 
     useEffect(() => {
         if (bloqueioAtivo) {
@@ -58,27 +69,157 @@ const LoginRegistro = (props) => {
         }
     }, [bloqueioAtivo]);
 
+    const criarConta = async (e) => {
+        e.preventDefault();
+    
+        if (!aceitouTermos) {
+            toast.error('Você precisa aceitar os termos para criar uma conta.');
+            return;
+        }
+    
+        const birthdateElement = document.getElementById("birthdate-cadastro");
+        const emailElement = document.getElementById("email-cadastro");
+        const passwordElement = document.getElementById("password-cadastro");
+        const userNameElement = document.getElementById("userName-cadastro");
+        const socialNameElement = document.getElementById("socialName-cadastro");
+        const preferredLanguageElement = document.getElementById("preferredLanguage-cadastro");
+        const genderElement = document.getElementById("gender-cadastro");
+        const phoneElement = document.getElementById("phone-cadastro");
+        const addressElement = document.getElementById("address-cadastro");
+        const streetElement = document.getElementById("street-cadastro");
+    const numberElement = document.getElementById("number-cadastro");
+    const cityElement = document.getElementById("city-cadastro");
+    const stateElement = document.getElementById("state-cadastro");
+    const cipteaFileElement = document.getElementById("file-cadastro");
+
+    let userName = userNameElement.value;
+    let socialName = socialNameElement.value || null; // Opcional
+    let email = emailElement.value;
+    let password = passwordElement.value;
+    let birthDate = birthdateElement.value;
+    let idade = calcularIdade(birthDate);
+    let gender = genderElement.value;
+    let preferredLanguage = preferredLanguageElement.value || "Português Brasileiro";
+    let phone = phoneElement.value;
+    let street = streetElement.value;
+    let number = numberElement.value;
+    let city = cityElement.value;
+    let state = stateElement.value;
+    let address = `${street}, ${number}, ${city}, ${state}`;
+    let cipteaFile = cipteaFileElement.files[0];
+
+    
+    
+    if (!userName) {
+        toast.error('Por favor, insira seu nome de usuário.');
+            return;
+        }
+        if (!email) {
+            toast.error('Por favor, insira um endereço de e-mail.');
+            return;
+        }
+        if (!email.includes("@")) {
+            toast.error('Por favor, insira um endereço de e-mail válido.');
+            return;
+        }
+        if (idade < 16 || idade > 124) {
+            toast.error('Você precisa ter entre 16 anos ou mais para criar uma conta.');
+            return;
+        }
+        if (!gender) {
+            toast.error('Por favor, selecione seu gênero.');
+            return;
+        }
+        if (!address) {
+            toast.error('Por favor, insira seu endereço.');
+            return;
+        }
+        if (!street || !number || !city || !state) {
+            toast.error('Por favor, preencha todos os campos do endereço.');
+            return;
+        }
+        if (!/^\d+$/.test(number)) {
+            toast.error('O campo "Número" deve conter apenas números.');
+            return;
+        }
+    
+        if (!cipteaFile) {
+            toast.error("Por favor, faça o upload da carteira CIPTEA.");
+            return;
+        }
+    
+        try {
+            const authUser = await auth.createUserWithEmailAndPassword(email, password);
+            toast.success("Conta criada com Sucesso!");
+    
+            await authUser.user.updateProfile({
+                displayName: userName
+            });
+    
+            // Upload dos arquivos
+            const cipteaFileRef = storage.ref().child(`user_files/${authUser.user.uid}/ciptea_${cipteaFile.name}`);
+    
+            await cipteaFileRef.put(cipteaFile);
+    
+            const cipteaURL = await cipteaFileRef.getDownloadURL();
+    
+            // Armazenar dados no Firestore
+            await db.collection('users').doc(authUser.user.uid).set({
+                email: authUser.user.email,
+                displayName: userName,
+                socialName,
+                preferredLanguage,
+                birthDate,
+                gender,
+                phone,
+                address,
+                cipteaURL,
+                idade,
+                validated: false, // Marcar conta como não validada
+            });
+    
+            toast.info('Sua conta foi criada, mas você só poderá acessar após a validação da carteira CIPTEA por um administrador.');
+            await auth.signOut(); // Forçar logout até validação
+        } catch (error) {
+            toast.error('Erro ao criar uma conta. Por favor, tente novamente.');
+        }
+    };
+    
     const logar = async (e) => {
         e.preventDefault();
-
+    
         if (bloqueioAtivo) {
             toast.error(`Você pode tentar novamente em ${Math.floor(tempoRestante / 60)}:${('0' + (tempoRestante % 60)).slice(-2)}`);
             return;
         }
-
+    
         let email = document.getElementById("email-login").value;
         let password = document.getElementById("password-login").value;
-
+    
         try {
             const authResult = await auth.signInWithEmailAndPassword(email, password);
             const userDoc = await db.collection('users').doc(authResult.user.uid).get();
-
-            if (userDoc.exists && userDoc.data().banned) {
+    
+            if (!userDoc.exists) {
+                toast.error('Usuário não encontrado.');
+                await auth.signOut();
+                return;
+            }
+    
+            const userData = userDoc.data();
+    
+            if (userData.banned) {
                 toast.error('Sua conta foi banida. Fale com algum ADM.');
                 await auth.signOut();
                 return;
             }
-
+    
+            if (!userData.validated) {
+                toast.error('Sua conta ainda não foi validada por um administrador.');
+                await auth.signOut();
+                return;
+            }
+    
             props.setUser(authResult.user.displayName);
             toast.success('Logado com Sucesso!');
             localStorage.setItem('user', JSON.stringify(authResult.user));
@@ -90,78 +231,13 @@ const LoginRegistro = (props) => {
                     setBloqueioAtivo(true);
                     toast.error('Você excedeu o número de tentativas. Você pode tentar novamente em 3 minutos.');
                 } else {
-                    toast.error('Erro ao logar, tente novamente ');
+                    toast.error('Erro ao logar, tente novamente.');
                 }
                 return novaTentativa;
             });
         }
     };
-
-    const criarConta = async (e) => {
-        e.preventDefault();
-
-        if (!aceitouTermos) {
-            toast.error('Você precisa aceitar os termos para criar uma conta.');
-            return;
-        }
-
-        const birthdateElement = document.getElementById("birthdate-cadastro");
-        const emailElement = document.getElementById("email-cadastro");
-        const passwordElement = document.getElementById("password-cadastro");
-        const userNameElement = document.getElementById("userName-cadastro");
-        const genderElement = document.getElementById("gender-cadastro");
-        const phoneElement = document.getElementById("phone-cadastro");
-        const addressElement = document.getElementById("address-cadastro");
-        const fileElement = document.getElementById("file-cadastro");
-
-        let birthDate = birthdateElement.value;
-
-        let idade = calcularIdade(birthDate);
-
-        if (idade < 18) {
-            toast.error('Você precisa ser maior de idade para criar uma conta.');
-            return;
-        }
-
-        let email = emailElement.value;
-        let password = passwordElement.value;
-        let userName = userNameElement.value;
-        let gender = genderElement.value;
-        let phone = phoneElement.value;
-        let address = addressElement.value;
-        let selectedFile = fileElement.files[0];
-
-        try {
-            const authUser = await auth.createUserWithEmailAndPassword(email, password);
-            toast.success("Conta criada com Sucesso!");
-
-            await authUser.user.updateProfile({
-                displayName: userName
-            });
-
-            let fileURL = '';
-
-            if (selectedFile) {
-                const fileRef = storage.ref().child(`user_files/${authUser.user.uid}/${selectedFile.name}`);
-                await fileRef.put(selectedFile);
-                fileURL = await fileRef.getDownloadURL();
-            }
-
-            await db.collection('users').doc(authUser.user.uid).set({
-                email: authUser.user.email,
-                displayName: userName,
-                birthDate,
-                gender,
-                phone,
-                address,
-                fileURL,
-                idade,
-            });
-
-        } catch (error) {
-            toast.error('Erro ao criar uma conta: ');
-        }
-    };
+    
 
     const calcularIdade = (birthDate) => {
         const hoje = new Date();
@@ -215,18 +291,29 @@ const LoginRegistro = (props) => {
                             <img src={IconSoloMeetTEA} width={40} style={{ margin: '0 10px' }} />MEET TEA <img src={IconSoloMeetTEA} width={40} style={{ margin: '0 10px' }} />
                         </h1>
                         <input type="text" id="userName-cadastro" placeholder="Nome de usuário" required />
+                        <input type="text" id="socialName-cadastro" placeholder="Nome Social (opcional)" />
                         <input type="email" placeholder="User@gmail.com" id="email-cadastro" required />
                         <input type="password" id="password-cadastro" placeholder="Senha" required />
                         <input type="date" id="birthdate-cadastro" placeholder="Data de Nascimento" required />
                         <select id="gender-cadastro" required>
-                            <option value="">Selecione o Sexo</option>
+                            <option value="">Diga seu gênero</option>
                             <option value="Masculino">Masculino</option>
                             <option value="Feminino">Feminino</option>
                             <option value="Outro">Outro</option>
                         </select>
+<select id="preferredLanguage-cadastro">
+    <option value="">Idioma preferido</option>
+    <option value="Português Brasileiro" defaultValue>Português Brasileiro</option>
+    <option value="Inglês">Inglês</option>
+    <option value="Espanhol">Espanhol</option>
+</select>
                         <input type="text" id="phone-cadastro" placeholder="Telefone" />
-                        <input type="text" id="address-cadastro" placeholder="Endereço" />
-                        <label>Carteira CIPTEA</label>
+                        <input type="text" id="street-cadastro" placeholder="Rua" required />
+<input type="text" id="number-cadastro" placeholder="Número" required />
+<input type="text" id="city-cadastro" placeholder="Cidade" required />
+<input type="text" id="state-cadastro" placeholder="Estado" required />
+
+                        <label>Carteira CIPTEA - Para usar o Meet TEA é necessário uma carteira CIPTEA válida, após avaliação de veracidade, seu acesso será aprovado</label>
                         <input type="file" id="file-cadastro" required />
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <input style={{ width: '10px', marginRight: '20px' }}

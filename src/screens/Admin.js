@@ -156,6 +156,9 @@ export const Admin = () => {
       <button id="btn-denuncia-post" onClick={() => navigate("/DenunciaPost")}>
         Denúncias de Posts
       </button>
+      <button id="btn-denuncia-post" onClick={() => navigate("/ValidarCiptea")}>
+        Validar CIPTEAs
+      </button>
       <div className="container-admin2">
         <table id="table-admin">
           <thead>

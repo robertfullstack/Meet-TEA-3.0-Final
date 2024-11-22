@@ -15,6 +15,7 @@ import ExcluirConta from './screens/ExcluirConta.js';
 import DenunciaPost from './screens/DenunciaPost.js';
 import Chat from './screens/Chat.js';
 import PostComp from './screens/PostComp.js';
+import ValidarCiptea from './screens/ValidarCiptea.js';
 
 const App = () => {
   const [user, setUser] = useState();
@@ -69,6 +70,7 @@ const App = () => {
           <Route path="/excluir-conta" element={<ExcluirConta/>}/>
           <Route path="/chat" element={<Chat/>}/>
           <Route path="/post/:id" element={<PostComp/>} /> {/* Página para visualização */}
+          <Route path="/validarCiptea" element={<ValidarCiptea/>} />
         </Routes>
       </Router>
     </div>

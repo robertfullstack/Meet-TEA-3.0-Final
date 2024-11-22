@@ -63,6 +63,9 @@ html {
   margin: 1rem 0;
 }
 
+textarea {
+  resize: none;
+  }
 .modal-publicar {
   display: grid;
   margin-top: 30px;

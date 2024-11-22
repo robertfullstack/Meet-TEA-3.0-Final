@@ -35,6 +35,8 @@ const Home = (props) => {
   const [reportPostText, setReportPostText] = useState("");
   const [hasReportedPost, setHasReportedPost] = useState(false);
   const [openModalDenuncia, setOpenModalDenuncia] = useState(false);
+  const [addressFilter, setAddressFilter] = useState("");
+
 
   //calcula a idade com base na data de nascimento
   const calcularIdade = (birthDate) => {
@@ -149,39 +151,55 @@ const Home = (props) => {
     const filtered = profiles.filter((profile) => {
       const displayName = profile.displayName || "";
       const email = profile.email || "";
+      const address = profile.address || ""; // Novo campo para endereço
 
+       // Verifica se 'address' é um objeto
+    const fullAddress =
+    typeof address === "object"
+      ? `${address.rua || ""} ${address.cidade || ""} ${address.estado || ""}`
+      : address; // Concatena se for um objeto ou usa como string
+  
       const calculateAge = (birthDate) => {
         const birth = new Date(birthDate);
         const today = new Date();
         let age = today.getFullYear() - birth.getFullYear();
         const monthDifference = today.getMonth() - birth.getMonth();
-
+  
         if (
           monthDifference < 0 ||
           (monthDifference === 0 && today.getDate() < birth.getDate())
         ) {
           age--;
         }
-
+  
         return age;
       };
-
+  
       const age = profile.birthDate ? calculateAge(profile.birthDate) : "";
       const gender = profile.gender || "";
-
+  
       const matchesNameOrEmail =
         displayName.toLowerCase().includes(filter.toLowerCase()) ||
         email.toLowerCase().includes(filter.toLowerCase());
-
+  
       const matchesAge = ageFilter ? age.toString().includes(ageFilter) : true;
       const matchesGender = genderFilter
         ? gender.toLowerCase() === genderFilter.toLowerCase()
         : true;
-
-      return matchesNameOrEmail && matchesAge && matchesGender;
+  
+        const matchesAddress =
+        addressFilter
+          ? 
+              fullAddress.toLowerCase().includes(addressFilter)
+            
+          : true;      
+  
+      return matchesNameOrEmail && matchesAge && matchesGender && matchesAddress;
     });
+  
     setFilteredProfiles(filtered);
-  }, [filter, ageFilter, genderFilter, profiles]);
+  }, [filter, ageFilter, genderFilter, addressFilter, profiles]);
+  
 
   if (!props.user) {
     return <Navigate to="/" />;
@@ -218,30 +236,73 @@ const Home = (props) => {
   };
 
   const handleCommentSubmit = (postId) => {
-    if (commentText.trim()) {
-      const newComment = {
-        text: commentText,
-        user: props.user,
-        timestamp: new Date(),
-      };
-
-      db.collection("posts").doc(postId).collection("comments").add(newComment);
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                comments: [...post.comments, newComment],
-              }
-            : post
-        )
-      );
-
-      setCommentText("");
-      setCurrentPostId(null);
+    const maxCharacters = 400;
+    const offensiveWords = [
+      "cu",
+      "caralho",
+      "ca ralho",
+      "ca ra lho",
+      "porra",
+      "filha da puta", 
+      "puta", 
+      "pu ta", 
+      "buce ta", 
+      "bct", 
+      "carai", 
+      "caraio", 
+      "caraleo", 
+      "caraliu", 
+      "crl", 
+      "burro", 
+      "idiota", 
+      "feio", 
+      "energumeno", 
+      "rapariga", 
+      "filha da" 
+    ];
+  
+    if (!commentText.trim()) {
+      alert("O comentário não pode estar vazio.");
+      return;
     }
+  
+    if (commentText.length > maxCharacters) {
+      alert(`O comentário não pode exceder ${maxCharacters} caracteres.`);
+      return;
+    }
+  
+    const containsOffensiveWords = offensiveWords.some((word) =>
+      commentText.toLowerCase().includes(word)
+    );
+  
+    if (containsOffensiveWords) {
+      alert("Seu comentário contém palavras ofensivas. Por favor, revise.");
+      return;
+    }
+  
+    const newComment = {
+      text: commentText,
+      user: props.user,
+      timestamp: new Date(),
+    };
+  
+    db.collection("posts").doc(postId).collection("comments").add(newComment);
+  
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              comments: [...post.comments, newComment],
+            }
+          : post
+      )
+    );
+  
+    setCommentText("");
+    setCurrentPostId(null);
   };
+  
 
   const handleLike = async (postId, currentLikes) => {
     const userReaction = userReactions[postId];
@@ -542,6 +603,16 @@ const Home = (props) => {
               />{" "}
               <br></br>
               <br></br>
+              <label>Filtrar por Endereço: </label>
+              <input
+                id="filtro"
+                type="text"
+                value={addressFilter}
+                onChange={(e) => setAddressFilter(e.target.value)}
+                placeholder="Filtrar por Endereço"
+              />{" "}
+              <br></br>
+              <br></br>
               <label>Filtrar por Sexo: </label>
               <select
                 id="filtro"
@@ -585,6 +656,9 @@ const Home = (props) => {
                 </p>
                 <p>
                   <strong>Sexo:</strong> {profile.gender}
+                </p>
+                <p>
+                  <strong>Endereço:</strong> {profile.address || null}
                 </p>
               </div>
             ))}
@@ -803,30 +877,35 @@ const Home = (props) => {
                 </button>
 
                 {currentPostId === post.id && (
-                  <div className="comment-form">
-                    <textarea
-                      id="comentario"
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="Escreva um comentário..."
-                    />
+  <div className="comment-form">
+    <textarea
+      id="comentario"
+      value={commentText}
+      onChange={(e) => setCommentText(e.target.value)}
+      placeholder="Escreva um comentário..."
+      maxLength={400}
+    />
+    <p>
+      Caracteres restantes: {400 - commentText.length}
+    </p>
 
-                    <div className="button-group">
-                      <button
-                        id="btn-coment-enviar"
-                        onClick={() => handleCommentSubmit(post.id)}
-                      >
-                        Enviar
-                      </button>
-                      <button
-                        id="btn-coment-fechar"
-                        onClick={() => setCurrentPostId(null)}
-                      >
-                        Fechar
-                      </button>
-                    </div>
-                  </div>
-                )}
+    <div className="button-group">
+      <button
+        id="btn-coment-enviar"
+        onClick={() => handleCommentSubmit(post.id)}
+      >
+        Enviar
+      </button>
+      <button
+        id="btn-coment-fechar"
+        onClick={() => setCurrentPostId(null)}
+      >
+        Fechar
+      </button>
+    </div>
+  </div>
+)}
+
 
                 <div className="comments">
                   <h3>Comentários:</h3>
