@@ -174,7 +174,7 @@
   color: white;
   opacity: 80%;
 }
-#btn-seguidores {
+#btn-seguidores{
   border-radius: 10px;
   background-color: #edb47f;
   border: none;
@@ -288,6 +288,87 @@ h5 {
   background-color: #c82333;
 }
 
+.btn-follow {
+  width: 80px;
+}
+
+.btn-unfollow { 
+  margin-left: 30px;
+  width: 100px; 
+}
+
+#ul-followers{
+  padding: 0px;
+  margin: 0px;
+}
+
+#btn-point-denunciar{
+  display: flex;
+  position: relative;
+  border: none;
+  background-color: #30405f;
+  align-items: end;
+}
+
+#btn-point-denunciar img {
+  width: 60px;
+  height: 60px;
+}
+
+
+#pontinhos-followers{
+  display: flex;
+  flex-direction: row;
+  align-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+#btn-seguir-outros{
+border-radius: 10px;
+background-color: #95A7E5;
+border: none;
+font-family: "Nunito";
+padding: 2px;
+height: 20%;
+color: white;
+}
+
+#seguidores{
+  color: white;
+}
+
+#span-followers{
+  margin: 0px;
+  padding: 0px;
+}
+
+.btn-enviar-denuncia-outros{
+  background-color: #d1ac46;
+  border:none;
+  border-radius: 10px;
+}
+.btn-fechar-denuncia-outros{
+  background-color: #30405f;
+  border: none;
+  border-radius: 10px;
+}
+
+#motivo-denuncia{
+  border-radius: 10px;
+}
+.loading {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-forms{
+ border-radius: 10px;
+ background-color: #95A7E5;
+ font-family: "Nunito";
+}
+
+
 @media (max-width: 800px) {
   .navbar-mobile {
     display: flex;
@@ -376,9 +457,36 @@ h5 {
     justify-content: center;
     display: flex;
   }
-}
 
-.loading {
+  #pontinhos-followers{
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-content: center;
+    flex-direction: column-reverse;
+  }
+
+  #btn-seguir-outros{
+    border-radius: 10px;
+    background-color: #95A7E5;
+    border: none;
+    font-family: "Nunito";
+    padding: 2px;
+    width: 100%;
+    height: 40%;
+    color: white;
+  }
+
+  #btn-point-denunciar img {
+    width: 60px;
+    height: 60px;
+  }
+
+  #btn-point-denunciar{
   display: flex;
+  position: relative;
+  border: none;
+  background-color: #30405f;
   justify-content: center;
+}
 }

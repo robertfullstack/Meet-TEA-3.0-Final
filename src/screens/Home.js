@@ -383,14 +383,13 @@ const Home = (props) => {
           <div className="nav-buttons">
             {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
-              {showChat ? "Fechar" : "Chat"}
+              <abbr title="Botão que abre o chat">{showChat ? "Fechar" : "Chat"}</abbr>  
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              {" "}
-              Postar{" "}
+              <abbr title="Botão que abre a tela de postagem">{" "}Postar{" "} </abbr>
             </button>
             <button id="btn-sair" onClick={handleLogout}>
-              Sair
+              <abbr title="Botão que desloga o usuário">Sair</abbr>
             </button>
           </div>
         </nav>
@@ -469,15 +468,15 @@ const Home = (props) => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={() => navigate("/chat")}>
-                        {showChat ? "Fechar" : "Chat"}
-                      </button>
-                      <button id="btn-pub" onClick={() => navigate("/postar")}>
-                        Postar
-                      </button>
-                      <button id="btn-sair" onClick={handleLogout}>
-                        Sair
-                      </button>
+                    <button id="btn-chat" onClick={() => navigate("/chat")}>
+              <abbr title="Botão que abre o chat">{showChat ? "Fechar" : "Chat"}</abbr>  
+            </button>
+            <button id="btn-pub" onClick={() => navigate("/postar")}>
+              <abbr title="Botão que abre a tela de postagem">{" "}Postar{" "} </abbr>
+            </button>
+            <button id="btn-sair" onClick={handleLogout}>
+              <abbr title="Botão que desloga o usuário">Sair</abbr>
+            </button>
                     </div>
                   </ul>
                 </div>
