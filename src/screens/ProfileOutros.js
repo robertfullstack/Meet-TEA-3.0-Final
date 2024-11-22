@@ -89,7 +89,9 @@ const ProfileOutros = () => {
     }
   };
   const checkIfFollowing = async () => {
-    if (auth.currentUser) {
+    if (!auth.currentUser || !id) return;
+  
+    try {
       const currentUser = auth.currentUser.uid;
       const followerDoc = await db
         .collection("users")
@@ -97,8 +99,10 @@ const ProfileOutros = () => {
         .collection("followers")
         .doc(currentUser)
         .get();
-
+  
       setIsFollowing(followerDoc.exists);
+    } catch (error) {
+      console.error("Erro ao verificar se está seguindo:", error);
     }
   };
 
@@ -132,40 +136,53 @@ const ProfileOutros = () => {
     navigate(`/profile/${profileId}`);
   };
 
+  useEffect(() => {
+    if (id && currentUser) {
+      checkIfFollowing();
+    }
+  }, [id, currentUser]);
+  
+  
+  
   const toggleFollow = async () => {
     if (!auth.currentUser) {
       alert("Você precisa estar logado para seguir usuários.");
       return;
     }
-
+  
     const currentUser = auth.currentUser.uid;
-    const userRef = db.collection("users").doc(id); // O perfil que está sendo seguido
-    const followerRef = userRef.collection("followers").doc(currentUser); // O seguidor atual
-
+    const userRef = db.collection("users").doc(id);
+    const followerRef = userRef.collection("followers").doc(currentUser);
+  
     try {
       if (isFollowing) {
-        // Se já está seguindo, "desseguir"
+        // Remover seguidor
         await followerRef.delete();
         await userRef.update({
-          followersCount: followersCount - 1,
+          followersCount: Math.max(0, followersCount - 1), // Evitar valores negativos
         });
-        setFollowersCount(followersCount - 1);
+        setFollowersCount(Math.max(0, followersCount - 1));
       } else {
-        // Caso contrário, "seguir"
-        await followerRef.set({
-          followedAt: new Date(),
-        });
-        await userRef.update({
-          followersCount: followersCount + 1,
-        });
-        setFollowersCount(followersCount + 1);
+        // Adicionar seguidor
+        const followerSnapshot = await followerRef.get();
+        if (!followerSnapshot.exists) {
+          await followerRef.set({
+            followedAt: new Date(),
+          });
+          await userRef.update({
+            followersCount: followersCount + 1,
+          });
+          setFollowersCount(followersCount + 1);
+        }
       }
-
-      setIsFollowing(!isFollowing); // Inverte o estado de seguir/desseguir
+  
+      // Atualizar estado local
+      setIsFollowing(!isFollowing);
     } catch (error) {
       console.error("Erro ao seguir/desseguir o usuário:", error);
     }
   };
+  
 
   const handleLogout = () => {
     auth

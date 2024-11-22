@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase.js";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ValidarCiptea = () => {
     const [cipteaList, setCipteaList] = useState([]);
+    const navigate = useNavigate();
 
     // Busca todos os usuários com carteira CIPTEA no Firestore e organiza os não validados primeiro
     useEffect(() => {
@@ -55,6 +57,9 @@ const ValidarCiptea = () => {
     return (
         <div>
             <h1>Lista de Carteiras CIPTEA</h1>
+            <button id="btn-denuncia-post" onClick={() => navigate("/admin")}>
+            Voltar
+            </button>
             {cipteaList.length === 0 ? (
                 <p>Nenhuma carteira disponível.</p>
             ) : (

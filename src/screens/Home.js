@@ -258,7 +258,19 @@ const Home = (props) => {
       "feio", 
       "energumeno", 
       "rapariga", 
-      "filha da" 
+      "filha da",
+      "foda",
+      "foda-se",
+      "fds",
+      "prr",
+      "poura",
+      "pourra",
+      "caguei",
+      "merda",
+      "saco",
+      "esterco",
+      "droga",
+      "drogas",
     ];
   
     if (!commentText.trim()) {
