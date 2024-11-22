@@ -36,6 +36,11 @@ export const Profile = () => {
   const [followersCount, setFollowersCount] = useState(0);
   const [postToDelete, setPostToDelete] = useState(null);
   const navigate = useNavigate();
+  const [followersData, setFollowersData] = useState([]); 
+  const [openModalSeguidores, setOpenModalSeguidores] = useState(false);
+  
+  
+
   const currentUser = auth.currentUser; // Verificação de autenticação
   const [formData, setFormData] = useState({
     displayName: "",
@@ -47,6 +52,9 @@ export const Profile = () => {
     setShowChat(!showChat);
   };
 
+  const handleProfileClick = (profileId) => {
+    navigate(`/profile/${profileId}`);
+  };
   const handleLogout = () => {
     auth
       .signOut()
@@ -80,6 +88,7 @@ export const Profile = () => {
 
       const validFollowers = followersList.filter(Boolean); // Remove seguidores nulos
       setFollowers(validFollowers);
+    setFollowersData(validFollowers);
     } catch (error) {
       console.error("Erro ao buscar seguidores:", error);
     }
@@ -258,14 +267,13 @@ export const Profile = () => {
           <div className="nav-buttons">
             {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
-              {showChat ? "Fechar" : "Chat"}
+              <abbr title="Botão que abre o chat">{showChat ? "Fechar" : "Chat"}</abbr>  
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              {" "}
-              Postar{" "}
+              <abbr title="Botão que abre a tela de postagem">{" "}Postar{" "} </abbr>
             </button>
             <button id="btn-sair" onClick={handleLogout}>
-              Sair
+              <abbr title="Botão que desloga o usuário">Sair</abbr>
             </button>
           </div>
         </nav>
@@ -344,15 +352,15 @@ export const Profile = () => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                      <button id="btn-chat" onClick={() => navigate("/chat")}>
-                        {showChat ? "Fechar" : "Chat"}
-                      </button>
-                      <button id="btn-pub" onClick={() => navigate("/postar")}>
-                        Postar
-                      </button>
-                      <button id="btn-sair" onClick={handleLogout}>
-                        Sair
-                      </button>
+                    <button id="btn-chat" onClick={() => navigate("/chat")}>
+              <abbr title="Botão que abre o chat">{showChat ? "Fechar" : "Chat"}</abbr>  
+            </button>
+            <button id="btn-pub" onClick={() => navigate("/postar")}>
+              <abbr title="Botão que abre a tela de postagem">{" "}Postar{" "} </abbr>
+            </button>
+            <button id="btn-sair" onClick={handleLogout}>
+              <abbr title="Botão que desloga o usuário">Sair</abbr>
+            </button>
                     </div>
                   </ul>
                 </div>
@@ -408,29 +416,41 @@ export const Profile = () => {
           </div>
           <button
             id="btn-seguidores"
-            onClick={() => setMostrarSeguidores(true)}
+            onClick={() => setOpenModalSeguidores(true)}
           >
             Mostrar Seguidores
           </button>
-          {mostrarSeguidores && (
+          {openModalSeguidores && (
+          <div className="modal-overlay">
             <div className="followers-section">
-              {followers.length > 0 ? (
-                followers.map((follower) => (
-                  <div key={follower.uid} className="follower">
-                    <p>{follower.displayName}</p>
-                  </div>
-                ))
-              ) : (
-                <p id="no-followers">Você não tem seguidores</p>
-              )}
-              <button
-                id="btn-seguidores"
-                onClick={() => setMostrarSeguidores(false)}
-              >
-                Fechar
-              </button>
+              <ul id="ul-followers">
+              {followersData.length > 0 ? (
+  followersData.map((follower, index) => (
+    <p key={index} className="follower-item">
+      <span
+        onClick={() => handleProfileClick(follower.id)}
+        style={{
+          cursor: "pointer",
+          textDecoration: "none"
+        }}
+      >
+        {follower.displayName || "Usuário Anônimo"}
+      </span>
+    </p>
+  ))
+) : (
+  <li>Este usuário ainda não possui seguidores.</li>
+)}
+
+              </ul>
+          
             </div>
-          )}
+                <button id="btn-seguidores"onClick={() => setOpenModalSeguidores(false)}>
+                   Fechar
+                </button>
+          </div>
+        )}
+        
           <p>
             <br></br>
             <strong id="sobre">Sobre mim:</strong>

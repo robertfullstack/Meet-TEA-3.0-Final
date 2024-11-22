@@ -199,6 +199,12 @@ tr > td {
   margin-top: 15px;
 }
 
+#btn-excluir-denuncia{
+  border-radius: 10px;
+  border: none;
+  background-color: #30405f;
+}
+
 .btn-cancel1 {
   background-color: rgb(185, 32, 32);
   border: none;

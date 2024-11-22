@@ -7,6 +7,9 @@ import IconConfig from "../img/icon_config.png";
 import IconProfile from "../img/icon_profile.png";
 import loading1 from "../img/loading-meet-tea.gif";
 import defaultProfile from "../img/default-profile.png";
+import "../styles/Profile.css";
+
+import pontinhos from "../img/pontinhos.png";
 
 const ProfileOutros = () => {
   const { id } = useParams();
@@ -20,10 +23,11 @@ const ProfileOutros = () => {
   const [hasReported, setHasReported] = useState(false);
   const [openModalVisualizar, setOpenModalVisualizar] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [userPosts, setUserPosts] = useState([]);
   const navigate = useNavigate();
-
-  const [followersData, setFollowersData] = useState([]); // Novo estado para armazenar dados dos seguidores
-  const [openModalSeguidores, setOpenModalSeguidores] = useState(false); // Estado para abrir o modal
+  const currentUser = auth.currentUser;
+  const [followersData, setFollowersData] = useState([]);
+  const [openModalSeguidores, setOpenModalSeguidores] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -42,13 +46,48 @@ const ProfileOutros = () => {
           console.error("Erro ao buscar usuário:", error);
         });
 
-      // Verifica se o usuário atual já está seguindo este perfil
       checkIfFollowing();
-      // Carrega dados dos seguidores
       fetchFollowers();
     }
   }, [id]);
 
+  useEffect(() => {
+    if (user) {
+      fetchUserPosts();
+    }
+  }, [user]);
+
+  const calcularIdade = (dataNascimento) => {
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+
+    return idade;
+  };
+  const fetchUserPosts = async () => {
+    if (!user.uid) return;
+
+    try {
+      const postsSnapshot = await db
+        .collection("posts")
+        .where("user", "==", user.uid)
+        .get();
+
+      const posts = postsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setUserPosts(posts);
+    } catch (error) {
+      console.error("Erro ao buscar posts do usuário:", error);
+    }
+  };
   const checkIfFollowing = async () => {
     if (auth.currentUser) {
       const currentUser = auth.currentUser.uid;
@@ -242,14 +281,15 @@ const ProfileOutros = () => {
           <div className="nav-buttons">
             {" "}
             <button id="btn-chat" onClick={() => navigate("/chat")}>
-              {showChat ? "Fechar" : "Chat"}
+              <abbr title="Botão que abre o chat">
+                {showChat ? "Fechar" : "Chat"}
+              </abbr>
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
-              {" "}
-              Postar{" "}
+              <abbr title="Botão que abre a tela de postagem"> Postar </abbr>
             </button>
             <button id="btn-sair" onClick={handleLogout}>
-              Sair
+              <abbr title="Botão que desloga o usuário">Sair</abbr>
             </button>
           </div>
         </nav>
@@ -329,13 +369,18 @@ const ProfileOutros = () => {
                     </li>
                     <div className="nav-buttons1">
                       <button id="btn-chat" onClick={() => navigate("/chat")}>
-                        {showChat ? "Fechar" : "Chat"}
+                        <abbr title="Botão que abre o chat">
+                          {showChat ? "Fechar" : "Chat"}
+                        </abbr>
                       </button>
                       <button id="btn-pub" onClick={() => navigate("/postar")}>
-                        Postar
+                        <abbr title="Botão que abre a tela de postagem">
+                          {" "}
+                          Postar{" "}
+                        </abbr>
                       </button>
                       <button id="btn-sair" onClick={handleLogout}>
-                        Sair
+                        <abbr title="Botão que desloga o usuário">Sair</abbr>
                       </button>
                     </div>
                   </ul>
@@ -360,64 +405,176 @@ const ProfileOutros = () => {
             }}
           />
         </div>
-        <div className="info-outros">
-          <p>
-            <strong>Nome:</strong> {user.displayName}
-          </p>
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-          <p>Seguidores: {followersCount}</p>
-          <button onClick={toggleFollow}>
+
+        <div id="pontinhos-followers">
+          <button
+            id="btn-seguir-outros"
+            className={isFollowing ? "btn-unfollow" : "btn-follow"}
+            onClick={toggleFollow}
+          >
             {isFollowing ? "Deixar de Seguir" : "Seguir"}
           </button>
-          <button onClick={() => setOpenModalSeguidores(true)}>
-            Ver Seguidores
+          <p id="sobre-nome1">{user.displayName}</p>
+          <button
+            id="btn-point-denunciar"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src={pontinhos}
+              alt="Imagem com 3 pontos horizontais que levam para a seção denunciar"
+              height="50px"
+            />
           </button>
+          <ul id="denuncia" class="dropdown-menu">
+            <li id="li-papai">
+              <button
+                id="btn-personalizar"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#reportModal"
+              >
+                Denunciar
+              </button>
+            </li>
+          </ul>
         </div>
 
-        {/* Modal para exibir seguidores */}
+        <p>
+          <br></br>
+          <strong id="sobre">Sobre mim:</strong>
+        </p>
+        <p id="sobre-info">{user.about}</p>
+        <p id="seguidores">Seguidores: {followersCount}</p>
+
+        <button
+          id="btn-seguidores"
+          onClick={() => setOpenModalSeguidores(true)}
+        >
+          Ver Seguidores
+        </button>
         {openModalSeguidores && (
           <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Seguidores</h3>
-              <button onClick={() => setOpenModalSeguidores(false)}>
-                Fechar
-              </button>
-              <ul>
+            <div className="followers-section">
+              <ul id="span-followers">
                 {followersData.length > 0 ? (
                   followersData.map((follower, index) => (
-                    <li key={index} className="follower-item">
+                    <p key={index} className="follower-item">
                       <span
                         onClick={() => handleProfileClick(follower.uid)}
                         style={{
                           cursor: "pointer",
-                          color: "blue",
-                          textDecoration: "underline",
+                          textDecoration: "none",
                         }}
                       >
                         {follower.displayName || "Usuário Anônimo"}
                       </span>
-                      <li>{follower.id}</li>
-                    </li>
+                      <p>{follower.id}</p>
+                    </p>
                   ))
                 ) : (
                   <li>Este usuário ainda não possui seguidores.</li>
                 )}
               </ul>
+              <button
+                id="btn-seguidores"
+                onClick={() => setOpenModalSeguidores(false)}
+              >
+                Fechar
+              </button>
             </div>
           </div>
         )}
+        <div></div>
+        <br></br>
+        <div id="infos">
+          <div id="texto1">
+            <p>
+              <strong>E-mail:</strong>
+              <br />
+              {user.email}
+            </p>
+            <p>
+              <strong>Idade:</strong>
+              <br />
+              {calcularIdade(user.birthDate)}
+            </p>
+            <p>
+              <strong>Sexo:</strong>
+              <br />
+              {user.gender}
+            </p>
+          </div>
+          <div id="texto2">
+            <p>
+              <strong>Telefone:</strong>
+              <br />
+              {user.phone}
+            </p>
+            <p>
+              <strong>Endereço:</strong>
+              <br />
+              {user.address}
+            </p>
+            {user.fileURL && (
+              <div>
+                <p>
+                  <strong>Carteira CIPTEA</strong>
+                </p>
+                <a
+                  id="ciptea-link"
+                  href={user.fileURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visualizar carteira
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="profile-post">
+          <h3>Postagens de {user.displayName}</h3>
+          {userPosts.length > 0 ? (
+            userPosts.map((post) => (
+              <div key={post.id} className="post">
+                <h4>{post.title}</h4>
+                <p>{post.description}</p>
+                {post.imageUrl && (
+                  <img src={post.imageUrl} alt="Post" width={200} />
+                )}
+              </div>
+            ))
+          ) : (
+            <p id="no-post">Ainda não possui posts.</p>
+          )}
+        </div>
+      </div>
 
-        <button onClick={() => setOpenModalVisualizar(true)}>
-          Denunciar Usuário
-        </button>
-
-        {/* Modal de denúncia */}
-        {openModalVisualizar && (
-          <div className="modal-overlay">
-            <div className="ban-form" style={{ marginTop: "20px" }}>
-              <h3>Denunciar Usuário</h3>
+      <div
+        className="modal fade"
+        id="reportModal"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="reportModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div id="modal-content-denuncia" className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="reportModalLabel">
+                Denunciar Usuário
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
               {hasReported ? (
                 <p style={{ color: "red" }}>
                   Você já enviou uma denúncia para este usuário.
@@ -426,7 +583,7 @@ const ProfileOutros = () => {
                 <>
                   <label htmlFor="reportReason">Motivo da denúncia:</label>
                   <select
-                    id="reportReason"
+                    id="motivo-denuncia"
                     value={reportReason}
                     onChange={(e) => setReportReason(e.target.value)}
                     style={{ width: "100%", marginBottom: "10px" }}
@@ -448,7 +605,7 @@ const ProfileOutros = () => {
 
                   <label htmlFor="reportText">Justificativa (opcional):</label>
                   <textarea
-                    id="reportText"
+                    id="motivo-denuncia"
                     value={reportText}
                     onChange={(e) => setReportText(e.target.value)}
                     placeholder="Escreva uma justificativa para a denúncia (opcional)"
@@ -456,11 +613,6 @@ const ProfileOutros = () => {
                     cols="50"
                     style={{ width: "100%", marginBottom: "10px" }}
                   ></textarea>
-
-                  <button onClick={handleReport}>Enviar Denúncia</button>
-                  <button onClick={() => setOpenModalVisualizar(false)}>
-                    Fechar
-                  </button>
                 </>
               )}
               {successMessage && (
@@ -468,8 +620,26 @@ const ProfileOutros = () => {
               )}
               {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             </div>
+            <div className="modal-footer">
+              {!hasReported && (
+                <>
+                  <button
+                    className="btn-enviar-denuncia-outros"
+                    onClick={handleReport}
+                  >
+                    Enviar Denúncia
+                  </button>
+                </>
+              )}
+              <button
+                className="btn-fechar-denuncia-outros"
+                data-bs-dismiss="modal"
+              >
+                Fechar
+              </button>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
