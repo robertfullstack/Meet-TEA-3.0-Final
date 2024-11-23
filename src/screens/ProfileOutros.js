@@ -7,6 +7,8 @@ import IconConfig from "../img/icon_config.png";
 import IconProfile from "../img/icon_profile.png";
 import loading1 from "../img/loading-meet-tea.gif";
 import defaultProfile from "../img/default-profile.png";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Profile.css";
 
 import pontinhos from "../img/pontinhos.png";
@@ -178,6 +180,7 @@ const ProfileOutros = () => {
   
       // Atualizar estado local
       setIsFollowing(!isFollowing);
+      fetchFollowers();
     } catch (error) {
       console.error("Erro ao seguir/desseguir o usuário:", error);
     }
@@ -196,46 +199,58 @@ const ProfileOutros = () => {
       });
   };
 
+  useEffect(() => {
+    const savedReportStatus = localStorage.getItem(`hasReported_${id}`);
+    if (savedReportStatus === "true") {
+      setHasReported(true);
+    }
+  }, [id]);
+  
+  
+
   const handleReport = async () => {
     if (!auth.currentUser) {
       setErrorMessage("Você precisa estar logado para denunciar.");
       return;
     }
-
+  
     if (reportReason === "") {
       setErrorMessage("Por favor, selecione um motivo para a denúncia.");
       return;
     }
-
+  
     if (hasReported) {
       setErrorMessage("Você já enviou uma denúncia para este usuário.");
       return;
     }
-
+  
     try {
-      const currentUser = auth.currentUser;
-
       await db
         .collection("users")
         .doc(id)
         .collection("reports")
         .add({
-          emailDenunciante: currentUser.email,
+          emailDenunciante: auth.currentUser.email,
           motivo: reportReason,
           justificativa: reportText || null,
           timestamp: new Date(),
         });
-
-      setSuccessMessage("Denúncia enviada com sucesso.");
+  
+      alert("Denúncia enviada com sucesso.");
       setReportReason("");
       setReportText("");
       setHasReported(true);
       setOpenModalVisualizar(false);
+  
+      // Persistir estado no localStorage
+      localStorage.setItem(`hasReported_${id}`, "true");
     } catch (error) {
       console.error("Erro ao enviar denúncia:", error);
       setErrorMessage("Erro ao enviar denúncia. Tente novamente mais tarde.");
     }
   };
+  
+  
 
   if (!user) {
     return (
@@ -631,9 +646,6 @@ const ProfileOutros = () => {
                     style={{ width: "100%", marginBottom: "10px" }}
                   ></textarea>
                 </>
-              )}
-              {successMessage && (
-                <p style={{ color: "green" }}>{successMessage}</p>
               )}
               {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             </div>
