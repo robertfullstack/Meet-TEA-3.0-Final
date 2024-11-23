@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { db, auth, storage } from "../firebase";
 import "../styles/Admin.css";
+import loading1 from "../img/loading-meet-tea.gif";
 
 export const Denuncia = () => {
   const [showModal, setShowModal] = useState(true);
@@ -73,6 +74,7 @@ export const Denuncia = () => {
   };
 
   return (
+
     <div>
       <h1 id="titulo-denuncia">Denúncias feitas ao usuário</h1>
       {reports.length > 0 ? (
@@ -88,7 +90,15 @@ export const Denuncia = () => {
           ))}
         </ul>
       ) : (
-          <p>Nenhuma denúncia encontrada.</p>
+          <div className="loading">
+                <img
+                  className="loading"
+                  src={loading1}
+                  alt="Xicará com quebra-cabeça balançando como formato de carregamento da página"
+                  width={600}
+                  height={800}
+                />
+              </div>
         )}
         {confirmDelete && (
           <div className="modal-confirm">

@@ -37,6 +37,14 @@
   color: #61dafb;
 }
 
+.btn-dark-mode {
+  background-color: #f0f0f0;
+  color: #000000;
+  border-radius: 10px;
+  display: flex;
+  margin-top: 20px;
+  ;
+}	
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -107,9 +115,18 @@ body.dark #infos {
   color: dark;
 }
 
-body.dark #btn-seguidores {
+body.dark #btn-seguidores,
+body.dark #btn-seguir-outros {
   background-color: #474343;
   background-image: none;
+  color: white;
+}
+
+body.dark .btn-excluir-denuncia {
+  background-color: #474343;
+  background-image: none;
+  border: none;
+  border-radius: 10px;
   color: white;
 }
 
@@ -121,9 +138,26 @@ body.dark #btn-excluir-conta {
   background-color: #474343;
 }
 
-body.dark #btn-coment {
-  background-color: #756f6f;
+body.dark #btn-coment, 
+body.dark #btn-coment-enviar, 
+body.dark #btn-coment-fechar{
+  background-color: #474343;
   color: white;
+}
+body.dark #btn-coment:hover,
+body.dark #btn-coment-enviar:hover,
+body.dark #btn-enviar:hover
+body.dark #btn-cancel:hover
+{
+  background-color: #a7a1a1;
+  color: white;
+}
+
+body.dark #btn-enviar, 
+body.dark #btn-cancel{
+  background-color: #474343;
+  color: white;
+  border:none;
 }
 
 body.dark #menu-denuncia,
@@ -135,7 +169,11 @@ body.dark #denuncia {
   background-color: #121212;
   color: #ffffff;
 }
-
+body.dark .btn-dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+  border-radius: 10px;
+}
 body.dark #btn-point {
   background-color: #6d6565;
   background-image: none;
@@ -150,7 +188,12 @@ body.dark #filtro {
   background-color: #292929;
   color: white;
 }
-body.dark .profile-outros-border {
+body.dark #title-ciptea, body.dark #subtitle-ciptea{	
+  color: #ffffff;
+}
+
+body.dark .profile-outros-,
+body.dark #ul1>#li1{
   background-color: #979090;
   background-image: none;
   color: #ffffff;
@@ -160,16 +203,20 @@ body.dark .main2 {
   color: #ffffff;
 }
 
-body.dark .sidbar {
+body.dark .sidbar, 
+body.dark .nav-mob, 
+body.dark .offcanvas-header{
   background-color: #979090;
   background-image: none;
   color: black;
 }
 
 body.dark .modal-content,
-body.dark .modal-content1 {
-  background-color: rgb(201, 197, 189);
+body.dark .modal-content1,
+body.dark #modal-content-denuncia{
+  background-color: rgb(0, 0, 0);
 }
+
 body.dark .App-link {
   color: #61dafb;
 }

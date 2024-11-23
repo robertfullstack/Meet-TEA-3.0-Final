@@ -86,9 +86,9 @@ const App = () => {
             A-
           </button>
           <button
-            className="toggle-button"
+            className="btn-dark-mode"
             onClick={toggleDarkMode}
-            style={{ fontSize: "18px", padding: "10px", marginLeft: "10px" }}
+            style={{ fontSize: "18px", padding: "10px"}}
           >
             {darkMode ? "Modo Claro" : "Modo Escuro"}
           </button>

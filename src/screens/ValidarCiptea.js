@@ -3,6 +3,7 @@ import { db } from "../firebase.js";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/Admin.css";
 
 const ValidarCiptea = () => {
     const [cipteaList, setCipteaList] = useState([]);
@@ -55,15 +56,13 @@ const ValidarCiptea = () => {
     };
 
     return (
-        <div>
-            <h1>Lista de Carteiras CIPTEA</h1>
-            <button id="btn-denuncia-post" onClick={() => navigate("/admin")}>
-            Voltar
-            </button>
+        <div className="container-ciptea">
+            <h1 id="title-ciptea"> Lista de Carteiras CIPTEA</h1>
             {cipteaList.length === 0 ? (
                 <p>Nenhuma carteira disponível.</p>
             ) : (
-                <ul style={{ listStyleType: "none", padding: 0 }}>
+                <ul style={{ listStyleType: "none", padding: 0, justifyContent: "center",
+                    display: "flex", alignContent: "center", flexDirection: "column", flexWrap: "wrap",}}>
                     {cipteaList.map((ciptea) => (
                         <li
                             key={ciptea.id}
@@ -72,19 +71,20 @@ const ValidarCiptea = () => {
                                 padding: "15px",
                                 border: "1px solid #ccc",
                                 borderRadius: "8px",
+                                width: "50%",
                                 backgroundColor: ciptea.validated
-                                    ? "#d4edda"
+                                    ? "#62a360"
                                     : "#f8d7da",
                             }}
                         >
-                            <p>
+                            <p id="subtitle-ciptea">
                                 <strong>Usuário ID:</strong> {ciptea.id}
                             </p>
-                            <p>
+                            <p id="subtitle-ciptea">
                                 <strong>Status:</strong>{" "}
                                 {ciptea.validated ? "Validado" : "Pendente"}
                             </p>
-                            <div style={{ margin: "10px 0" }}>
+                            <div style={{ margin: "10px 0"}}>
                                 <iframe
                                     src={ciptea.url}
                                     title={`Carteira CIPTEA ${ciptea.id}`}
