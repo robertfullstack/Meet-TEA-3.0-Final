@@ -155,15 +155,13 @@ const LoginRegistro = (props) => {
             await authUser.user.updateProfile({
                 displayName: userName
             });
-    
-            // Upload dos arquivos
+
             const cipteaFileRef = storage.ref().child(`user_files/${authUser.user.uid}/ciptea_${cipteaFile.name}`);
     
             await cipteaFileRef.put(cipteaFile);
     
             const cipteaURL = await cipteaFileRef.getDownloadURL();
     
-            // Armazenar dados no Firestore
             await db.collection('users').doc(authUser.user.uid).set({
                 email: authUser.user.email,
                 displayName: userName,
@@ -175,11 +173,11 @@ const LoginRegistro = (props) => {
                 address,
                 cipteaURL,
                 idade,
-                validated: false, // Marcar conta como não validada
+                validated: false, 
             });
     
             toast.info('Sua conta foi criada, mas você só poderá acessar após a validação da carteira CIPTEA por um administrador.');
-            await auth.signOut(); // Forçar logout até validação
+            await auth.signOut(); 
         } catch (error) {
             toast.error('Erro ao criar uma conta. Por favor, tente novamente.');
         }
@@ -333,10 +331,11 @@ const LoginRegistro = (props) => {
                 {showResetPassword && (
                     <div className="reset-password-modal">
                         <div className="reset-password-content">
-                            <h3>Redefinir senha</h3>
-                            <input type="email" placeholder="Digite seu e-mail" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} />
-                            <button onClick={enviarEmailRedefinicaoSenha}>Enviar E-mail</button>
-                            <button onClick={() => setShowResetPassword(false)}>Cancelar</button>
+                            <h3 style={{color:"white"}}>Redefinir senha</h3>
+                            <input id="filtro" type="email" placeholder="Digite seu e-mail" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} />
+                            <br></br><br></br>
+                            <button id="btn-curtir" onClick={enviarEmailRedefinicaoSenha}>Enviar E-mail</button>
+                            <button id="btn-curtir" onClick={() => setShowResetPassword(false)}>Cancelar</button>
                         </div>
                     </div>
                 )}

@@ -58,39 +58,45 @@ const Postar = (props) => {
   const uploadPost = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-
+  
     setIsSubmitting(true);
-
+  
     const titlePost = document.getElementById("titlePost").value;
     const descricaoPost = document.getElementById("descricaoPost").value;
-
+  
     if (!file) {
       alert("Selecione um arquivo para upload");
       setIsSubmitting(false);
       return;
     }
-
+  
     if (!currentUser) {
       alert("Usuário não autenticado.");
       setIsSubmitting(false);
       return;
     }
-
+  
     // Busca a URL da foto de perfil do usuário
     let profilePhotoURL = "";
     try {
       const userDoc = await db.collection("users").doc(currentUser.uid).get();
-      profilePhotoURL = userDoc.exists ? userDoc.data().profilePhotoURL : null;
+      if (userDoc.exists) {
+        profilePhotoURL = userDoc.data().profilePhotoURL || "https://example.com/default-avatar.png"; // Valor padrão
+      } else {
+        console.warn("Documento do usuário não encontrado. Usando avatar padrão.");
+        profilePhotoURL = "https://example.com/default-avatar.png";
+      }
     } catch (error) {
       console.error("Erro ao buscar foto de perfil:", error);
       alert("Erro ao buscar foto de perfil do usuário.");
       setIsSubmitting(false);
       return;
     }
-
+  
+    // Upload da imagem
     const uniqueImageName = crypto.randomUUID();
     const uploadTask = storage.ref(`images/${uniqueImageName}`).put(file);
-
+  
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -101,10 +107,11 @@ const Postar = (props) => {
       },
       (error) => {
         console.error("Erro no upload:", error);
-        alert(error.message);
+        alert("Erro no upload da imagem.");
         setIsSubmitting(false);
       },
       () => {
+        // Recupera a URL da imagem e cria o post
         storage
           .ref("images")
           .child(uniqueImageName)
@@ -119,8 +126,8 @@ const Postar = (props) => {
                 imageUrl: url,
                 timestamp: new Date(),
                 user: currentUser.uid,
-                postUserName: currentUser.displayName,
-                profilePhotoURL: profilePhotoURL, // Adiciona a foto de perfil do usuário ao post
+                postUserName: currentUser.displayName || "Usuário Desconhecido", // Valor padrão
+                profilePhotoURL: profilePhotoURL,
                 likes: 0,
                 loves: 0,
               })
@@ -129,15 +136,15 @@ const Postar = (props) => {
                 setFile(null);
                 setOpenModalPublicar(false);
                 alert("Postagem criada com sucesso!");
-
-                // Gera o link para a postagem recém-criada
+  
+                // Gera o link de compartilhamento
                 const generatedLink = `${window.location.origin}/post/${newPostRef.id}`;
                 setShareLink(generatedLink);
-
+  
                 navigate("/Home");
               })
               .catch((error) => {
-                console.error("Erro ao adicionar documento: ", error);
+                console.error("Erro ao adicionar documento:", error);
                 alert("Erro ao criar postagem.");
                 setIsSubmitting(false);
               });
@@ -150,6 +157,7 @@ const Postar = (props) => {
       }
     );
   };
+  
 
   // Função para copiar o link de compartilhamento
   const copyShareLink = () => {

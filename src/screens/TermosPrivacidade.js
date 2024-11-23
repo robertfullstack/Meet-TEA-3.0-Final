@@ -32,7 +32,7 @@ const TermosPrivacidade = () => {
       <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" className="scrollspy-example bg-body-tertiary p-3 rounded-2" tabIndex="0">
         <div className="Politicas-de-privacidade">
           <h2 id="scrollspyHeading1">Políticas de Privacidade</h2>
-          <p>A sua privacidade é importante para nós. É política do Meet Tea respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a href="https://meet-tea-2-0.vercel.app/">Meet Tea</a>, e outros sites que possuímos e operamos.</p>
+          <p>A sua privacidade é importante para nós. É política do Meet Tea respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a href="https://meet-tea-3-0.vercel.app/">Meet Tea</a>, e outros sites que possuímos e operamos.</p>
           <p>Solicitamos informações pessoais apenas quando realmente precisamos delas para lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento. Também informamos por que estamos coletando e como será usado.</p>
           <p>Apenas retemos as informações coletadas pelo tempo necessário para fornecer o serviço solicitado. Quando armazenamos dados, protegemos dentro de meios comercialmente aceitáveis ​​para evitar perdas e roubos, bem como acesso, divulgação, cópia, uso ou modificação não autorizados.</p>
           <p>Não compartilhamos informações de identificação pessoal publicamente ou com terceiros, exceto quando exigido por lei.</p>
@@ -59,7 +59,7 @@ const TermosPrivacidade = () => {
 
         <div className="Termos">
           <h2 id="scrollspyHeading2">1. Termos</h2>
-          <p>Ao acessar o site <a href="https://meet-tea-2-0.vercel.app/">Meet Tea</a>, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.</p>
+          <p>Ao acessar o site <a href="https://meet-tea-3-0.vercel.app/">Meet Tea</a>, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.</p>
         </div>
 
         <h2 id="scrollspyHeading3">2. Uso de Licença</h2>
