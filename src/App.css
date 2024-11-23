@@ -78,7 +78,8 @@ body.dark button {
   color: #ffffff;
 }
 
-body.dark .post {
+body.dark .post,
+body.dark .modal-publicar{
   background-color: #6d6565;
   background-image: none;
   color: #ffffff;
