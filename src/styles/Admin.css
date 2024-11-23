@@ -1,11 +1,18 @@
 .container-admin2 {
   font-family: "Nunito";
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 15px;
 }
 
 #title-admin {
   font-family: "Nunito";
   text-align: center;
+  font-size: 40px;
+  margin-bottom: 15px;
+  margin: 15px;
 }
 
 #title-admin-1 {
@@ -16,34 +23,34 @@
 }
 
 .gif-admin {
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
 }
 
 #animaAdmin {
   width: 100%;
+  max-width: 400px;
   height: auto;
+  margin: 0 auto;
 }
+
 .container-admin {
   display: flex;
-  justify-content: space-around;
-  background-color: #314263;
-  padding: 10px;
-  max-height: 100%;
-  min-height: 100vh;
-  height: 100%;
-  width: 100%;
-  min-width: fit-content;
   flex-wrap: wrap;
+  justify-content: center;
+  background-color: #314263;
+  padding: 20px;
+  min-height: 100vh;
+  width: 100%;
   align-items: center;
-  align-content: center;
 }
 
 .admin-login {
-  justify-content: start;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
 }
 
 #btn-admin {
@@ -53,102 +60,141 @@
   padding: 10px;
   color: white;
   width: 150px;
-  margin-top: 40px;
+  margin-top: 20px;
   font-family: "Nunito";
-  font-size: 20px;
+  font-size: 18px;
 }
 
 #btn-input {
   border: 1px solid black;
   border-radius: 7px;
   font-family: "Nunito";
-  font-size: 20px;
-  margin-top: 2em;
+  font-size: 18px;
+  margin-top: 10px;
   padding: 7px;
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
 }
 
 #div-btn-admin {
-  justify-content: flex-start;
   display: flex;
   flex-direction: column;
-  align-content: center;
   align-items: center;
-}
-tr > td {
-  padding: 45px;
-  text-align: center;
-  font-size: 18px;
-}
-#th-id {
-  margin-left: 130px;
+  gap: 15px;
 }
 
-#th-email {
-  margin-left: 330px;
-}
 
-#th-arquivo {
-  margin-left: 220px;
-}
-
-#th-denuncia {
-  margin-left: 110px;
-}
-
+#th-id,
+#th-email,
+#th-arquivo,
+#th-denuncia,
 #th-ação {
-  margin-left: 110px;
+  padding: 15px 0; 
+  text-align: center; 
+  font-weight: bold; 
+  border-bottom: 2px solid #ccc; 
+  vertical-align:middle; 
 }
 
-#th-admin {
-  display: flex;
-  padding: 10px;
-  flex-direction: row;
-  text-align: center;
-  font-size: 18px;
+#th-id {
+  width:28%; 
 }
+#th-email {
+  width: 23%;
+}
+#th-arquivo {
+  width: 15%;
+}
+#th-denuncia {
+  width: 24%; 
+}
+#th-ação {
+  width: 8%; 
+}
+
+.table-tbody {
+  width: 100%;
+  margin: 0 auto; 
+  padding-left: 20px;
+}
+
+.table-tbody > tbody > tr:hover {
+  background-color: #eee4c6; 
+}
+
+/* Estilo para as células */
+.table-tbody > tbody > tr > td {
+  padding: 10px 20px; 
+  text-align: center;
+}
+.table-container{
+  display: flex;             
+  justify-content: center;  
+  align-items: center;                
+  height: 100%;             
+  width: 100%;                   
+}
+
+.container-buttons {
+  display: flex;
+  justify-content: center; 
+  gap: 20px; 
+  font-family: "Nunito";
+}
+
 
 #btn-logout {
   border: 1px solid black;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: rgb(26, 26, 109);
   color: white;
   font-family: "Nunito";
   padding: 7px;
-  width: 90px;
-  margin-left: 35px;
+  width: 160px;
+  text-align: center;
 }
 
 #btn-denuncia-post {
   border: 1px solid rgb(26, 26, 109);
   background-color: rgb(76, 122, 221);
   border-radius: 10px;
-  padding: 7px;
-  width: 190px;
-  margin-left: 10px;
+  padding: 3px;
+  width: 160px;
+  text-align: center;
   color: white;
 }
-#btn-banir {
-  background-color: rgb(151, 30, 30);
-  border: none;
+
+#btn-banir,
+#btn-denuncia {
+  border: 1px solid black;
   border-radius: 10px;
   padding: 10px;
-  width: 90px;
   color: white;
+  margin: 10px 35px;
+}
+
+#btn-banir {
+  background-color: rgb(136, 30, 30);
+  width: 90px;
 }
 
 #btn-denuncia {
   background-color: rgb(209, 139, 10);
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  color: white;
   opacity: 60%;
+}
+
+#btn-banir:hover {
+  background-color: rgb(120, 20, 20);
+}
+
+#btn-denuncia:hover {
+  background-color: rgb(179, 100, 10);
 }
 
 #div-btn-excluir {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -168,7 +214,6 @@ tr > td {
 }
 
 #btn-close {
-  position: relative;
   margin-left: 10px;
   background-color: transparent;
   border: none;
@@ -185,12 +230,13 @@ tr > td {
   color: white;
 }
 
+
 #info-denuncia {
   display: flex;
-  font-family: "Nunito";
   justify-content: center;
   align-items: center;
   margin-top: 10px;
+  text-align: center;
 }
 
 #titulo-denuncia {
@@ -199,28 +245,143 @@ tr > td {
   margin-top: 15px;
 }
 
-#btn-excluir-denuncia{
+#btn-excluir-denuncia {
   border-radius: 10px;
   border: none;
   background-color: #30405f;
 }
 
 .btn-cancel1 {
-  background-color: rgb(185, 32, 32);
+  background-color: rgb(160, 25, 25);
   border: none;
   border-radius: 10px;
   padding: 10px;
   width: 100px;
   margin-bottom: 10px;
 }
+
+
 #modal-content {
   font-family: "Nunito";
   color: white;
 }
 
+#modal-content-denuncia-post{
+  background-color: transparent;
+}
 .modal.fade.show {
   background-color: #00000091;
 }
+
 .modal-confirmation {
   font-family: "Nunito";
+}
+
+
+@media screen and (max-width: 1024px) {
+  .container-admin2 {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+  }
+
+  #title-admin-1 {
+    font-size: 48px;
+  }
+
+  tr > td, tr > th {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  #btn-admin,
+  #btn-input {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .table-container {
+    padding: 10px;
+    overflow-x: auto; 
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container-admin {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  #title-admin {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  #title-admin-1 {
+    font-size: 36px;
+  }
+
+  .admin-login {
+    gap: 10px;
+    align-items: stretch; 
+  }
+
+  tr > td, tr > th {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #btn-admin,
+  #btn-input {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .container-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  #btn-logout,
+  #btn-denuncia-post {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container-admin2 {
+    padding: 5px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #title-admin-1 {
+    font-size: 28px;
+  }
+
+  tr > td, tr > th {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  #btn-admin,
+  #btn-input {
+    width: 100%;
+    max-width: 250px;
+    font-size: 14px;
+  }
+
+  #btn-logout,
+  #btn-denuncia-post {
+    width: 100%;
+    max-width: 250px;
+    font-size: 14px;
+  }
+
+  .table-container {
+    padding: 5px;
+    overflow-x: auto;
+  }
 }

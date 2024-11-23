@@ -150,6 +150,7 @@ export const Admin = () => {
   return (
     <div>
       <h1 id="title-admin">Usuários Cadastrados</h1>
+      <div class="container-buttons"> 
       <button id="btn-logout" onClick={handleLogout}>
         Logout
       </button>
@@ -159,7 +160,9 @@ export const Admin = () => {
       <button id="btn-denuncia-post" onClick={() => navigate("/ValidarCiptea")}>
         Validar CIPTEAs
       </button>
+      </div>
       <div className="container-admin2">
+        <div class="table-container"> 
         <table id="table-admin">
           <thead>
             <tr id="tr-admin">
@@ -184,6 +187,7 @@ export const Admin = () => {
                 />
               </div>
             ) : (
+              <table class="table-tbody"> 
               <tbody>
                 {users.map((user) => (
                   <tr key={user.id}>
@@ -234,9 +238,11 @@ export const Admin = () => {
                   </tr>
                 ))}
               </tbody>
+            </table>
             )}
           </div>
         </table>
+       </div>
       </div>
     </div>
   );
