@@ -6,7 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fontsource/poetsen-one';
-
 import '../styles/logincadastro.css';
 import IconSoloMeetTEA from '../icons/icon-solo-meet-tea.png';
 import animalogin from '../img/animalogin.gif';
@@ -26,9 +25,8 @@ const LoginRegistro = (props) => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
             if (authUser) {
                 const userDoc = await db.collection('users').doc(authUser.uid).get();
-                
+
                 if (!userDoc.exists || !userDoc.data().validated) {
-                    toast.error('Sua conta ainda não foi validada por um administrador.');
                     await auth.signOut();
                     setUser(null);
                     localStorage.removeItem('user');
@@ -99,7 +97,7 @@ const LoginRegistro = (props) => {
     let birthDate = birthdateElement.value;
     let idade = calcularIdade(birthDate);
     let gender = genderElement.value;
-    let preferredLanguage = preferredLanguageElement.value || "Português Brasileiro";
+    let preferredLanguage = preferredLanguageElement.value || "Português";
     let phone = phoneElement.value;
     let street = streetElement.value;
     let number = numberElement.value;
@@ -150,8 +148,7 @@ const LoginRegistro = (props) => {
     
         try {
             const authUser = await auth.createUserWithEmailAndPassword(email, password);
-            toast.success("Conta criada com Sucesso!");
-    
+
             await authUser.user.updateProfile({
                 displayName: userName
             });
@@ -175,8 +172,8 @@ const LoginRegistro = (props) => {
                 idade,
                 validated: false, 
             });
-    
-            toast.info('Sua conta foi criada, mas você só poderá acessar após a validação da carteira CIPTEA por um administrador.');
+            setContainerLogar(true);
+            toast.info('Sua conta foi criada, mas você só poderá acessar após a validação da sua carteira CIPTEA por um administrador. Aguarde 1 dia útil');
             await auth.signOut(); 
         } catch (error) {
             toast.error('Erro ao criar uma conta. Por favor, tente novamente.');
@@ -311,7 +308,7 @@ const LoginRegistro = (props) => {
 <input type="text" id="city-cadastro" placeholder="Cidade" required />
 <input type="text" id="state-cadastro" placeholder="Estado" required />
 
-                        <label>Carteira CIPTEA - Para usar o Meet TEA é necessário uma carteira CIPTEA válida, após avaliação de veracidade, seu acesso será aprovado</label>
+                        <label>Para usar o Meet TEA é necessário uma carteira CIPTEA válida, após avaliação de veracidade, seu acesso será aprovado</label>
                         <input type="file" id="file-cadastro" required />
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <input style={{ width: '10px', marginRight: '20px' }}

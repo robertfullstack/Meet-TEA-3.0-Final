@@ -26,8 +26,8 @@ const Home = (props) => {
   const [currentPostId, setCurrentPostId] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [filter, setFilter] = useState("");
-  const [ageFilter, setAgeFilter] = useState(""); // Novo estado para idade
-  const [genderFilter, setGenderFilter] = useState(""); // Novo estado para sexo
+  const [ageFilter, setAgeFilter] = useState(""); 
+  const [genderFilter, setGenderFilter] = useState("");
   const [userReactions, setUserReactions] = useState({});
   const [following, setFollowing] = useState([]);
   const navigate = useNavigate();

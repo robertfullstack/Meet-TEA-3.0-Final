@@ -69,7 +69,7 @@ const Chat = (props) => {
 
           <div className="nav-buttons">
             {" "}
-            <button id="btn-chat" onClick={() => navigate("/chat")}>
+            <button id="btn-chat" onClick={() => navigate("/home")}>
               <abbr title="Botão que abre o chat">{showChat ? "Fechar" : "Chat"}</abbr>  
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>
@@ -155,7 +155,7 @@ const Chat = (props) => {
                       </a>
                     </li>
                     <div className="nav-buttons1">
-                    <button id="btn-chat" onClick={() => navigate("/chat")}>
+                    <button id="btn-chat" onClick={() => navigate("/home")}>
               <abbr title="Botão que abre o chat">{showChat ? "Fechar" : "Chat"}</abbr>  
             </button>
             <button id="btn-pub" onClick={() => navigate("/postar")}>

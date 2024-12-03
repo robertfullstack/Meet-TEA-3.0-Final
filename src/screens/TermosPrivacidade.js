@@ -11,27 +11,27 @@ const TermosPrivacidade = () => {
         <a className="navbar-brand" href="#">Navegação</a>
         <ul className="nav nav-pills">
           <li className="nav-item">
-            <a className="nav-link" href="#scrollspyHeading1">Políticas</a>
+            <a className="nav-link" href="#Politicas">Políticas</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#scrollspyHeading2">Termos</a>
+            <a className="nav-link" href="#Termos">Termos</a>
           </li>
           <li className="nav-item dropdown">
             <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Outros</a>
             <ul className="dropdown-menu">
-              <li><a className="dropdown-item" href="#scrollspyHeading3">Licença</a></li>
-              <li><a className="dropdown-item" href="#scrollspyHeading4">Responsabilidade</a></li>
-              <li><a className="dropdown-item" href="#scrollspyHeading5">Limitações</a></li>
-              <li><a className="dropdown-item" href="#scrollspyHeading6">Links</a></li>
-              <li><a className="dropdown-item" href="#scrollspyHeading7">Modificações</a></li>
-              <li><a className="dropdown-item" href="#scrollspyHeading8">Lei Aplicável</a></li>
+              <li><a className="dropdown-item" href="#Licenca">Licença</a></li>
+              <li><a className="dropdown-item" href="#Isencao">Responsabilidade</a></li>
+              <li><a className="dropdown-item" href="#Limitacoes">Limitações</a></li>
+              <li><a className="dropdown-item" href="#Links">Links</a></li>
+              <li><a className="dropdown-item" href="#Modificacoes">Modificações</a></li>
+              <li><a className="dropdown-item" href="#Leis">Lei Aplicável</a></li>
             </ul>
           </li>
         </ul>
       </nav>
-      <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" className="scrollspy-example bg-body-tertiary p-3 rounded-2" tabIndex="0">
+      <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" className="scrollspy-example p-3 rounded-2" tabIndex="0">
         <div className="Politicas-de-privacidade">
-          <h2 id="scrollspyHeading1">Políticas de Privacidade</h2>
+          <h2 id="Politicas">Políticas de Privacidade</h2>
           <p>A sua privacidade é importante para nós. É política do Meet Tea respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar no site <a href="https://meet-tea-3-0.vercel.app/">Meet Tea</a>, e outros sites que possuímos e operamos.</p>
           <p>Solicitamos informações pessoais apenas quando realmente precisamos delas para lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento. Também informamos por que estamos coletando e como será usado.</p>
           <p>Apenas retemos as informações coletadas pelo tempo necessário para fornecer o serviço solicitado. Quando armazenamos dados, protegemos dentro de meios comercialmente aceitáveis ​​para evitar perdas e roubos, bem como acesso, divulgação, cópia, uso ou modificação não autorizados.</p>
@@ -58,11 +58,11 @@ const TermosPrivacidade = () => {
         </div>
 
         <div className="Termos">
-          <h2 id="scrollspyHeading2">1. Termos</h2>
+          <h2 id="Termos">1. Termos</h2>
           <p>Ao acessar o site <a href="https://meet-tea-3-0.vercel.app/">Meet Tea</a>, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis. Se você não concordar com algum desses termos, está proibido de usar ou acessar este site. Os materiais contidos neste site são protegidos pelas leis de direitos autorais e marcas comerciais aplicáveis.</p>
         </div>
 
-        <h2 id="scrollspyHeading3">2. Uso de Licença</h2>
+        <h2 id="Licenca">2. Uso de Licença</h2>
         <div className="Licenca">
           <p>É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site Meet Tea, apenas para visualização transitória pessoal e não comercial. Esta é a concessão de uma licença, não uma transferência de título e, sob esta licença, você não pode:</p>
           <ol>
@@ -75,7 +75,7 @@ const TermosPrivacidade = () => {
           <p>Esta licença será automaticamente rescindida se você violar alguma dessas restrições e poderá ser rescindida por Meet Tea a qualquer momento. Ao encerrar a visualização desses materiais ou após o término desta licença, você deve apagar todos os materiais baixados em sua posse, seja em formato eletrônico ou impresso.</p>
         </div>
 
-        <h2 id="scrollspyHeading4">3. Isenção de responsabilidade</h2>
+        <h2 id="Isencao">3. Isenção de responsabilidade</h2>
         <div className="Isencao-de-responsabilidade">
           <ol>
             <li>Os materiais no site da Meet Tea são fornecidos 'como estão'. Meet Tea não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</li>
@@ -83,22 +83,22 @@ const TermosPrivacidade = () => {
           </ol>
         </div>
 
-        <h2 id="scrollspyHeading5">4. Limitações</h2>
+        <h2 id="Limitacoes">4. Limitações</h2>
         <div className="Limitacoes">
           <p>Em nenhum caso o Meet Tea ou seus fornecedores serão responsáveis ​​por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em Meet Tea, mesmo que Meet Tea ou um representante autorizado da Meet Tea tenha sido notificado oralmente ou por escrito da possibilidade de tais danos. Como algumas jurisdições não permitem limitações em garantias implícitas, ou limitações de responsabilidade por danos consequenciais ou incidentais, essas limitações podem não se aplicar a você.</p>
         </div>
 
-        <h2 id="scrollspyHeading6">5. Links</h2>
+        <h2 id="Links">5. Links</h2>
         <div className="Links">
           <p>O Meet Tea não analisou todos os sites vinculados ao seu site e não é responsável pelo conteúdo de nenhum site vinculado. A inclusão de qualquer link não implica endosse por Meet Tea do site. O uso de qualquer site vinculado é por conta e risco do usuário.</p>
         </div>
 
-        <h4 id="scrollspyHeading7">Modificações</h4>
+        <h4 id="Modificacoes">Modificações</h4>
         <div className="Modificacoes">
           <p>O Meet Tea pode revisar estes termos de serviço do site a qualquer momento, sem aviso prévio. Todas as atualizações futuras serão avisadas pelo e-mail cadastrado, sendo válidas de sua concordância. Ao usar este site, você concorda em ficar vinculado à versão atual desses termos de serviço.</p>
         </div>
 
-        <h4 id="scrollspyHeading8">Lei aplicável</h4>
+        <h4 id="Leis">Lei aplicável</h4>
         <div className="Lei-aplicavel">
           <p>Estes termos e condições são regidos e interpretados de acordo com as leis do Meet Tea e você se submete irrevogavelmente à jurisdição exclusiva dos tribunais naquele estado ou localidade.</p>
         </div>

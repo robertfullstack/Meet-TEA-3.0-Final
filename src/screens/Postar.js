@@ -6,6 +6,7 @@ import "@fontsource/nunito";
 import IconHome from "../img/icon_home.png";
 import IconConfig from "../img/icon_config.png";
 import IconProfile from "../img/icon_profile.png";
+import defaultProfile from "../img/default-profile.png"
 
 const Postar = (props) => {
   const [openModalPublicar, setOpenModalPublicar] = useState(true);
@@ -16,7 +17,7 @@ const Postar = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [shareLink, setShareLink] = useState(""); // Novo estado para o link de compartilhamento
+  const [shareLink, setShareLink] = useState(""); 
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -81,10 +82,10 @@ const Postar = (props) => {
     try {
       const userDoc = await db.collection("users").doc(currentUser.uid).get();
       if (userDoc.exists) {
-        profilePhotoURL = userDoc.data().profilePhotoURL || "https://example.com/default-avatar.png"; // Valor padrão
+        profilePhotoURL = userDoc.data().profilePhotoURL || defaultProfile; // Valor padrão
       } else {
         console.warn("Documento do usuário não encontrado. Usando avatar padrão.");
-        profilePhotoURL = "https://example.com/default-avatar.png";
+        profilePhotoURL = defaultProfile;
       }
     } catch (error) {
       console.error("Erro ao buscar foto de perfil:", error);

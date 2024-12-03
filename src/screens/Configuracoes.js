@@ -375,8 +375,6 @@ const Configuracoes = () => {
             <div
               id="img-perfil"
               style={{
-                width: "200px",
-                height: "200px",
                 borderRadius: "50%",
                 backgroundImage: `url(${
                   userData.profilePhotoURL || defaultProfile

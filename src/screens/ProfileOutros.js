@@ -7,8 +7,6 @@ import IconConfig from "../img/icon_config.png";
 import IconProfile from "../img/icon_profile.png";
 import loading1 from "../img/loading-meet-tea.gif";
 import defaultProfile from "../img/default-profile.png";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Profile.css";
 
 import pontinhos from "../img/pontinhos.png";
@@ -428,8 +426,6 @@ const ProfileOutros = () => {
           <div
             id="img-perfil"
             style={{
-              width: "200px",
-              height: "200px",
               borderRadius: "50%",
               backgroundImage: `url(${user.profilePhotoURL || defaultProfile})`,
               backgroundSize: "cover",
